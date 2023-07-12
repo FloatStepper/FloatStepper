@@ -1,0 +1,14 @@
+EXE_INC = \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I../../src/rigidBodyMotion/addedMass/lnInclude \
+    -I$(LIB_SRC)/functionObjects/forces/lnInclude \
+    -I../../src/forceContributions/lnInclude \
+
+EXE_LIBS = \
+    -lfiniteVolume \
+    -lfvOptions \
+    -lmeshTools \
+    -L${FOAM_USER_LIBBIN} \
+    -laddedMass \
+    -lforceContributions

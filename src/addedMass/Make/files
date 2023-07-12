@@ -1,0 +1,7 @@
+rigidBodyVelocityPotentialFvPatchScalarField.C
+addedMass.C
+potentialAddedMass/potentialAddedMass.C
+slipVelocityFvPatchVectorField.C
+pisoAddedMass/pisoAddedMass.C
+
+LIB = $(FOAM_USER_LIBBIN)/libaddedMass

@@ -1,0 +1,33 @@
+mooringLine1
+{
+    floaterMotionRestraint linearSpring;
+    anchor          (40 -15 75);
+    refAttachmentPt (80 30 95);
+    restLength      63.4429;
+    #include "moorParms"
+}
+
+mooringLine2
+{
+    $mooringLine1;
+    anchor          (160 -15 75);
+    refAttachmentPt (120 30 95);
+    restLength      63.4429;
+}
+
+mooringLine3
+{
+    $mooringLine1;
+    anchor          (160 120 75);
+    refAttachmentPt (120 75 95);
+    restLength      63.4429;
+}
+
+mooringLine4
+{
+    $mooringLine1;
+    anchor          (40 120 75);
+    refAttachmentPt (80 75 95);
+    restLength      63.4429;
+}
+

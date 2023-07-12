@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Parameters to vary
+bodyDensity=500
+bodyEccentricity=0
+
+vx0=0
+vy0=-1
+omega0=0
+
+# Making dictionary used for theoretical Kirchoff Kelvin solution
+dict=bodyDict
+foamDictionary -entry rhob -set "$bodyDensity" $dict
+foamDictionary -entry a -set "$bodyEccentricity" $dict
+foamDictionary -entry vx0 -set "$vx0" $dict
+foamDictionary -entry vy0 -set "$vy0" $dict
+foamDictionary -entry omega0 -set "$omega0" $dict
+tend=$(foamDictionary -entry endTime -value system/controlDict)
+foamDictionary -entry tend -set "$tend" $dict
+
+# Initial body state dictionary used by floatStepper
+dict=0.orig/uniform/floaterMotionState
+foamDictionary -entry velocity -set "( $vx0 $vy0 0)" $dict

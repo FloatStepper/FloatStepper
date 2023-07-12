@@ -1,0 +1,44 @@
+#!/bin/sh
+cd ${0%/*} || exit 1                        # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions    # Tutorial run functions
+
+touch dum.foam constant/CofR
+restore0Dir
+
+# Write mooring file for inclusion in constant/dynamicMeshDict
+python writeMooringFile.py
+
+# Generate base mesh
+runApplication blockMesh
+
+# Refine mesh
+runApplication -s 1 topoSet -dict system/topoSetDict1
+runApplication -s 1 refineMesh -dict system/refineMeshDict1 -overwrite
+#runApplication -s 2 topoSet -dict system/topoSetDict2
+#runApplication -s 2 refineMesh -dict system/refineMeshDict2 -overwrite
+
+runApplication topoSet
+runApplication subsetMesh -overwrite c0 -patch floatingObject
+
+# Calculate mass, centre of mass and moment of inertia
+# Uses floatingObject patch and assumes mass density is uniform:
+density=500
+inside="(100 50 100)"
+runApplication surfaceMeshExtract -time 0 -patches floatingObject floater.stl
+runApplication surfaceOrient -inside floater.stl "${inside}" floater.stl
+runApplication surfaceInertia floater.stl -density ${density}
+grep -A4 'Entries for sixDoFRigidBodyDisplacement' log.surfaceInertia > tmp
+tail -4 tmp > constant/floaterMassAndInertia
+grep "centreOfMass" constant/floaterMassAndInertia > constant/CofR
+sed -i 's/centreOfMass/CofR/g' constant/CofR
+rm tmp floater.stl axes.obj
+
+# Set initial free surface
+runApplication setFields
+
+# Run case
+runApplication decomposePar
+runParallel $(getApplication)
+#runApplication $(getApplication)
+
+#------------------------------------------------------------------------------

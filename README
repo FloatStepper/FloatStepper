@@ -1,0 +1,55 @@
+_________________________ FLOATSTEPPER ____________________________
+
+Library for rigid body interaction with two phase flow.
+May also be used in single phase mode by setting alpha field to 1.
+
+Solver
+floatStepper
+
+Library
+floaterMotion (code structure based on sixDoFRigidBodyMotion)
+
+Requirements
+OpenFOAM-v2206 (may compile with later versions as well).
+
+Installation
+1. Source OpenFOAM-v2206
+2. Execute ./Allwmake from FloatStepper main directory
+
+Testing
+Execute ./Allrun in run/flatLightBoxInWaves
+
+Note that case syntax in slightly different from sixDoFRigidBodyMotion cases.
+In particular:
+0.  Set application to floatStepper in system/controlDict.
+1.  Use dynamicFloaterMotionSolversFvMesh in constant/dynamicMeshDict.
+    See examples of usage in run/*/constant/dynamicMeshDict.
+2.  Use floaterVelocity for U on floating object patches.
+    Set "slip true;" to run with slip boundary condition (default is no-slip).
+
+Author
+Johan Roenby, Stromning Aps and Roskilde University
+
+Contributors
+Henrik Bredmose (conceptualisation)
+Sithik Aliyar (validation and verification)
+Henning Scheufler (code structure)
+
+Contributing
+Please report bugs on the issue tracker of the repository or write to
+johan@ruc.dk.
+
+Known limitations
+-   Currently only runs with morphing mesh (not overset mesh)
+-   Has not been tested with turbulence modelling.
+-   Currently only runs with isoAdvector (not MULES).
+-   Plenty of field copying that can probably be avoided to increase efficiency.
+
+Funding
+Innovation Fund Denmark Grand Solution project FloatStep (8055-00075B).
+Independen Research Fund Denmark, InterFlow project (9063-00018B).
+
+Disclaimer
+This offering is not approved or endorsed by OpenCFD Limited, producer and
+distributor of the OpenFOAM software via www.openfoam.com, and owner of the 
+OPENFOAM®  and OpenCFD®  trade marks.

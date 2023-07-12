@@ -1,0 +1,8 @@
+Version of surfaceInertia application fixed so that it can cope with
+symmetric bodies, i.e. bodies for which the moment of inertia components
+along two or three directions are identical.
+
+Done by introducing an eignevalue algorithm specially designed for 
+symmetric matrices.
+
+Author: Johan Roenby, STROMNING, 2021

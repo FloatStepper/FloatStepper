@@ -1,0 +1,7 @@
+            //F = m*a = k*dx
+            //We want roughly a = g when dx = 10 m
+            //Mass is 1000kg/m3*20*50*40 m3 = 4e7 kg
+            //Then k = 4e7 kg*10m/s^2/10m = 4e7 kg/s^2
+            stiffness       1e7;// units of N/m
+            //Critical damping: c_crit = 2*sqrt(k*m) = 80 kg/s
+            damping         1e6;// units of Ns/m

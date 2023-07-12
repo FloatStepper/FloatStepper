@@ -1,0 +1,16 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+wcmd="${1:-wmake}"
+
+$wcmd src/functionObjects/forceContributions
+$wcmd src/addedMass
+$wcmd src/floaterMotion
+$wcmd src/functionObjects/floaterStateWriter
+$wcmd src/functionObjects/sixDoFRigidBodyStateWriter
+$wcmd src/functionObjects/addedMassWriter
+$wcmd src/waveMakerMotionSolver
+
+$wcmd applications/floatStepper
+$wcmd applications/util/joukowskiTransformPoints
+$wcmd applications/util/mySurfaceInertia
