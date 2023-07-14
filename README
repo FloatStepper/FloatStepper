@@ -1,7 +1,12 @@
 _________________________ FLOATSTEPPER ____________________________
 
 Library for rigid body interaction with two phase flow.
-May also be used in single phase mode by setting alpha field to 1.
+Can also be used in single phase mode by setting alpha field to 1 internally and
+on boundaries.
+FloatStepper solves the added mass instability problem by calculating the added
+mass matrix of the rigid body and exploiting that in the updating of the body
+motion. With FloatStepper you no longer need outer correctors or acceleration
+relaxation to stabilise coupling. 
 
 Solver
 floatStepper
@@ -17,18 +22,34 @@ Installation
 2. Execute ./Allwmake from FloatStepper main directory
 
 Testing
-Execute ./Allrun in run/flatLightBoxInWaves
+Execute ./Allrun in run/circleFallingIntoWater
 
 Note that case syntax in slightly different from sixDoFRigidBodyMotion cases.
 In particular:
 0.  Set application to floatStepper in system/controlDict.
 1.  Use dynamicFloaterMotionSolversFvMesh in constant/dynamicMeshDict.
     See examples of usage in run/*/constant/dynamicMeshDict.
+    Restraints and their syntax is like sixDoFRigidBodyMotion but class names
+    are changed "sixDoFRigidBody" replaced with "floater".
+    Constraints are specified with two vectors e.g.
+        linDirs (1 0 1);
+        rotDirs (0 1 1);
+    which means translation only along x- and y-axes and rotation only around
+    the y-axis (default is all DoF's active).
+    The integer parameter MaddUpdateFreq (default 1) determines how often the
+    (computationally expensive) added mass update is done, so setting
+    MaddUpdateFreq e.g. to 3 means that the added mass matrix is only updated
+    evert 3rd time step.
+    Subdictionaries constraints{}, solvers{} and parameters 
+    accelerationRelexation and accelerationDamping will not be read or used by
+    FloatStepper.
 2.  Use floaterVelocity for U on floating object patches.
     Set "slip true;" to run with slip boundary condition (default is no-slip).
+3.  Specify in 0.orig/uniform/floaterMotionState the initial body position,
+    orientation, linear and angular velocity and acceleration.
 
 Author
-Johan Roenby, Stromning Aps and Roskilde University
+Johan Roenby, STROMNING APS and Roskilde University
 
 Contributors
 Henrik Bredmose (conceptualisation)
@@ -40,10 +61,14 @@ Please report bugs on the issue tracker of the repository or write to
 johan@ruc.dk.
 
 Known limitations
--   Currently only runs with morphing mesh (not overset mesh)
+-   Currently only runs with morphing mesh (not overset mesh).
+-   Currently only supports a single rigid body.
 -   Has not been tested with turbulence modelling.
 -   Currently only runs with isoAdvector (not MULES).
 -   Plenty of field copying that can probably be avoided to increase efficiency.
+-   Currently a simple time integration of the 6-DoF equations of motion are
+    hardcoded in the floaterMotion class. The chosen method for Q update
+    guarantees that it stays an orthogonal matrix to machine precission.
 
 Funding
 Innovation Fund Denmark Grand Solution project FloatStep (8055-00075B).
