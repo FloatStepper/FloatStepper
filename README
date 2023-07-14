@@ -60,6 +60,10 @@ Contributing
 Please report bugs on the issue tracker of the repository or write to
 johan@ruc.dk.
 
+Citing software
+Roenby, Johan, (2023). FloatStepper-v0.0.1 [Computer Software]. Zenodo.
+https://www.doi.org/10.5281/zenodo.8146516
+
 Known limitations
 -   Currently only runs with morphing mesh (not overset mesh).
 -   Currently only supports a single rigid body.
