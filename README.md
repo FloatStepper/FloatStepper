@@ -3,11 +3,31 @@
 
 # FloatStepper 
 
-Library for rigid body interaction with two phase flow.
-Can also be used in single phase mode by setting alpha field to 1 internally and
-on boundaries.
-**FloatStepper** solves the added mass instability problem by calculating the added mass matrix of the rigid body and exploiting that in the updating of the body motion. 
-With **FloatStepper** you no longer need outer correctors or acceleration relaxation to stabilise coupling. 
+OpenFOAM extension module for fluid-rigid body coupling.
+
+Works for two-phase flows and also in single-phase mode by setting alpha field to 1 internally and on boundaries.
+
+FloatStepper solves the added mass instability problem by calculating the added mass matrix, $A$, of the rigid body and exploiting $A$ in the updating of the body motion.
+
+The basic idea is the following decomposition of the net force (and torque) on a body into an added mass term and everything else,
+
+$\mathbf F = \mathbf F_\textrm{other} - A\mathbf a$, 
+
+where $\mathbf a$ is the body acceleration, and $\mathbf F_\textrm{other}$ contains all forces not proportional to $\mathbf a$.
+Inserting this into Newton's 2nd law, we have
+
+$M\mathbf a = \mathbf F_\textrm{other} - A\mathbf a \Rightarrow \mathbf a = (M + A)^{-1} \mathbf F_\textrm{other}$
+
+FloatStepper finds $\mathbf F_\textrm{other}$ by preceeding the actual time step by a test time step with zero body acceleration.\
+The added mass matrix components are numerically calculated as the force (and torque) per (linear and angular) acceleration of the body.
+
+A 15-minute presentation of FloatStepper from the 18th OpenFOAM Workshop can be found [here](https://youtu.be/Nn3Zl1jnr5U)
+
+With **FloatStepper** you no longer need outer correctors or acceleration relaxation to stabilise coupling.
+
+FloatStepper is not necessarily faster than the existing sixDoFRigidBodyMotion library in OpenFOAM, but should be more stable for light bodies in heavy fluids.
+
+In terms of code maturity it is at the proof-of-concept stage so users should expect (and report) bugs and also be willing to accept some syntax and API changes in future updates.
 
 ## Solver
 *floatStepper*
@@ -16,7 +36,8 @@ With **FloatStepper** you no longer need outer correctors or acceleration relaxa
 *floaterMotion* (code structure based on *sixDoFRigidBodyMotion*)
 
 ## Requirements
-OpenFOAM-v2206 (may compile with later versions as well).
+OpenFOAM-v2206 (may compile with later versions as well). 
+Only openfoam.com version is supported.
 
 ## Installation
 1. Source OpenFOAM-v2206
@@ -36,12 +57,11 @@ In particular:
     Restraints and their syntax is like *sixDoFRigidBodyMotion* but class names are changed, where "sixDoFRigidBody" is replaced with "floater".
     Constraints are specified with two vectors e.g.
     - `linDirs (1 0 1);`
-    - `rotDirs (0 1 1);`
+    - `rotDirs (0 1 0);`
   
     which means translation only along x- and z-axes and rotation only around the y-axis (default is all DoF's active).
-    The integer parameter *MaddUpdateFreq* (default 1) determines how often the (computationally expensive) added mass update is done, so setting *MaddUpdateFreq* e.g. to 3 means that the added mass matrix is only updated
-    evert 3rd time step.
-    Subdictionaries *constraints{}*, *solvers{}* and parameters *accelerationRelexation* and *accelerationDamping* will not be read or used by **FloatStepper**.
+    The integer parameter *MaddUpdateFreq* (default 1) determines how often the (computationally expensive) added mass update is done, so setting *MaddUpdateFreq* e.g. to 3 means that the added mass matrix is only updated evert 3rd time step.
+    sixDofRigidBodyMotionCoeffs subdicts *constraints{}*, *solver{}* and parameters *accelerationRelexation* and *accelerationDamping* will not be read or used by **FloatStepper**.
 3.  Use *floaterVelocity* for U on floating object patches. Set `slip true;` to run with slip boundary condition (default is `no-slip`).
 4.  Specify in `0.orig/uniform/floaterMotionState` the initial body position, orientation, linear and angular velocity and acceleration.
 
@@ -50,19 +70,19 @@ Johan Roenby, STROMNING APS and Roskilde University
 
 ## Contributors
 - Henrik Bredmose (conceptualisation)
-- Sithik Aliyar (validation, verification, moorDyn coupling (to appear))
+- Sithik Aliyar (validation, verification, MoorDyn coupling (to appear))
 - Henning Scheufler (code structure)
 
 ## Contributing
-Please report bugs on the issue tracker of the repository or write to
-johan@ruc.dk.
+Please report bugs on the issue tracker of this repository or write to
+johan[at]ruc[dot]dk
 
 ## Citing software
 Roenby, Johan, (2023). FloatStepper-v0.0.1 [Computer Software]. Zenodo.
 https://www.doi.org/10.5281/zenodo.8146516
 
 ```bibtex
-@software{isoadvector_2023_8146516,
+@software{roenby_2023_8146516,
   author       = {Roenby, J.},
   title        = {FloatStepper},
   month        = jul,
