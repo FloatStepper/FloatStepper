@@ -80,8 +80,9 @@ class floaterMotionSolver
         //- Outer morphing distance (limit of linear interpolation region)
         const scalar do_;
 
-        // //- Test-mode in which only the gravitational body-force is applied
-        // bool test_;
+        //- Optional stretching of distance-to-floater measure to accomodate
+        //  different effective di_ and do_ in different directions
+        const tensor distStretch_;
 
         //- Reference density required by the forces object for
         //  incompressible calculations, required if rho == rhoInf

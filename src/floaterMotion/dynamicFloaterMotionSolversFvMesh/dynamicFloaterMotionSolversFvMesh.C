@@ -288,6 +288,7 @@ bool Foam::dynamicFloaterMotionSolversFvMesh::update()
                     bodySolver.motion().updateFloaterState(dvwdt, deltaT);
                     Info << "Body state after real time step:" << endl;
                     bodySolver.motion().status();
+                    Info << "Centre of mass      : " << bodySolver.motion().centreOfMass() << endl;
 
                 }
 

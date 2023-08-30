@@ -100,6 +100,7 @@ Foam::floaterMotionSolver::floaterMotionSolver
     patchSet_(mesh.boundaryMesh().patchSet(patches_)),
     di_(coeffDict().get<scalar>("innerDistance")),
     do_(coeffDict().get<scalar>("outerDistance")),
+    distStretch_(coeffDict().getOrDefault<tensor>("distStretch", tensor::I)),
     rhoInf_(1.0),
     rhoName_(coeffDict().getOrDefault<word>("rho", "rho")),
     scale_
@@ -169,7 +170,8 @@ Foam::floaterMotionSolver::floaterMotionSolver
     {
         const pointMesh& pMesh = pointMesh::New(mesh);
 
-        pointPatchDist pDist(pMesh, patchSet_, points0());
+//        pointPatchDist pDist(pMesh, patchSet_, points0());
+        pointPatchDist pDist(pMesh, patchSet_, (distStretch_ & points0()));
 
         // Scaling: 1 up to di then linear down to 0 at do away from patches
         scale_.primitiveFieldRef() =
