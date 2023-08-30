@@ -302,7 +302,7 @@ void Foam::floaterMotion::updateFloaterState
     motionState_.a() = a;
     motionState_.domegadt() = alpha;
 
-    label nSteps = 1e3;
+    label nSteps = 1;
     scalar dt = deltaT/nSteps;
 
     for (label n = 1; n <= nSteps; n++)
@@ -315,12 +315,14 @@ void Foam::floaterMotion::updateFloaterState
 
         //Updating velocity
 //        motionState_.v() = v0 + 0.5*dt*(a0 + a);
-        motionState_.v() = v0 + dt*a0;
+//        motionState_.v() = v0 + dt*a0;
+        motionState_.v() = v0 + dt*a; //TEST!!!!!!!!!!
 
         // Updating body angular velocity and orientation
         vector omega0 = motionState_.omega();
 //        motionState_.omega() = omega0 + 0.5*dt*(alpha0 + alpha);
-        motionState_.omega() = omega0 + dt*alpha0;
+//        motionState_.omega() = omega0 + dt*alpha0;
+        motionState_.omega() = omega0 + dt*alpha; //TEST!!!!!!!!!
 
         vector omega = omega0;
 //        vector omega = omega0 + 0.5*dt*alpha0;
