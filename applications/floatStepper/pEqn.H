@@ -24,12 +24,17 @@
     );
     MRF.makeRelative(phiHbyA);
 
-    if (p_rgh.needReference())
-    {
-        fvc::makeRelative(phiHbyA, U);
-        adjustPhi(phiHbyA, U, p_rgh);
-        fvc::makeAbsolute(phiHbyA, U);
-    }
+//    I have disabled adjustPhi for phiHbyA here since I find it problematic.
+//    It produces a fatalError if mag(fixedMassOut - massIn)/totalFlux > 1e-8
+//    for phiHbyA. (rho*U -rho0*U0)/deltaT = -gradp + ... so HbyA ~ rho0*U0/rho.
+//    I see no good reason that the net flux of this quantity over all domain 
+//    patches should be zero.
+//    if (p_rgh.needReference())
+//    {
+//        fvc::makeRelative(phiHbyA, U);
+//        adjustPhi(phiHbyA, U, p_rgh);
+//        fvc::makeAbsolute(phiHbyA, U);
+//    }
 
     surfaceScalarField phig
     (
