@@ -1,0 +1,14 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+echo "=========================================="
+echo "    Uninstalling moorDyn lib              "
+echo "=========================================="
+echo "removing $FOAM_USER_LIBBIN/libmoorDyn.so"
+rm $FOAM_USER_LIBBIN/libmoorDyn.so
+
+echo "==============================================="
+echo "    Cleaning MoorDyn-FloatStepper extension    "
+echo "==============================================="
+
+wclean src

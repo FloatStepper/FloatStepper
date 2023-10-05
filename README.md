@@ -27,7 +27,7 @@ With **FloatStepper** you no longer need outer correctors or acceleration relaxa
 
 FloatStepper is not necessarily faster than the existing sixDoFRigidBodyMotion library in OpenFOAM, but should be more stable for light bodies in heavy fluids.
 
-In terms of code maturity it is at the proof-of-concept stage so users should expect (and report) bugs and also be willing to accept some syntax and API changes in future updates.
+In terms of code maturity, it is at the proof-of-concept stage so users should expect (and report) bugs and also be willing to accept some syntax and API changes in future updates.
 
 ## Solver
 *floatStepper*
@@ -42,6 +42,8 @@ Only openfoam.com version is supported.
 ## Installation
 1. Source OpenFOAM-v2206
 2. Execute `./Allwmake` from FloatStepper main directory
+3. (optional) To install MoorDyn coupling go to thirdparty/MoorDyn and execute
+   the Allwmake script found there.
 
 ## Testing
 Execute `./Allrun` in `run/circleFallingIntoWater`
@@ -65,12 +67,14 @@ In particular:
 3.  Use *floaterVelocity* for U on floating object patches. Set `slip true;` to run with slip boundary condition (default is `no-slip`).
 4.  Specify in `0.orig/uniform/floaterMotionState` the initial body position, orientation, linear and angular velocity and acceleration.
 
+To test the MoorDyn installation, go to the run/moorDynBoxInWaves and execute the Allrun script. The mooring line parameters are located in the lines.txt file in run/moorDynBoxInWaves/Mooring. Mooring line forces will be written to files in the same folder.
+
 ## Author
 Johan Roenby, STROMNING APS and Roskilde University
 
 ## Contributors
 - Henrik Bredmose (conceptualisation)
-- Sithik Aliyar (validation, verification, MoorDyn coupling (to appear))
+- Sithik Aliyar (validation, verification, MoorDyn coupling)
 - Henning Scheufler (code structure)
 
 ## Contributing
@@ -94,6 +98,20 @@ https://www.doi.org/10.5281/zenodo.8146516
 }
 ```
 
+## Publication (preprint)
+Roenby J, Aliyar S and Bredmose H. (2023). "A robust algorithm for computational floating body dynamics", https://doi.org/10.48550/arXiv.2310.01199
+
+```bibtex
+@misc{roenby2023robust,
+      title={A robust algorithm for computational floating body dynamics}, 
+      author={Johan Roenby and Sithik Aliyar and Henrik Bredmose},
+      year={2023},
+      eprint={2310.01199},
+      archivePrefix={arXiv},
+      primaryClass={physics.flu-dyn}
+}
+```
+
 ## Known limitations
 -   Currently only runs with morphing mesh (not overset mesh).
 -   Currently only supports a single rigid body.
@@ -101,7 +119,6 @@ https://www.doi.org/10.5281/zenodo.8146516
 -   Currently only runs with isoAdvector (not MULES).
 -   Plenty of field copying that can probably be avoided to increase efficiency.
 -   Currently a simple time integration of the 6-DoF equations of motion are hardcoded in the *floaterMotion* class. The chosen method for Q update guarantees that it stays an orthogonal matrix to machine precission.
--   Possibly buggy behaviour when Center of Mass and Centre of Rotation do not coincide (needs testing).
 
 ## Funding
 Innovation Fund Denmark Grand Solution project FloatStep (8055-00075B).

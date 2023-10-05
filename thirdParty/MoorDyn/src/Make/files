@@ -1,0 +1,3 @@
+moorDynR1/moorDynR1.C
+
+LIB = $(FOAM_USER_LIBBIN)/libmoorDynForFloatStepper

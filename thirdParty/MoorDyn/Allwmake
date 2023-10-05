@@ -1,0 +1,20 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+echo "=========================================="
+echo "    COMPILE Thirdparty lib - MoorDynv1    "
+echo "=========================================="
+# compile MoorDyn v1
+echo "compile MoorDyn v1"
+cd MoorDyn_v1/compileSO/; 
+make 
+mv MoorDyn.so $FOAM_USER_LIBBIN/libmoorDyn.so
+echo "Compilation done! Library location:"
+echo "$FOAM_USER_LIBBIN/libmoorDyn.so"
+cd ../../
+
+echo "==============================================="
+echo "    COMPILE MoorDyn-FloatStepper extension     "
+echo "==============================================="
+
+wmake src

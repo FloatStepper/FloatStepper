@@ -1,16 +1,4 @@
                     GNU GENERAL PUBLIC LICENSE
-
- FloatStepper is released by Johan Roenby via
-
-        www.github.com/FloatStepper/FloatStepper
-
- You may use, distribute and copy the FloatStepper under the terms
- of GNU General Public License version 3, which is displayed below, or
- (at your option) any later version.
-
--------------------------------------------------------------------------
-
-                    GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
@@ -684,5 +672,3 @@ may consider it more useful to permit linking proprietary applications with
 the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 <http://www.gnu.org/philosophy/why-not-lgpl.html>.
-
--------------------------------------------------------------------------
