@@ -34,7 +34,7 @@ solvers
 
             centreOfMass    (0 0 -0.016);
             mass            3.148;
-            momentOfInertia (0.015 0.0167 0.021);
+            momentOfInertia (0.015 0 0 0.0167 0 0.021);
             rotDirs   (0 1 0);
             linDirs   (1 0 1);
             MaddUpdateFreq  2;

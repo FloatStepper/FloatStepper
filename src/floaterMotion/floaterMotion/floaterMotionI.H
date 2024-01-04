@@ -98,7 +98,7 @@ inline Foam::scalar Foam::floaterMotion::mass() const
 }
 
 
-inline const Foam::diagTensor&
+inline const Foam::symmTensor&
 Foam::floaterMotion::momentOfInertia() const
 {
     return momentOfInertia_;

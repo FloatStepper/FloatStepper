@@ -56,7 +56,7 @@ Foam::floaterMotion::floaterMotion(const Time& time)
     initialCentreOfRotation_(Zero),
     initialQ_(I),
     mass_(VSMALL),
-    momentOfInertia_(diagTensor::one*VSMALL),
+    momentOfInertia_(symmTensor::one*VSMALL),
     Madd_({6, 6}, 0),
     MaddUpdateFreq_(1),
     F0_(Zero),
@@ -103,7 +103,7 @@ Foam::floaterMotion::floaterMotion
         )
     ),
     mass_(dict.get<scalar>("mass")),
-    momentOfInertia_(dict.get<diagTensor>("momentOfInertia")),
+    momentOfInertia_(dict.get<symmTensor>("momentOfInertia")),
     Madd_(dict.getOrDefault("Madd", SquareMatrix<scalar>({6, 6}, 0))),
     MaddUpdateFreq_(dict.getOrDefault("MaddUpdateFreq", 1)),
     F0_(Zero),
@@ -123,7 +123,7 @@ Foam::floaterMotion::floaterMotion
     if (magSqr(R) > VSMALL)
     {
         // ... correct the moment of inertia tensor using parallel axes theorem
-        momentOfInertia_ += mass_*diag(I*magSqr(R) - sqr(R));
+        momentOfInertia_ += mass_*(I*magSqr(R) - sqr(R));
 
         // ... and if the centre of rotation is not specified for motion state
         // update it
@@ -415,7 +415,7 @@ Foam::scalarField Foam::floaterMotion::calcAcceleration
     typedef SquareMatrix<scalar> SMatrix;
     SMatrix Mbody({6, 6}, 0);
     tensor Q = motionState_.Q();
-    diagTensor I_bf = momentOfInertia(); // body frame
+    symmTensor I_bf = momentOfInertia(); // body frame
     tensor I_lf = (Q & I_bf) & Q.T(); // lab frame
 //    tensor Mtensor = mass()*(tensor::I); // Q mI QT = m Q Qt = mI
     vector marm = mass()*momentArm();

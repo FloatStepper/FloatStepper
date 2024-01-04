@@ -26,8 +26,8 @@ density=500
 inside="(100 50 100)"
 runApplication surfaceMeshExtract -time 0 -patches floatingObject floater.stl
 runApplication surfaceOrient -inside floater.stl "${inside}" floater.stl
-runApplication surfaceInertia floater.stl -density ${density}
-grep -A4 'Entries for sixDoFRigidBodyDisplacement' log.surfaceInertia > tmp
+runApplication mySurfaceInertia floater.stl -density ${density}
+grep -A4 'Entries for floatStepper' log.mySurfaceInertia > tmp
 tail -4 tmp > constant/floaterMassAndInertia
 grep "centreOfMass" constant/floaterMassAndInertia > constant/CofR
 sed -i 's/centreOfMass/CofR/g' constant/CofR

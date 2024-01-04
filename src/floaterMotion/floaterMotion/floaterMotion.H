@@ -104,7 +104,7 @@ class floaterMotion
 
         //- Moment of inertia of the body in reference configuration
         //  (Q = I)
-        diagTensor momentOfInertia_;
+        symmTensor momentOfInertia_;
 
         //- Added mass matrix in body reference frame
         SquareMatrix<scalar> Madd_;
@@ -194,7 +194,7 @@ public:
             inline scalar mass() const;
 
             //- Return the inertia tensor
-            inline const diagTensor& momentOfInertia() const;
+            inline const symmTensor& momentOfInertia() const;
 
             //- Return the motion state
             inline const floaterMotionState& state() const;

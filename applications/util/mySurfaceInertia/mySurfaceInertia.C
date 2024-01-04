@@ -462,6 +462,16 @@ int main(int argc, char *argv[])
             << "        momentOfInertia " << eVal << token::END_STATEMENT << nl
             << "        orientation     " << eVec.T() << token::END_STATEMENT
             << endl;
+
+        Jsym = symmTensor(J.xx(), J.xy(), J.xz(), J.yy(), J.yz(), J.zz());
+        Info<< nl
+            << "Entries for floatStepper:"
+            << nl
+            << "        mass            " << m << token::END_STATEMENT << nl
+            << "        centreOfMass    " << cM << token::END_STATEMENT << nl
+            << "        momentOfInertia " << Jsym << token::END_STATEMENT << nl
+            << "        orientation     " << eVec.T() << token::END_STATEMENT
+            << endl;
     }
 
     if (calcAroundRefPt)

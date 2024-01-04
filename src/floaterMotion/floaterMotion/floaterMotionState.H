@@ -47,7 +47,7 @@ SourceFiles
 
 #include "vector.H"
 #include "point.H"
-#include "diagTensor.H"
+#include "symmTensor.H"
 #include "tensor.H"
 #include "dictionary.H"
 
