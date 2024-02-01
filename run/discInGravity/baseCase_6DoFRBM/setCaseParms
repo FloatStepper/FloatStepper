@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Parameters to vary
+bodyDensity=0.8
+bodyEccentricity=0
+
+vx0=0
+vy0=0
+omega0=0
+
+# Making dictionary used for theoretical Kirchoff Kelvin solution
+dict=bodyDict
+foamDictionary -entry rhob -set "$bodyDensity" $dict
+foamDictionary -entry a -set "$bodyEccentricity" $dict
+foamDictionary -entry vx0 -set "$vx0" $dict
+foamDictionary -entry vy0 -set "$vy0" $dict
+foamDictionary -entry omega0 -set "$omega0" $dict
+tend=$(foamDictionary -entry endTime -value system/controlDict)
+foamDictionary -entry tend -set "$tend" $dict
+
+KirchhoffKelvinIntegrator2D RKDP45 > log.KirchhoffKelvinIntegrator2D
+
+# Initial body state dictionary used by sixDoFRBM
+dict=0.orig/uniform/sixDoFRigidBodyMotionState
+foamDictionary -entry velocity -set "( $vx0 $vy0 0)" $dict
+acceleration=$(foamDictionary -entry acceleration -value sixDoFRigidBodyMotionStateInput)
+foamDictionary -entry acceleration -set "$acceleration" $dict
+angularMomentum=$(foamDictionary -entry angularMomentum -value sixDoFRigidBodyMotionStateInput)
+foamDictionary -entry angularMomentum -set "$angularMomentum" $dict
+torque=$(foamDictionary -entry torque -value sixDoFRigidBodyMotionStateInput)
+foamDictionary -entry torque -set "$torque" $dict

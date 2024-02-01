@@ -1,0 +1,74 @@
+#!/bin/bash
+
+#Make a sequence of copies of baseCase and change one or more parameters in the
+#setup files of each case
+
+#Settings
+
+baseCase=${1:-baseCase}
+
+scanDir=nxMaxCoScan
+
+if [ ! -d "$scanDir" ];
+then
+    mkdir $scanDir
+    cp -r $baseCase $scanDir
+fi
+
+cd $scanDir
+
+parm1File="initUcase/writeMeshParmFile.py"
+parm2File="initUcase/writeMeshParmFile.py"
+parm1Name="nx"
+parm2Name="ny"
+parm1Range=(50 100 200)
+parm2Range=(15 30 60)
+#parm1Range=(400)
+#parm2Range=(120)
+
+parm3File="system/controlDict"
+parm3Name=maxCo
+#parm3Range=(0.1 0.2 0.5 0.05)
+parm3Range=(0.2)
+
+##########################
+
+echo "=========================================" >> README
+echo "Parameter scan generated with $(basename "$0")" >> README
+echo "Date: " $(date) >> README
+echo "Base case: $baseCase" >> README
+echo "Parameters: $parm1Name, $parm2Name, $parm3Name" >> README
+echo "=========================================" >> README
+echo "Case    $parm1Name    $parm2Name    $parm3Name" >> README
+
+for m in ${!parm3Range[*]}
+do
+    parm3=${parm3Range[$m]}
+
+    for n in ${!parm1Range[*]}
+    do
+        parm1=${parm1Range[$n]}
+        parm2=${parm2Range[$n]}
+#        caseName=$(printf "%03d\n" "$n")
+        caseName=$parm3Name$parm3$parm1Name$parm1
+        if [ "${1}" = "run" ];
+        then
+            cd ${caseName}
+            ./Allrun &
+            cd ..
+        elif [ ! -d "$caseName" ];
+        then
+            cp -r ../$baseCase $caseName
+        #    sed -i "s/${parmName}\s.*;/${parmName}\t${parm};/" ${caseName}/${parmFile}
+            sed -i "s/${parm1Name}\s*=.*/${parm1Name}=${parm1}/" ${caseName}/${parm1File}
+            sed -i "s/${parm2Name}\s*=.*/${parm2Name}=${parm2}/" ${caseName}/${parm2File}
+#            sed -i "s/${parm3Name}=.*/${parm3Name}=${parm3}/" ${caseName}/${parm3File}
+            foamDictionary -entry "${parm3Name}" -set "${parm3}" ${caseName}/${parm3File}
+            echo "$caseName:    $parm1    $parm2    $parm3" >> README
+        else
+            echo "Directory $caseName already exists - not recreated."
+        fi
+    done
+done
+
+echo "=========================================" >> README

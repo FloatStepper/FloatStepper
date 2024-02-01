@@ -1,0 +1,130 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5                                     |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+scale 1;
+
+xmin     0;
+xmax     8;
+z0       0;
+z1       0.3;
+z2       0.5;
+z3       0.8;
+y0      -0.2;
+y1      0.2;
+
+nx      800;
+ny      1;
+nz0     30;
+nz1     20;
+nz2     30;
+
+vertices
+(
+    ($xmin $y0 $z0) //0
+    ($xmax $y0 $z0) //1
+    ($xmax $y1 $z0) //2 
+    ($xmin $y1 $z0)  //3
+    ($xmin $y0 $z1)  //4
+    ($xmax $y0 $z1)  //5
+    ($xmax $y1 $z1)  //6
+    ($xmin $y1 $z1)  //7
+    ($xmin $y0 $z2)  //8 
+    ($xmax $y0 $z2)  //9  
+    ($xmax $y1 $z2) //10
+    ($xmin $y1 $z2) //11
+    ($xmin $y0 $z3) //12
+    ($xmax $y0 $z3) //13
+    ($xmax $y1 $z3)  //14
+    ($xmin $y1 $z3)  //15
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) ($nx $ny $nz0)simpleGrading (1 1 1)
+    hex (4 5 6 7 8 9 10 11) ($nx $ny $nz1) simpleGrading (1 1 1)
+    hex (8 9 10 11 12 13 14 15) ($nx $ny $nz2) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+   inlet
+    {
+        type patch;
+        faces
+        (
+            (3 0 4 7)
+            (7 4 8 11)
+            (11 8 12 15)
+        );
+    }
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (2 6 5 1)
+            (6 10 9 5)
+            (10 14 13 9)
+            
+            
+        );
+    }
+    sidewalls
+    {
+        type empty;
+        faces
+        (
+            (3 7 6 2)
+            (0 1 5 4)
+            (7 11 10 6)
+            (4 5 9 8 )
+            (11 15 14 10)
+            (8 9 13 12)
+        );
+    }
+    bottom
+    {
+        type patch;
+        faces
+        (
+            (3 2 1 0)
+        );
+    }
+    atmosphere
+    {
+        type patch;
+        faces
+        (
+            (15 12 13 14)
+        );
+    }
+
+    box
+    {
+        type wall;
+        faces ();
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

@@ -1,0 +1,119 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.3                                   |
+|   \\  /    A nd           | Web:      http://www.openfoam.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+    location        "system";
+    class           dictionary;
+    object          controlDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     floatStepper;
+
+startFrom       latestTime;
+
+startTime       0.0;
+
+stopAt          endTime;
+
+endTime         20;
+
+deltaT          0.001;
+
+writeControl    adjustable;
+
+writeInterval   0.1;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression on;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxCo           0.5;
+maxAlphaCo	    0.5;
+
+maxDeltaT       1;
+
+// ************************************************************************* //
+libs    (waveModels);
+
+functions
+{
+    floaterMotion
+    {
+        type            floaterStateWriter;
+        libs            ( floaterStateWriter );
+        writeControl    timeStep;
+        writeInterval   1;
+        classicWriteFormat false;
+        bodyName        myBox;
+    }
+
+    addedMass
+    {
+        type           addedMassWriter;
+        libs           (addedMassWriter);
+        writeControl   timeStep;
+        writeInterval  1;
+        bodyName        myBox;
+    }
+
+    interfaceHeight1
+    {
+        // Mandatory entries (unmodifiable)
+        type            interfaceHeight;
+        libs            (fieldFunctionObjects);
+
+        // Mandatory entries (runtime modifiable)
+        locations       (
+                            (0.0001 0.0001 .4001)
+                            (1.0001 0.0001 .4001)
+                            (3.0001 0.0001 .4001)
+                            (4.0001 0.0001 .4001)
+                            (4.9999 0.0001 .4001)
+                        );
+
+
+        // Optional entries (runtime modifiable)
+        alpha           alpha.water;
+/*
+        liquid          true;
+        direction       (1 0 0);
+        interpolationScheme    cellPoint;
+
+        // Optional (inherited) entries
+        writePrecision  8;
+        writeToFile     true;
+        useUserTime     true;
+        region          region0;
+        enabled         true;
+        log             true;
+        timeStart       0;
+        timeEnd         1000;
+        executeControl  timeStep;
+        executeInterval 1;
+*/
+        writeControl    timeStep;
+        writeInterval   1;
+
+    }
+}

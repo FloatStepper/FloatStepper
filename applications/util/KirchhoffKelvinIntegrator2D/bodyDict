@@ -1,0 +1,17 @@
+R    1;
+a    0.5;
+rhof 1000;
+rhob 0;
+gy   -10;
+
+x0   0;
+y0   0;
+th0ByPi  0.25;
+vx0  0;
+vy0  0;
+omega0 0;
+
+tend 1;
+nPlotSteps 200;
+
+outFile trajectory;

@@ -1,0 +1,82 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      Phi;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -1 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    floatingObject
+    {
+        type            codedMixed;
+
+        refValue        uniform 0;
+        refGradient     uniform 0;
+        valueFraction   uniform 0;
+
+        name    rigidBodyVelocityPotential;   // name of generated BC
+
+        code
+        #{
+            const fvMesh& mesh(patch().boundaryMesh().mesh());
+            IOdictionary bodyDict
+            (
+                IOobject
+                (
+                    "bodyParmDict",
+                    mesh.time().constant(),
+                    mesh,
+                    IOobject::MUST_READ,
+                    IOobject::NO_WRITE
+                )
+            );
+            const scalar vx(bodyDict.get<scalar>("vx0"));
+            const scalar vy(bodyDict.get<scalar>("vy0"));
+            const scalar omegaValue(bodyDict.get<scalar>("omega0"));
+            const vector v0(vx, vy, 0);
+            const vector omega(0, 0, omegaValue);
+
+            const vectorField nf(this->patch().nf());
+            const vectorField Sf(this->patch().Sf());
+            const vectorField Cf(this->patch().Cf());
+
+            const vector CoR(gSum(Foam::magSqr(Cf)*Sf)/gSum(Cf & Sf));
+
+            this->refValue() = 0.0;
+            this->refGrad() = (nf & (v0 + (omega ^ (Cf - CoR))));
+            this->valueFraction() = 0.0;
+        #};
+    }
+
+    front
+    {
+        type            empty;
+    }
+
+    back
+    {
+        type            empty;
+    }
+
+    rim
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+}
+
+// ************************************************************************* //

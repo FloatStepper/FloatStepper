@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#/bin/sh
+cd ${0%/*} || exit 1                        # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions    # Tutorial run functions
+
+caseName=$(basename $(dirname $(readlink -f "$0")))
+touch ${caseName}.foam
+#restore0Dir
+#cp system/controlDict.init system/controlDict
+#runApplication blockMesh
+
+#runApplication -s 1 topoSet -dict system/topoSetDict1
+#runApplication -s 1 refineMesh -dict system/refineMeshDict1 -overwrite
+
+#runApplication -s 2 topoSet -dict system/topoSetDict2
+#runApplication -s 2 refineMesh -dict system/refineMeshDict2 -overwrite
+
+#runApplication -s 3 topoSet -dict system/topoSetDict3
+#runApplication -s 3 refineMesh -dict system/refineMeshDict3 -overwrite
+
+#runApplication topoSet
+#runApplication subsetMesh -overwrite c0 -patch box
+
+#runApplication moveDynamicMesh
+
+#rm -r 0/uniform 0/polyMesh
+#mv 0.001/* 0/
+#rm -rf 0.001
+
+#runApplication setAlphaField
+
+#cp system/controlDict.run system/controlDict
+
+#runApplication decomposePar
+runParallel $(getApplication)

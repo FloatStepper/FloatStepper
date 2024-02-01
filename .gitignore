@@ -11,6 +11,7 @@ linux64GccDPInt32Opt
 .vscode
 lnInclude
 log.*
+.vscode
 
 # Packages #
 ############

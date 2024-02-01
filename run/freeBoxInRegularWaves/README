@@ -1,0 +1,14 @@
+Freely floating box benchmark case from:
+
+@article{renNonlinearSimulationsWaveinduced2015,
+	title = {Nonlinear simulations of wave-induced motions of a freely floating body using {WCSPH} method},
+	volume = {50},
+	issn = {0141-1187},
+	url = {https://www.sciencedirect.com/science/article/pii/S0141118714001175},
+	doi = {10.1016/j.apor.2014.12.003},
+	journal = {Applied Ocean Research},
+	author = {Ren, Bing and He, Ming and Dong, Ping and Wen, Hongjie},
+	month = mar,
+	year = {2015},
+	pages = {1--12}
+}

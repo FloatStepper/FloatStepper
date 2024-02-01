@@ -1,0 +1,72 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.7.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    inlet
+    {
+        type            waveVelocity;
+        value           uniform (0 0 0);
+//        type            streamFunctionWave;
+//        value		uniform (0 0 0);
+//        waveDictName    waveProperties;
+//        waveDictPath    "constant";
+//        type            movingWallVelocity;
+//        value           uniform (0 0 0);
+    }
+    outlet
+    {
+        type            waveVelocity;
+        value           uniform (0 0 0);
+//        type            slip;
+//        value           uniform (0 0 0);
+//        type            waveVelocity;
+//        value           uniform (0 0 0);
+
+//        type            waveAbsorption2DVelocity;
+//        absorptionDir   180;
+//        nPaddles        1;
+//        value           uniform (0 0 0);
+    }
+    bottom
+    {
+        type            noSlip;
+        value           uniform (0 0 0);
+    }
+    sidewalls
+    {
+        type            empty;
+    }
+    atmosphere
+    {
+        type            pressureInletOutletVelocity;
+        value           uniform (0 0 0);
+    }
+    box
+    {
+        type            floaterVelocity;
+        slip            false;
+        value           uniform (0 0 0);
+    }
+}
+
+
+// ************************************************************************* //

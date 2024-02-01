@@ -1,0 +1,41 @@
+Moored box floating in regular waves benchmark case from MaRINET2 EsflOWC
+project with wave period T = 2 s and wave height H = 0.12 m.
+
+For details on the experiment see:
+
+@article{wuExperimentalStudyMoored2019,
+  title = {Experimental {{Study}} of a {{Moored Floating Oscillating Water Column Wave-Energy Converter}} and of a {{Moored Cubic Box}}},
+  author = {Wu, Minghao and Stratigaki, Vasiliki and Troch, Peter and Altomare, Corrado and Verbrugghe, Tim and Crespo, Alejandro and Cappietti, Lorenzo and Hall, Matthew and Gómez-Gesteira, Moncho},
+  date = {2019-05-15},
+  journaltitle = {Energies},
+  volume = {12},
+  number = {10},
+  pages = {1834},
+  issn = {1996-1073},
+  doi = {10.3390/en12101834},
+  url = {https://www.mdpi.com/1996-1073/12/10/1834}
+}
+
+See also Case 3 in:
+
+@article{dominguez2019sph,
+  title={SPH simulation of floating structures with moorings},
+  author={Dom{\'\i}nguez, Jos{\'e} M and Crespo, Alejandro JC and Hall, Matthew and Altomare, Corrado and Wu, Minghao and Stratigaki, Vasiliki and Troch, Peter and Cappietti, Lorenzo and G{\'o}mez-Gesteira, Moncho},
+  journal={Coastal Engineering},
+  volume={153},
+  pages={103560},
+  year={2019},
+  publisher={Elsevier}
+}
+
+and case 2 in:
+
+@article{chen2022cfd,
+  title={CFD simulation of floating body motion with mooring dynamics: Coupling MoorDyn with OpenFOAM},
+  author={Chen, Haifei and Hall, Matthew},
+  journal={Applied Ocean Research},
+  volume={124},
+  pages={103210},
+  year={2022},
+  publisher={Elsevier}
+}

@@ -1,0 +1,363 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5                                     |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      blockMeshDict;
+}
+
+scale 1;
+
+"nxCells_1" 5;
+"nxCells_2" 15;
+"nxCells_3" 14;
+"nyCells" 500;
+"nz_L1A5" 40;
+"nz_Box" 21;
+"ny_Box" 21;
+
+"x1" -5;
+"x2" -0.1;
+"x3" 0.1;
+"x4" 5;
+"y1" -0.5;
+"y2" -0.1;
+"y3" 0.1;
+"y4" 0.5;
+"z1" -0.5;
+"z2" -0.2;
+"z3" -0.0786;
+"z4" 0.053;
+"z5" 0.2;
+"z6" 0.5;
+
+
+
+
+vertices
+(
+    ($x1 $y1 $z1)     // Vertex 0
+    ($x2 $y1 $z1)      // Vertex 1
+    ($x3 $y1 $z1)      // Vertex 2
+    ($x4 $y1 $z1)      // Vertex 3
+    ($x1 $y1 $z2)     // Vertex 4
+    ($x2 $y1 $z2)      // Vertex 5
+    ($x3 $y1 $z2)      // Vertex 6
+    ($x4 $y1 $z2)      // Vertex 7
+    ($x1 $y1 $z3)     // Vertex 8
+    ($x2 $y1 $z3)      // Vertex 9
+    ($x3 $y1 $z3)      // Vertex 10
+    ($x4 $y1 $z3)      // Vertex 11
+    ($x1 $y1 $z4)     // Vertex 12
+    ($x2 $y1 $z4)      // Vertex 13
+    ($x3 $y1 $z4)      // Vertex 14
+    ($x4 $y1 $z4)      // Vertex 15
+    ($x1 $y1 $z5)     // Vertex 16
+    ($x2 $y1 $z5)      // Vertex 17
+    ($x3 $y1 $z5)      // Vertex 18
+    ($x4 $y1 $z5)      // Vertex 19
+    ($x1 $y1 $z6)     // Vertex 20
+    ($x2 $y1 $z6)      // Vertex 21
+    ($x3 $y1 $z6)      // Vertex 22
+    ($x4 $y1 $z6)      // Vertex 23
+    ($x1 $y2 $z1)     // Vertex 24
+    ($x2 $y2 $z1)      // Vertex 25
+    ($x3 $y2 $z1)      // Vertex 26
+    ($x4 $y2 $z1)      // Vertex 27
+    ($x1 $y2 $z2)     // Vertex 28
+    ($x2 $y2 $z2)      // Vertex 29
+    ($x3 $y2 $z2)      // Vertex 30
+    ($x4 $y2 $z2)      // Vertex 31
+    ($x1 $y2 $z3)     // Vertex 32
+    ($x2 $y2 $z3)      // Vertex 33
+    ($x3 $y2 $z3)      // Vertex 34
+    ($x4 $y2 $z3)      // Vertex 35
+    ($x1 $y2 $z4)     // Vertex 36
+    ($x2 $y2 $z4)      // Vertex 37
+    ($x3 $y2 $z4)      // Vertex 38
+    ($x4 $y2 $z4)      // Vertex 39
+    ($x1 $y2 $z5)     // Vertex 40
+    ($x2 $y2 $z5)      // Vertex 41
+    ($x3 $y2 $z5)      // Vertex 42
+    ($x4 $y2 $z5)      // Vertex 43
+    ($x1 $y2 $z6)     // Vertex 44
+    ($x2 $y2 $z6)      // Vertex 45
+    ($x3 $y2 $z6)      // Vertex 46
+    ($x4 $y2 $z6)      // Vertex 47
+    ($x1 $y3 $z1)     // Vertex 48
+    ($x2 $y3 $z1)      // Vertex 49
+    ($x3 $y3 $z1)      // Vertex 50
+    ($x4 $y3 $z1)      // Vertex 51
+    ($x1 $y3 $z2)     // Vertex 52
+    ($x2 $y3 $z2)      // Vertex 53
+    ($x3 $y3 $z2)      // Vertex 54
+    ($x4 $y3 $z2)      // Vertex 55
+    ($x1 $y3 $z3)     // Vertex 56
+    ($x2 $y3 $z3)      // Vertex 57
+    ($x3 $y3 $z3)      // Vertex 58
+    ($x4 $y3 $z3)      // Vertex 59
+    ($x1 $y3 $z4)     // Vertex 60
+    ($x2 $y3 $z4)      // Vertex 61
+    ($x3 $y3 $z4)      // Vertex 62
+    ($x4 $y3 $z4)      // Vertex 63
+    ($x1 $y3 $z5)     // Vertex 64
+    ($x2 $y3 $z5)      // Vertex 65
+    ($x3 $y3 $z5)      // Vertex 66
+    ($x4 $y3 $z5)      // Vertex 67
+    ($x1 $y3 $z6)     // Vertex 68
+    ($x2 $y3 $z6)      // Vertex 69
+    ($x3 $y3 $z6)      // Vertex 70
+    ($x4 $y3 $z6)      // Vertex 71
+    ($x1 $y4 $z1)     // Vertex 72
+    ($x2 $y4 $z1)      // Vertex 73
+    ($x3 $y4 $z1)      // Vertex 74
+    ($x4 $y4 $z1)      // Vertex 75
+    ($x1 $y4 $z2)     // Vertex 76
+    ($x2 $y4 $z2)      // Vertex 77
+    ($x3 $y4 $z2)      // Vertex 78
+    ($x4 $y4 $z2)      // Vertex 79
+    ($x1 $y4 $z3)     // Vertex 80
+    ($x2 $y4 $z3)      // Vertex 81
+    ($x3 $y4 $z3)      // Vertex 82
+    ($x4 $y4 $z3)      // Vertex 83
+    ($x1 $y4 $z4)     // Vertex 84
+    ($x2 $y4 $z4)      // Vertex 85
+    ($x3 $y4 $z4)      // Vertex 86
+    ($x4 $y4 $z4)      // Vertex 87
+    ($x1 $y4 $z5)     // Vertex 88
+    ($x2 $y4 $z5)      // Vertex 89
+    ($x3 $y4 $z5)      // Vertex 90
+    ($x4 $y4 $z5)      // Vertex 91
+    ($x1 $y4 $z6)     // Vertex 92
+    ($x2 $y4 $z6)      // Vertex 93
+    ($x3 $y4 $z6)      // Vertex 94
+    ($x4 $y4 $z6)      // Vertex 95
+    
+    
+
+);
+
+blocks
+(
+    hex (0	4	5	1	24	28	29	25) ($nxCells_1 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (1	5	6	2	25	29	30	26) ($nxCells_1 $ny_Box $nz_L1A5) simpleGrading (1 1 1)
+    hex (2	6	7	3	26	30	31	27) ($nxCells_1 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (4	8	9	5	28	32	33	29) ($nxCells_2 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (5	9	10	6	29	33	34	30) ($nxCells_2 $ny_Box $nz_L1A5) simpleGrading (1 1 1)
+    hex (6	10	11	7	30	34	35	31) ($nxCells_2 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (8	12	13	9	32	36	37	33) ($nxCells_3 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (9	13	14	10	33	37	38	34) ($nxCells_3 $ny_Box $nz_L1A5) simpleGrading (1 1 1)
+    hex (10	14	15	11	34	38	39	35) ($nxCells_3 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (12	16	17	13	36	40	41	37) ($nxCells_2 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (13	17	18	14	37	41	42	38) ($nxCells_2 $ny_Box $nz_L1A5) simpleGrading (1 1 1)
+    hex (14	18	19	15	38	42	43	39) ($nxCells_2 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (16	20	21	17	40	44	45	41) ($nxCells_1 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (17	21	22	18	41	45	46	42) ($nxCells_1 $ny_Box $nz_L1A5) simpleGrading (1 1 1)
+    hex (18	22	23	19	42	46	47	43) ($nxCells_1 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (24	28	29	25	48	52	53	49) ($nxCells_1 $nyCells $nz_Box) simpleGrading (1 1 1)
+    hex (25	29	30	26	49	53	54	50) ($nxCells_1 $ny_Box $nz_Box) simpleGrading (1 1 1)
+    hex (26	30	31	27	50	54	55	51) ($nxCells_1 $nyCells $nz_Box) simpleGrading (1 1 1)
+    hex (28	32	33	29	52	56	57	53) ($nxCells_2 $nyCells $nz_Box) simpleGrading (1 1 1)
+    hex (29	33	34	30	53	57	58	54) ($nxCells_2 $ny_Box $nz_Box) simpleGrading (1 1 1)
+    hex (30	34	35	31	54	58	59	55) ($nxCells_2 $nyCells $nz_Box) simpleGrading (1 1 1)
+    hex (32	36	37	33	56	60	61	57) ($nxCells_3 $nyCells $nz_Box) simpleGrading (1 1 1)
+   // hex (33	37	38	34	57	61	62	58) ($nxCells $nyCells $nz_Box) simpleGrading (1 1 1)
+    hex (34	38	39	35	58	62	63	59) ($nxCells_3 $nyCells $nz_Box) simpleGrading (1 1 1)
+    hex (36	40	41	37	60	64	65	61) ($nxCells_2 $nyCells $nz_Box) simpleGrading (1 1 1)
+    hex (37	41	42	38	61	65	66	62) ($nxCells_2 $ny_Box $nz_Box) simpleGrading (1 1 1)
+    hex (38	42	43	39	62	66	67	63) ($nxCells_2 $nyCells $nz_Box) simpleGrading (1 1 1)
+    hex (40	44	45	41	64	68	69	65) ($nxCells_1 $nyCells $nz_Box) simpleGrading (1 1 1)
+    hex (41	45	46	42	65	69	70	66) ($nxCells_1 $ny_Box $nz_Box) simpleGrading (1 1 1)
+    hex (42	46	47	43	66	70	71	67) ($nxCells_1 $nyCells $nz_Box) simpleGrading (1 1 1)
+    hex (48	52	53	49	72	76	77	73) ($nxCells_1 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (49	53	54	50	73	77	78	74) ($nxCells_1 $ny_Box $nz_L1A5) simpleGrading (1 1 1)
+    hex (50	54	55	51	74	78	79	75) ($nxCells_1 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (52	56	57	53	76	80	81	77) ($nxCells_2 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (53	57	58	54	77	81	82	78) ($nxCells_2 $ny_Box $nz_L1A5) simpleGrading (1 1 1)
+    hex (54	58	59	55	78	82	83	79) ($nxCells_2 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (56	60	61	57	80	84	85	81) ($nxCells_3 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (57	61	62	58	81	85	86	82) ($nxCells_3 $ny_Box $nz_L1A5) simpleGrading (1 1 1)
+    hex (58	62	63	59	82	86	87	83) ($nxCells_3 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (60	64	65	61	84	88	89	85) ($nxCells_2 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (61	65	66	62	85	89	90	86) ($nxCells_2 $ny_Box $nz_L1A5) simpleGrading (1 1 1)
+    hex (62	66	67	63	86	90	91	87) ($nxCells_2 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (64	68	69	65	88	92	93	89) ($nxCells_1 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+    hex (65	69	70	66	89	93	94	90) ($nxCells_1 $ny_Box $nz_L1A5) simpleGrading (1 1 1)
+    hex (66	70	71	67	90	94	95	91) ($nxCells_1 $nyCells $nz_L1A5) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 24 28 4)
+            (4 28 32 8)
+            (8 32 36 12)
+            (12 36 40 16)
+            (16 40 44 20)
+            (24	48	52	28)
+            (28	52	56	32)
+            (32	56	60	36)
+            (36 60	64	40)
+            (40	64	68	44)
+            (48 72 76 52)
+            (52 76 80 56)
+            (56 80 84 60)
+            (60 84 88 64)
+            (64 88 92 68)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (3 27 31 7)
+            (7 31 35 11)
+            (11 35 39 15)
+            (15 39 43 19)
+            (19 43 47 23)
+            (27	51 55 31)
+            (31	55 59 35)
+            (35	59 63 39)
+            (39	63 67 43)
+            (43	67 71 47)
+            (51 75 79 55)
+            (55 79 83 59)
+            (59 83 87 63)
+            (63 87 91 67)
+            (67 91 95 71)
+        );
+    }
+
+    bottom
+    {
+        type patch;
+        faces
+        (
+            (0 1 25 24)
+            (1 2 26 25)
+            (2 3 27 26)
+            (24 25 49 48)
+            (25 26 50 49)
+            (26 27 51 50)
+            (48 49 73 72)
+            (49 50 74 73)
+            (50 51 75 74)
+        );
+    }
+    
+    wall1
+    {
+        type patch;
+        faces
+        (
+            (0 1 5 4)
+            (1 2 6 5)
+            (2 3 7 6)
+            (4 5 9 8)
+            (5 6 10 9)
+            (6 7 11 10)
+            (8 9 13 12)
+            (9 10 14 13)
+            (10 11 15 14)
+            (12 13 17 16)
+            (13 14 18 17)
+            (14 15 19 18)
+            (16 17 21 20)
+            (17 18 22 21)
+            (18 19 23 22)
+        );
+    }
+    
+    wall2
+    {
+        type patch;
+        faces
+        (
+            (72 73 77 76)
+            (73 74 78 77)
+            (74 75 79 78)
+            (76 77 81 80)
+            (77 78 82 81)
+            (78 79 83 82)
+            (80 81 85 84)
+            (81 82 86 85)
+            (82 83 87 86)
+            (84 85 89 88)
+            (85 86 90 89)
+            (86 87 91 90)
+            (88 89 93 92)
+            (89 90 94 93)
+            (90 91 95 94)
+        );
+    }
+    
+    box
+    {
+        type patch;
+        faces
+        (
+            (33 34 38 37)
+            (34 58 62 38)
+            (33 57 61 37)
+            (57 58 62 61)
+            (37 38 62 61)
+            (33 34 58 57)
+
+        );
+    }
+
+   atmosphere
+    {
+        type patch;
+        faces
+        (
+            (20 21 45 44)
+            (21 22 46 45)
+            (22 23 47 46)
+            (44	45	69	68)
+             (45 46	70	69)
+            ( 46 47	71	70)
+            (68 69 93 92)
+            (69 70 94 93)
+            (70 71 95 94)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //
+
+
+// ************************************************************************* //
+
+

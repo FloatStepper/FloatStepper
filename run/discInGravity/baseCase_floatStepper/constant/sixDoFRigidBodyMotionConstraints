@@ -1,0 +1,11 @@
+fixedLine
+{
+    sixDoFRigidBodyMotionConstraint line;
+    centreOfRotation (0 0 0);
+    direction (0 1 0);
+}
+
+fixedOrientation
+{
+    sixDoFRigidBodyMotionConstraint orientation;
+}

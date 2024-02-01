@@ -1,0 +1,11 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+dataFile=$(find postProcessing -name addedMassWriter.dat)
+dataDir=forceAndTorque
+mkdir $dataDir
+#Reading force and torque calculated by functionObject integrating pressure over body
+grep "^F0" $dataFile | cut -d'(' -f2 | cut -d' ' -f1 > $dataDir/F0x
+grep "^F0" $dataFile | cut -d'(' -f2 | cut -d' ' -f2 > $dataDir/F0y
+grep "^tau0" $dataFile | cut -d'(' -f2 | cut -d')' -f1 | cut -d' ' -f3 > $dataDir/tau0
+grep "^Time = " $dataFile | cut -d' ' -f3 > $dataDir/t

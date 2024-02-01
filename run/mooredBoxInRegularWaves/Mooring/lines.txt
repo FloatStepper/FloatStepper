@@ -1,0 +1,37 @@
+MoorDyn input file for a moored floating box EsfLOWC(Wu et al., 2018)
+FALSE Echo - echo the input file data (flag)
+---------------------- LINE DICTIONARY -----------------------------------------------------
+LineType  Diam    MassDenInAir    EA        BA/-zeta     Can     Cat    Cdn     Cdt 
+(-)       (m)       (kg/m)        (N)       (Pa-s/-)     (-)     (-)    (-)     (-)  
+main    0.003656    0.0607        29          -0.8       1.0     0.0    1.6     0.05  
+---------------------- NODE PROPERTIES -----------------------------------------------------
+Node      Type      X        Y         Z        M        V        FX       FY      FZ     CdA   CA
+(-)       (-)      (m)      (m)       (m)      (kg)     (m^3)    (kN)     (kN)    (kN)   (m^2)  (-)
+1         Fix      -1.385    0.423    -0.5      0        0        0        0       0       0     0
+2         Fix      -1.385   -0.423    -0.5      0        0        0        0       0       0     0
+3         Fix       1.385    0.423    -0.5      0        0        0        0       0       0     0
+4         Fix       1.385   -0.423    -0.5      0        0        0        0       0       0     0
+5         Vessel   -0.1      0.1      -0.061    0        0        0        0       0       0     0
+6         Vessel   -0.1     -0.1      -0.061    0        0        0        0       0       0     0
+7         Vessel    0.1      0.1      -0.061    0        0        0        0       0       0     0
+8         Vessel    0.1     -0.1      -0.061    0        0        0        0       0       0     0
+---------------------- LINE PROPERTIES -----------------------------------------------------
+Line     LineType  UnstrLen  NumSegs   NodeAnch  NodeFair  Flags/Outputs
+(-)      (-)       (m)         (-)       (-)       (-)       (-)
+1        main     1.455         40        1         5         pt
+2        main     1.455         40        2         6         pt
+3        main     1.455         40        3         7         pt
+4        main     1.455         40        4         8         pt
+---------------------- SOLVER OPTIONS-----------------------------------------
+0.0001  dtM          - time step to use in mooring integration
+0        WaveKin      - wave kinematics flag (0=neglect, the only option currently supported)
+3.0e6    kBot         - bottom stiffness
+3.0e5    cBot         - bottom damping
+0.5      WtrDpth      - water depth
+5        TmaxIC       - maximum simulation time to allow for IC generation without convergence
+5.0      CdScaleIC    - factor by which to scale drag coefficients during dynamic relaxation IC gen
+0.001    threshIC     - threshold for IC convergence
+-------------------------- OUTPUTS --------------------------------
+FairTen1 FairTen3
+AnchTen1 AnchTen3
+--------------------- need this line ------------------

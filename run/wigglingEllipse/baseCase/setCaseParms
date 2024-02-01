@@ -1,0 +1,48 @@
+#!/bin/sh
+
+# Parameters to vary
+bodyDensity=0
+bodyEccentricity=0.5
+
+vx0=1
+vy0=0
+omega0=1
+
+# Making dictionary used for theoretical Kirchoff Kelvin solution
+dict=bodyDict
+foamDictionary -entry rhob -set "$bodyDensity" $dict
+foamDictionary -entry a -set "$bodyEccentricity" $dict
+foamDictionary -entry vx0 -set "$vx0" $dict
+foamDictionary -entry vy0 -set "$vy0" $dict
+foamDictionary -entry omega0 -set "$omega0" $dict
+tend=$(foamDictionary -entry endTime -value system/controlDict)
+foamDictionary -entry tend -set "$tend" $dict
+
+KirchhoffKelvinIntegrator2D RKDP45 > log.KirchhoffKelvinIntegrator2D
+
+# Initial body state dictionary used by floatStepper
+dict=0.orig/uniform/floaterMotionState
+foamDictionary -entry velocity -set "( $vx0 $vy0 0)" $dict
+foamDictionary -entry omega -set "( 0 0 $omega0 )" $dict
+acceleration=$(foamDictionary -entry acceleration -value rigidBodyMotionStateInput)
+foamDictionary -entry acceleration -set "$acceleration" $dict
+domegadt=$(foamDictionary -entry domegadt -value rigidBodyMotionStateInput)
+foamDictionary -entry domegadt -set "$domegadt" $dict
+
+# Initial body state dictionary used by sixDoFRBM
+dict=0.orig/uniform/sixDoFRigidBodyMotionState
+foamDictionary -entry velocity -set "( $vx0 $vy0 0)" $dict
+acceleration=$(foamDictionary -entry acceleration -value sixDoFRigidBodyMotionStateInput)
+foamDictionary -entry acceleration -set "$acceleration" $dict
+angularMomentum=$(foamDictionary -entry angularMomentum -value sixDoFRigidBodyMotionStateInput)
+foamDictionary -entry angularMomentum -set "$angularMomentum" $dict
+torque=$(foamDictionary -entry torque -value sixDoFRigidBodyMotionStateInput)
+foamDictionary -entry torque -set "$torque" $dict
+
+# Dictionary used for velocity field initialisation (initUcase)
+dict=initUcase/constant/bodyParmDict
+foamDictionary -entry bodyDensity -set "$bodyDensity" $dict
+foamDictionary -entry bodyEccentricity -set "$bodyEccentricity" $dict
+foamDictionary -entry vx0 -set "$vx0" $dict
+foamDictionary -entry vy0 -set "$vy0" $dict
+foamDictionary -entry omega0 -set "$omega0" $dict

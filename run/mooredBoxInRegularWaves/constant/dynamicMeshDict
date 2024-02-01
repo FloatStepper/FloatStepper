@@ -1,0 +1,56 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v1806                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dynamicFvMesh     dynamicFloaterMotionSolversFvMesh;
+
+addedMassModel    pisoAddedMass;
+
+solvers
+{
+    box
+    {
+
+        motionSolverLibs    (floaterMotion);
+
+        motionSolver        floaterMotion;
+
+         floaterMotionCoeffs
+         {
+            patches         (box);
+            innerDistance   0.075;
+            outerDistance   0.4;
+
+            centreOfMass    (0 0 -0.013);
+            mass            3.148;
+
+            momentOfInertia (0.015 0 0 0.015 0 0.021); // Iyy from Sph experiment reference
+            rotDirs   (1 1 1);
+            linDirs   (1 1 1);
+            MaddUpdateFreq  2;
+
+            restraints
+            {
+                moorDynR1
+                {
+                    floaterMotionRestraint moorDynR1;
+                }
+            }
+         }
+    }
+}
+
+
+// ************************************************************************* //
