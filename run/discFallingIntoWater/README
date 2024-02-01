@@ -1,0 +1,5 @@
+A disc of density 500 kg/m3 falls into calm water.
+
+Presented in section 5.2 of "A robust algorithm for computational floating body
+dynamics" where it is used to illustrate the sudden jump in added mass when the
+disc hits the water surface.

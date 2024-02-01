@@ -1,6 +1,11 @@
 Moored box floating in regular waves benchmark case from MaRINET2 EsflOWC
 project with wave period T = 2 s and wave height H = 0.12 m.
 
+Presented in section 5.5 of "A robust algorithm for computational floating body
+dynamics".
+
+NOTE! VERY HEAVY CASE RUNNING ON MANY CORES!
+
 For details on the experiment see:
 
 @article{wuExperimentalStudyMoored2019,

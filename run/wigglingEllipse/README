@@ -1,5 +1,7 @@
-Benchmark case to test coupling of translational and rotational body degrees of
-freedom via added mass coefficients.
+This bencmark case is used in Section 5.3 of "A robust algorithm for
+computational floating body dynamics" to validate the hydrodynamic coupling of
+translational and rotational degrees of freedom via added mass coefficients.
+
 The body is an ellipse in a 2D inviscid fluid with boundaries very far away.
 In the limit of an infinite fluid, the Kirchhoff-Kelvin ODE equations can be
 numerically integrated to get exact solution for the body trajectory.
@@ -8,7 +10,7 @@ via the Joukowski transformation,
 
 z = R(zeta + a^2/zeta)
 
-where zeta = exp(i*theta), theta = [0,2pi] so a = 0 corresponds to a circle of
+where zeta = exp(i*theta), theta = [0,2pi], so a = 0 corresponds to a circle of
 radius R, a = 1 corresponds to a plate of length 2R and values inbetwee
 correspond to ellipses of various eccentricity.
 
@@ -23,5 +25,8 @@ wiggling and wobbling.
 
 For Kirchhoff-Kelvin equations, see e.g. Milne-Thomson's Theoretical
 Hydrodynamics.
+
+Note that the finest cases generated with the nxMaxCoScanner script take a VERY
+long time to run.
 
 Johan Roenby, 2024
