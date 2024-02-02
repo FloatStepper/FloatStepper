@@ -86,7 +86,7 @@ class floaterMotionSolver
 
         //- Reference density required by the forces object for
         //  incompressible calculations, required if rho == rhoInf
-        scalar rhoInf_;
+        //scalar rhoInf_;
 
         //- Name of density field, optional unless used for an
         //  incompressible simulation, when this needs to be specified

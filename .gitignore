@@ -7,7 +7,12 @@
 *.o
 *.so
 
-linux64GccDPInt32Opt
+linux*Gcc*/
+linux*Icc*/
+darwin*Gcc*/
+darwin*Intel*/
+darwin*Arm*/
+darwin*Clang*/
 .vscode
 lnInclude
 log.*

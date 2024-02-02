@@ -6,4 +6,4 @@
 \*---------------------------------------------------------------------------*/
 zeroField Su;
 zeroField Sp;
-zeroField divU;
+//zeroField divU;

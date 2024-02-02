@@ -224,8 +224,8 @@ public:
 
         //domegadt = ((A(1)-A(2))*U(1)*U(2))/A(3);
 
-        scalar x = Y[0];
-        scalar y = Y[1];
+        // scalar x = Y[0];
+        // scalar y = Y[1];
         scalar th = Y[2];
         scalar v1 = Y[3];
         scalar v2 = Y[4];

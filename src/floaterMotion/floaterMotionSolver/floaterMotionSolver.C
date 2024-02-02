@@ -101,7 +101,7 @@ Foam::floaterMotionSolver::floaterMotionSolver
     di_(coeffDict().get<scalar>("innerDistance")),
     do_(coeffDict().get<scalar>("outerDistance")),
     distStretch_(coeffDict().getOrDefault<tensor>("distStretch", tensor::I)),
-    rhoInf_(1.0),
+    //rhoInf_(1.0),
     rhoName_(coeffDict().getOrDefault<word>("rho", "rho")),
     scale_
     (
