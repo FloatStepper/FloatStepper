@@ -212,7 +212,7 @@ void Foam::floaterVelocityFvPatchVectorField::updateCoeffs()
     if (slip_)
     {
         // Note: Using reference here causes crash
-        const vectorField nHat = this->patch().nf();
+        const vectorField nHat(this->patch().nf());
 
         vectorField::operator=
         (

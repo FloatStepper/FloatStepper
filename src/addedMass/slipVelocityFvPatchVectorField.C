@@ -129,7 +129,7 @@ void Foam::slipVelocityFvPatchVectorField::updateCoeffs
 
     curTimeIndex_ = this->db().time().timeIndex();
 
-    const vectorField nHat = this->patch().nf();
+    const vectorField nHat(this->patch().nf());
 
     vectorField::operator=
     (

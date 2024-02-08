@@ -375,7 +375,7 @@ int main(int argc, char *argv[])
     }
     else if (args.readIfPresent("joukowski", a))
     {
-        scalarField aor2 = a*a/magSqr(points - points.component(vector::Z)*vector(0,0,1));
+        scalarField aor2(a*a/magSqr(points - points.component(vector::Z)*vector(0,0,1)));
         points.replace(vector::X, (1 + aor2)*points.component(vector::X));
         points.replace(vector::Y, (1 - aor2)*points.component(vector::Y));
     }

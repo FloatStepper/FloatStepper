@@ -179,7 +179,7 @@ void Foam::pisoAddedMass::calcPressureForceAndTorque
     for (int m = 0; m <= pimple.nCorrPISO(); m++)
     {
 
-        volScalarField rAU2 = 1.0/U2Eqn.A();
+        volScalarField rAU2(1.0/U2Eqn.A());
         surfaceScalarField rAU2f("rAU2f", fvc::interpolate(rAU2));
 
         volVectorField HbyA2(constrainHbyA(rAU2*U2Eqn.H(), U2, p_rgh2));
