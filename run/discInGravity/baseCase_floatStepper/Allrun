@@ -17,7 +17,7 @@ runApplication surfaceMeshExtract -time 0 -patches floatingObject floater.stl
 runApplication surfaceOrient -inside floater.stl "(0 0 0)" floater.stl
 bodyDensity=$(foamDictionary -entry rhob -value bodyDict)
 runApplication mySurfaceInertia floater.stl -density ${bodyDensity}
-grep -A4 'Entries for sixDoFRigidBodyDisplacement' log.mySurfaceInertia > tmp
+grep -A4 'Entries for floatStepper' log.mySurfaceInertia > tmp
 tail -4 tmp > constant/floaterMassAndInertia
 rm tmp axes.obj
 
