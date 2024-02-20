@@ -112,6 +112,8 @@ void Foam::floaterMotionRestraints::moorDynR1::restrain
     vector& restraintMoment
 ) const
 {
+    if (Pstream::master())
+{
     scalar deltaT = motion.time().deltaTValue();
     scalar t = motion.time().value();
     scalar tprev = t - deltaT;
@@ -194,6 +196,12 @@ void Foam::floaterMotionRestraints::moorDynR1::restrain
         Info<< t << ": force " << restraintForce << ", moment "
             << restraintMoment << endl;
     }
+}
+
+        //Distribute results to other nodes:
+    Pstream::broadcast(restraintPosition);
+    Pstream::broadcast(restraintForce);
+    Pstream::broadcast(restraintMoment);
 }
 
 
