@@ -62,7 +62,7 @@ functions
         libs           (floaterStateWriter);
         writeControl    timeStep;
         writeInterval   1;
-        classicWriteFormat false;
+        classicWriteFormat true;
         bodyName        box;
     }
 }

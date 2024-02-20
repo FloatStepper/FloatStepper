@@ -34,9 +34,9 @@ Description
     DeepCwind semisubmersible model test data,” Ocean Engineering, vol. 104,
     pp. 590–603, Aug. 2015.
 
-    Chen, H., & Hall, M. (2022). CFD simulation of floating body motion with
-    mooring dynamics: Coupling MoorDyn with OpenFOAM. Applied Ocean Research,
-    124, 103210. https://doi.org/10.1016/j.apor.2022.103210
+    Chen, H., & Hall, M. (2022). CFD simulation of floating body motion with mooring dynamics: Coupling 
+    MoorDyn with OpenFOAM. Applied Ocean Research, 124, 103210.
+    https://doi.org/10.1016/j.apor.2022.103210
 
 SourceFiles
     moorDynR1.C
@@ -67,8 +67,12 @@ class moorDynR1
     // Private data
     vector initialCoM;
 
-    //- Initialize MoorDyn at the first time step ()
-    mutable bool initialized_;
+    vector DecayTranslation_;
+
+    vector DecayRotation_;
+
+	//- Initialize MoorDyn at the first time step ()
+        mutable bool initialized_;
 
 
 public:

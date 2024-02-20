@@ -27,9 +27,9 @@ License
 /*---------------------------------------------------------------------------*\
 References
 
-    Chen, H., & Hall, M. (2022). CFD simulation of floating body motion with
-    mooring dynamics: Coupling MoorDyn with OpenFOAM. Applied Ocean Research,
-    124, 103210. https://doi.org/10.1016/j.apor.2022.103210
+    Chen, H., & Hall, M. (2022). CFD simulation of floating body motion with mooring dynamics: 
+        Coupling MoorDyn with OpenFOAM. Applied Ocean Research, 124, 103210.
+        https://doi.org/10.1016/j.apor.2022.103210
 
 \*---------------------------------------------------------------------------*/
 
@@ -42,7 +42,7 @@ References
 #include "quaternion.H"
 
 // include MoorDyn header
-#include "MoorDyn.h"
+// #include "MoorDyn.h"
 #include "MatrixTools.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -60,6 +60,30 @@ namespace floaterMotionRestraints
         dictionary
     );
 }
+}
+
+namespace Foam
+{
+    extern "C" int LinesInit(double X[], double XD[]);
+
+    extern "C" int LinesCalc(double X[], double XD[], double Flines[], double* , double* );
+
+    extern "C" int FairleadsCalc2(double rFairIn[], double rdFairIn[], double fFairIn[], double* t_in, double *dt_in); // easier to call version
+    extern "C" int FairleadsCalc(double **rFairIn, double **rdFairIn, double ** fFairIn, double* t_in, double *dt_in);
+
+    extern "C" int LinesClose(void);
+
+    extern "C" double GetFairTen(int);
+
+    extern "C" int GetFASTtens(int* numLines, float FairHTen[], float FairVTen[], float AnchHTen[], float AnchVTen[] );
+
+    extern "C" int GetConnectPos(int l, double pos[3]);
+    extern "C" int GetConnectForce(int l, double force[3]);
+    extern "C" int GetNodePos(int LineNum, int NodeNum, double pos[3]);
+
+    extern "C" int DrawWithGL(void);
+
+    extern "C" void AllOutput(double, double);
 }
 
 
@@ -80,11 +104,15 @@ Foam::floaterMotionRestraints::moorDynR1::moorDynR1
     initialized_ = false;
 
     Info << "Create moorDynR1 using MoorDyn v1." << endl;
+    DecayTranslation_ = rBMRDict.lookupOrDefault<vector>("DecayTranslation", vector(0, 0, 0));
+    DecayRotation_ = rBMRDict.lookupOrDefault<vector>("DecayRotation", vector(0, 0, 0));
 
-    // Read the Initial CoM vector from the dynamic mesh dictionary
-    // const auto& initialCoM = rBMRDict.lookupOrDefault<vector>("centreOfMass", vector(0, 0, 0));
+
+   // Read the Initial CoM vector from the dynamic mesh dictionary
+
 
     // Print the vector to the console (for testing)
+
 
 }
 
@@ -112,11 +140,19 @@ void Foam::floaterMotionRestraints::moorDynR1::restrain
     vector& restraintMoment
 ) const
 {
+
+if (Pstream::master())
+{
     scalar deltaT = motion.time().deltaTValue();
     scalar t = motion.time().value();
-    scalar tprev = t - deltaT;
+    scalar tprev = t-deltaT;
     vector initialCoM = motion.initialCentreOfMass();
-    Info << "Initial CoM for Mooring initialisation : " << initialCoM << endl;
+    Info<< "Initial CoM for Mooring initialisation : " << initialCoM << endl;
+
+    vector DecayTranslation = DecayTranslation_;
+    vector DecayRotation = DecayRotation_;
+    Info<< "DecayTranslation[3]: " << vector(DecayTranslation[0], DecayTranslation[1], DecayTranslation[2]) << endl;
+    Info<< "DecayRotation[3]: " << vector(DecayRotation[0], DecayRotation[1], DecayRotation[2]) << endl;
 
     point CoM = motion.centreOfMass();
     vector rotationAngle
@@ -126,16 +162,18 @@ void Foam::floaterMotionRestraints::moorDynR1::restrain
 
     vector v = motion.v();
     vector omega = motion.omega();
-    Info << "CoM[6]: " << vector(CoM[0], CoM[1], CoM[2]) << endl;
+    Info<< "CoM[6]: " << vector(CoM[0], CoM[1], CoM[2]) << endl;
    // Info<< "initialCoM[6]: " << vector(initialCoM[0], initialCoM[1], initialCoM[2]) << endl;
-
+        
+    
+   
     double X[6], XD[6]; // X1[3], X2[3], XV1[3], XV2[3];
 
 
-    for (int ii = 0; ii < 3; ii++)
+    for (int ii=0; ii<3; ii++)
     {
-       X[ii] = (CoM[ii] - initialCoM[ii]) ; // Added a variable to substract initial reading of CoM
-       X[ii+3] = rotationAngle[ii];
+       X[ii] = (CoM[ii]-initialCoM[ii] + DecayTranslation[ii]) ; // Added a variable to substract initial reading of CoM
+       X[ii+3] = rotationAngle[ii]+ DecayRotation[ii];
        XD[ii] = v[ii];
        XD[ii+3] = omega[ii];
     }
@@ -149,10 +187,11 @@ void Foam::floaterMotionRestraints::moorDynR1::restrain
     {
         // Initialize MoorDyn
         //LinesInit(&CoM[0], &v[0]);
-        // Info<< "X[6]: " << vector(X[0], X[1], X[2]) << ", " << vector(X[3], X[4], X[5]) << endl;
+        Info<< "X[6]: " << vector(X[0], X[1], X[2]) << ", " << vector(X[3], X[4], X[5]) << endl;
 
+    
         LinesInit(X, XD);
-        Info << "MoorDyn module initialized!" << endl;
+        Info<< "MoorDyn module initialized!" << endl;
         initialized_ = true;
     }
 
@@ -161,26 +200,26 @@ void Foam::floaterMotionRestraints::moorDynR1::restrain
     // Call LinesCalc() to obtain forces and moments, Flines(1x6)
     // LinesCalc(double X[], double XD[], double Flines[], double* t_in, double* dt_in)
 
-    Info << "X[6]: " << vector(X[0], X[1], X[2]) << ", "
-        << vector(X[3], X[4], X[5]) << endl;
+    Info<< "X[6]: " << vector(X[0], X[1], X[2]) << ", " << vector(X[3], X[4], X[5])
+        << endl;
 
-    Info << "XD[6]: " << vector(XD[0], XD[1], XD[2]) << ", "
-        << vector(XD[3], XD[4], XD[5]) << endl;
+    Info<< "XD[6]: " << vector(XD[0], XD[1], XD[2]) << ", " << vector(XD[3], XD[4], XD[5])
+        << endl;
 
     //LinesCalc(&CoM[0], &v[0], Flines, &t, &deltaT); 
     LinesCalc(X, XD, Flines, &tprev, &deltaT);
     
 /*
-    Info << "Mooring [force, moment] = [ "
+    Info<< "Mooring [force, moment] = [ "
         << Flines[0] << " " << Flines[1] << " " << Flines[2] << ", "
         << Flines[3] << " " << Flines[4] << " " << Flines[5] << " ]"
         << endl;
 */
 
-    for(int i = 0; i < 3;i++)
+    for(int i=0;i<3;i++)
     {
-        restraintForce[i] = Flines[i];
-        restraintMoment[i] = Flines[i+3];
+        restraintForce[i]=Flines[i];
+        restraintMoment[i]=Flines[i+3];
     }
 
 
@@ -191,9 +230,15 @@ void Foam::floaterMotionRestraints::moorDynR1::restrain
 
     // if (motion.report())
     {
-        Info<< t << ": force " << restraintForce << ", moment "
-            << restraintMoment << endl;
+        Info<< t << ": force " << restraintForce
+	    << ", moment " << restraintMoment
+            << endl;
     }
+}
+        //Distribute results to other nodes:
+    Pstream::broadcast(restraintPosition);
+    Pstream::broadcast(restraintForce);
+    Pstream::broadcast(restraintMoment);
 }
 
 
@@ -212,7 +257,8 @@ void Foam::floaterMotionRestraints::moorDynR1::write
 (
     Ostream& os
 ) const
-{}
+{
+}
 
 
 // ************************************************************************* //
