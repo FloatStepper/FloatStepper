@@ -1,5 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8146516.svg)](https://doi.org/10.5281/zenodo.8146516)
-
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10904595.svg)](https://doi.org/10.5281/zenodo.10904595)
 
 # FloatStepper 
 
@@ -82,33 +81,37 @@ Please report bugs on the issue tracker of this repository or write to
 johan[at]ruc[dot]dk
 
 ## Citing software
-Roenby, Johan, (2023). FloatStepper-v0.0.1 [Computer Software]. Zenodo.
-https://www.doi.org/10.5281/zenodo.8146516
+Roenby, J. (2024). FloatStepper (v0.0.3). Zenodo. https://doi.org/10.5281/zenodo.10904595
 
 ```bibtex
-@software{roenby_2023_8146516,
-  author       = {Roenby, J.},
+@software{roenby_2024_10904595,
+  author       = {Roenby, Johan},
   title        = {FloatStepper},
-  month        = jul,
-  year         = 2023,
+  month        = apr,
+  year         = 2024,
   publisher    = {Zenodo},
-  version      = {v0.0.1},
-  doi          = {10.5281/zenodo.8146516},
-  url          = {https://doi.org/10.5281/zenodo.8146516}
+  version      = {v0.0.3},
+  doi          = {10.5281/zenodo.10904595},
+  url          = {https://doi.org/10.5281/zenodo.10904595}
 }
 ```
 
-## Publication (preprint)
-Roenby J, Aliyar S and Bredmose H. (2023). "A robust algorithm for computational floating body dynamics", https://doi.org/10.48550/arXiv.2310.01199
+## Publication
+Roenby J, Aliyar S, Bredmose H., 2024 A robust algorithm for computational floating body dynamics. R. Soc. Open Sci. 11:231453. https://doi.org/10.1098/rsos.231453
 
 ```bibtex
-@misc{roenby2023robust,
-      title={A robust algorithm for computational floating body dynamics}, 
-      author={Johan Roenby and Sithik Aliyar and Henrik Bredmose},
-      year={2023},
-      eprint={2310.01199},
-      archivePrefix={arXiv},
-      primaryClass={physics.flu-dyn}
+@article{roenbyRobustAlgorithm2024,
+	title = {A robust algorithm for computational floating body dynamics},
+	volume = {11},
+	issn = {2054-5703},
+	url = {http://rsos.royalsocietypublishing.org/lookup/doi/10.1098/rsos.160405},
+	doi = {10.1098/rsos.231453},
+	language = {en},
+	journal = {Royal Society Open Science},
+	author = {Roenby, Johan and Aliyar, Sithik and Bredmose, Henrik},
+	month = apr,
+	year = {2024},
+	pages = {231453}
 }
 ```
 
