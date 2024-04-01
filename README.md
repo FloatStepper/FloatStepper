@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10904595.svg)](https://doi.org/10.5281/zenodo.10904595)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8146515.svg)](https://doi.org/10.5281/zenodo.8146515)
 
 # FloatStepper 
 
@@ -35,11 +35,11 @@ In terms of code maturity, it is at the proof-of-concept stage so users should e
 *floaterMotion* (code structure based on *sixDoFRigidBodyMotion*)
 
 ## Requirements
-OpenFOAM-v2206 (may compile with later versions as well). 
-Only openfoam.com version is supported.
+OpenFOAM-v2206 to v2312. 
+Only openfoam.com versions supported.
 
 ## Installation
-1. Source OpenFOAM-v2206
+1. Source OpenFOAM-v2XYZ
 2. Execute `./Allwmake` from FloatStepper main directory
 3. (optional) To install MoorDyn coupling go to thirdparty/MoorDyn and execute
    the Allwmake script found there.
@@ -81,18 +81,17 @@ Please report bugs on the issue tracker of this repository or write to
 johan[at]ruc[dot]dk
 
 ## Citing software
-Roenby, J. (2024). FloatStepper (v0.0.3). Zenodo. https://doi.org/10.5281/zenodo.10904595
+Roenby, J. (2024). FloatStepper (v0.0.3). Zenodo. https://doi.org/10.5281/zenodo.8146515
 
 ```bibtex
-@software{roenby_2024_10904595,
+@software{roenby_2023_8146515,
   author       = {Roenby, Johan},
   title        = {FloatStepper},
-  month        = apr,
-  year         = 2024,
+  month        = jul,
+  year         = 2023,
   publisher    = {Zenodo},
-  version      = {v0.0.3},
-  doi          = {10.5281/zenodo.10904595},
-  url          = {https://doi.org/10.5281/zenodo.10904595}
+  doi          = {10.5281/zenodo.8146515},
+  url          = {https://doi.org/10.5281/zenodo.8146515}
 }
 ```
 
@@ -121,12 +120,14 @@ Roenby J, Aliyar S, Bredmose H., 2024 A robust algorithm for computational float
 -   Has not been tested with turbulence modelling.
 -   Currently only runs with isoAdvector (not MULES).
 -   Plenty of field copying that can probably be avoided to increase efficiency.
--   Currently a simple time integration of the 6-DoF equations of motion are hardcoded in the *floaterMotion* class. The chosen method for Q update guarantees that it stays an orthogonal matrix to machine precission.
+-   Currently a simple time integration of the 6-DoF equations of motion are hardcoded in the *floaterMotion* class. The chosen method for Q update guarantees that it stays an orthogonal matrix to machine precision.
 
 ## Funding
 Innovation Fund Denmark Grand Solution project FloatStep (8055-00075B).
 
 Independen Research Fund Denmark, InterFlow project (9063-00018B).
+
+Innovation Fund Denmark Grand Solution project FloatLab (2079-00042A).
 
 ## Disclaimer
 This offering is not approved or endorsed by OpenCFD Limited, producer and
