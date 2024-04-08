@@ -68,10 +68,10 @@ In particular:
 
 To test the MoorDyn installation, go to the run/moorDynBoxInWaves and execute the Allrun script. The mooring line parameters are located in the lines.txt file in run/moorDynBoxInWaves/Mooring. Mooring line forces will be written to files in the same folder.
 
-## Author
+## Main author
 Johan Roenby, STROMNING APS and Roskilde University
 
-## Contributors
+## Co-authors and contributors
 - Henrik Bredmose (conceptualisation)
 - Sithik Aliyar (validation, verification, MoorDyn coupling)
 - Henning Scheufler (code structure)
@@ -81,11 +81,11 @@ Please report bugs on the issue tracker of this repository or write to
 johan[at]ruc[dot]dk
 
 ## Citing software
-Roenby, J. (2024). FloatStepper (v0.0.3). Zenodo. https://doi.org/10.5281/zenodo.8146515
+Roenby J, Aliyar S, Bredmose H. 2023 Data from: Floatstepper. Zenodo. (doi:10.5281/zenodo.8146515)
 
 ```bibtex
 @software{roenby_2023_8146515,
-  author       = {Roenby, Johan},
+  author       = {Roenby, Johan and Aliyar, Sithik and Bredmose, Henrik},
   title        = {FloatStepper},
   month        = jul,
   year         = 2023,
