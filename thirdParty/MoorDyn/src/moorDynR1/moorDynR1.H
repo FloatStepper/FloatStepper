@@ -67,6 +67,10 @@ class moorDynR1
     // Private data
     vector initialCoM;
 
+    vector DecayTranslation_;
+
+    vector DecayRotation_;
+
     //- Initialize MoorDyn at the first time step ()
     mutable bool initialized_;
 
