@@ -1,5 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8146516.svg)](https://doi.org/10.5281/zenodo.8146516)
-
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8146515.svg)](https://doi.org/10.5281/zenodo.8146515)
 
 # FloatStepper 
 
@@ -36,11 +35,11 @@ In terms of code maturity, it is at the proof-of-concept stage so users should e
 *floaterMotion* (code structure based on *sixDoFRigidBodyMotion*)
 
 ## Requirements
-OpenFOAM-v2206 (may compile with later versions as well). 
-Only openfoam.com version is supported.
+OpenFOAM-v2206 to v2312. 
+Only openfoam.com versions supported.
 
 ## Installation
-1. Source OpenFOAM-v2206
+1. Source OpenFOAM-v2XYZ
 2. Execute `./Allwmake` from FloatStepper main directory
 3. (optional) To install MoorDyn coupling go to thirdparty/MoorDyn and execute
    the Allwmake script found there.
@@ -69,10 +68,10 @@ In particular:
 
 To test the MoorDyn installation, go to the run/moorDynBoxInWaves and execute the Allrun script. The mooring line parameters are located in the lines.txt file in run/moorDynBoxInWaves/Mooring. Mooring line forces will be written to files in the same folder.
 
-## Author
+## Main author
 Johan Roenby, STROMNING APS and Roskilde University
 
-## Contributors
+## Co-authors and contributors
 - Henrik Bredmose (conceptualisation)
 - Sithik Aliyar (validation, verification, MoorDyn coupling)
 - Henning Scheufler (code structure)
@@ -82,33 +81,36 @@ Please report bugs on the issue tracker of this repository or write to
 johan[at]ruc[dot]dk
 
 ## Citing software
-Roenby, Johan, (2023). FloatStepper-v0.0.1 [Computer Software]. Zenodo.
-https://www.doi.org/10.5281/zenodo.8146516
+Roenby J, Aliyar S, Bredmose H. 2023 Data from: Floatstepper. Zenodo. (doi:10.5281/zenodo.8146515)
 
 ```bibtex
-@software{roenby_2023_8146516,
-  author       = {Roenby, J.},
+@software{roenby_2023_8146515,
+  author       = {Roenby, Johan and Aliyar, Sithik and Bredmose, Henrik},
   title        = {FloatStepper},
   month        = jul,
   year         = 2023,
   publisher    = {Zenodo},
-  version      = {v0.0.1},
-  doi          = {10.5281/zenodo.8146516},
-  url          = {https://doi.org/10.5281/zenodo.8146516}
+  doi          = {10.5281/zenodo.8146515},
+  url          = {https://doi.org/10.5281/zenodo.8146515}
 }
 ```
 
-## Publication (preprint)
-Roenby J, Aliyar S and Bredmose H. (2023). "A robust algorithm for computational floating body dynamics", https://doi.org/10.48550/arXiv.2310.01199
+## Publication
+Roenby J, Aliyar S, Bredmose H., 2024 A robust algorithm for computational floating body dynamics. R. Soc. Open Sci. 11:231453. https://doi.org/10.1098/rsos.231453
 
 ```bibtex
-@misc{roenby2023robust,
-      title={A robust algorithm for computational floating body dynamics}, 
-      author={Johan Roenby and Sithik Aliyar and Henrik Bredmose},
-      year={2023},
-      eprint={2310.01199},
-      archivePrefix={arXiv},
-      primaryClass={physics.flu-dyn}
+@article{roenbyRobustAlgorithm2024,
+	title = {A robust algorithm for computational floating body dynamics},
+	volume = {11},
+	issn = {2054-5703},
+	url = {http://rsos.royalsocietypublishing.org/lookup/doi/10.1098/rsos.160405},
+	doi = {10.1098/rsos.231453},
+	language = {en},
+	journal = {Royal Society Open Science},
+	author = {Roenby, Johan and Aliyar, Sithik and Bredmose, Henrik},
+	month = apr,
+	year = {2024},
+	pages = {231453}
 }
 ```
 
@@ -118,12 +120,14 @@ Roenby J, Aliyar S and Bredmose H. (2023). "A robust algorithm for computational
 -   Has not been tested with turbulence modelling.
 -   Currently only runs with isoAdvector (not MULES).
 -   Plenty of field copying that can probably be avoided to increase efficiency.
--   Currently a simple time integration of the 6-DoF equations of motion are hardcoded in the *floaterMotion* class. The chosen method for Q update guarantees that it stays an orthogonal matrix to machine precission.
+-   Currently a simple time integration of the 6-DoF equations of motion are hardcoded in the *floaterMotion* class. The chosen method for Q update guarantees that it stays an orthogonal matrix to machine precision.
 
 ## Funding
 Innovation Fund Denmark Grand Solution project FloatStep (8055-00075B).
 
 Independen Research Fund Denmark, InterFlow project (9063-00018B).
+
+Innovation Fund Denmark Grand Solution project FloatLab (2079-00042A).
 
 ## Disclaimer
 This offering is not approved or endorsed by OpenCFD Limited, producer and

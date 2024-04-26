@@ -115,7 +115,6 @@ void Foam::floaterMotionRestraints::moorDynR1::restrain
     vector& restraintMoment
 ) const
 {
-
     if (Pstream::master())
 {
     scalar deltaT = motion.time().deltaTValue();
