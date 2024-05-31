@@ -48,7 +48,6 @@ SourceFiles
 #include "floaterMotionState.H"
 #include "pointField.H"
 #include "floaterMotionRestraint.H"
-//#include "floaterMotionConstraint.H"
 #include "Tuple2.H"
 #include "pimpleControl.H" //Used by updateBodyState()
 #include "addedMass.H"
@@ -286,9 +285,6 @@ public:
 
            //- Integrate equations of motion JRO
            void updateFloaterState(const scalarField& dvwdt, const scalar dt);
-
-           //- Integrate equations of motion JRO
-           void updateFloaterState2(const scalarField& dvwdt, const scalar dt);
 
 
            //- Assemble and solve body equations of motion given the added mass

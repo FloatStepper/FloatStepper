@@ -36,7 +36,6 @@ License
 #include "forceContributions.H"
 #include "uniformDimensionedFields.H"
 #include "symmTransformField.H"
-//#include "floaterSlipVelocityFvPatchVectorField.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -269,6 +268,7 @@ void Foam::floaterMotion::updateFloaterState
 )
 {
 /*
+    // Preparation for runTime selection of 6DoF integrator
     autoPtr<RBMIntegrator> RBMUpdater = RBMIntegrator::New
     (
         dynamicMeshDict.get<word>("RBMIntegratorModel"),
@@ -316,13 +316,13 @@ void Foam::floaterMotion::updateFloaterState
         //Updating velocity
 //        motionState_.v() = v0 + 0.5*dt*(a0 + a);
         motionState_.v() = v0 + dt*a0;
-//        motionState_.v() = v0 + dt*a; //TEST!!!!!!!!!!
+//        motionState_.v() = v0 + dt*a;
 
         // Updating body angular velocity and orientation
         vector omega0 = motionState_.omega();
 //        motionState_.omega() = omega0 + 0.5*dt*(alpha0 + alpha);
         motionState_.omega() = omega0 + dt*alpha0;
-//        motionState_.omega() = omega0 + dt*alpha; //TEST!!!!!!!!!
+//        motionState_.omega() = omega0 + dt*alpha;
 
         vector omega = omega0;
 //        vector omega = omega0 + 0.5*dt*alpha0;
@@ -345,61 +345,6 @@ void Foam::floaterMotion::updateFloaterState
         ) & motionState_.Q();
         motionState_.Q() = Qnew;
     }
-}
-
-
-void Foam::floaterMotion::updateFloaterState2
-(
-    const scalarField& dvwdt,
-    const scalar deltaT
-)
-{
-
-    // Updating body velocity and position
-    vector a0 = motionState_.a();
-    vector alpha0 = motionState_.domegadt();
-    vector a(dvwdt[0], dvwdt[1], dvwdt[2]);
-    vector alpha(dvwdt[3], dvwdt[4], dvwdt[5]);
-    motionState_.a() = a;
-    motionState_.domegadt() = alpha;
-
-    vector x0 = motionState_.centreOfRotation();
-    vector v0 = motionState_.v();
-    motionState_.centreOfRotation() = x0 + deltaT*(v0 + 0.5*deltaT*a);
-    motionState_.v() = v0 + a*deltaT;
-////    motionState_.centreOfRotation() = x0 + deltaT*v0;
-////    motionState_.v() = v0 + a0*deltaT;
-
-    vector omega0 = motionState_.omega();
-    motionState_.omega() = omega0 + deltaT*alpha;
-////    motionState_.omega() = omega0 + deltaT*alpha0;
-
-    label nSteps = 1e3;
-    scalar dt = deltaT/nSteps;
-
-    // Updating body angular velocity and orientation
-    for (label n = 1; n <= nSteps; n++)
-    {
-        tensor Q0 = motionState_.Q();
-        vector omega1 = motionState_.omega();
-        vector omega = omega0 + n*dt/deltaT*(omega1-omega0); //Check!!!
-////        vector omega = omega0;
-        scalar magw = mag(omega);
-        tensor B
-        (
-            0, -omega[2], omega[1],
-            omega[2], 0, -omega[0],
-            -omega[1], omega[0], 0
-        );
-
-        B /= (magw + SMALL);
-        // Rodrigues rotation formula
-        motionState_.Q() =
-        (
-            tensor::I + B*Foam::sin(magw*dt) + (B & B)*(1 - Foam::cos(magw*dt))
-        ) & Q0;
-    }
-
 }
 
 

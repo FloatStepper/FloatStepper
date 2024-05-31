@@ -34,17 +34,6 @@ License
 #include "polyMesh.H"
 #include "pointPatchDist.H"
 #include "pointConstraints.H"
-#include "uniformDimensionedFields.H"
-#include "forceContributions.H"
-#include "mathematicalConstants.H"
-#include "fvCFD.H"
-#include "isoAdvection.H"
-#include "CorrectPhi.H"
-#include "pimpleControl.H"
-#include "subCycle.H"
-#include "immiscibleIncompressibleTwoPhaseMixture.H"
-#include "incompressibleInterPhaseTransportModel.H"
-#include "volFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -230,7 +219,6 @@ Foam::floaterMotionSolver::curPoints() const
 
 void Foam::floaterMotionSolver::solve()
 {
-//    const Time& t = mesh().time();
 
     if (mesh().nPoints() != points0().size())
     {
@@ -248,91 +236,7 @@ void Foam::floaterMotionSolver::solve()
         curTimeIndex_ = this->db().time().timeIndex();
     }
 
-    // Removed body update - handled in floaterFoam
-
-
-// if (false)
-// {
-// /*
-//     // Grab handle to mesh motion solver
-//     floaterMotionSolver& bodySolver =
-//         const_cast<floaterMotionSolver&>
-//         (
-//             mesh().lookupObject<floaterMotionSolver>("dynamicMeshDict")
-//         );
-// */
-
-//     const scalar deltaT = time().deltaTValue();
-
-//     const fvMesh& mesh_ = dynamic_cast<const fvMesh&>(mesh());
-
-//     if (time().timeIndex() == time().startTimeIndex() + 1)
-//     {
-//         Info << "First time step - not calculating added mass" << endl;
-//         vector a = motion().state().a();
-//         vector alpha = motion().state().domegadt();
-//         scalarField dvwdt(6, 0);
-//         dvwdt[0] = a[0], dvwdt[1] = a[1], dvwdt[2] = a[2];
-//         dvwdt[3] = alpha[0], dvwdt[4] = alpha[1], dvwdt[5] = alpha[2];
-//         motion().updateFloaterState(dvwdt, deltaT);
-//     }
-//     else
-//     {
-//         pointField oldPoints(mesh_.points());
-//         pointField oldOldPoints(mesh_.oldPoints());
-//         // oldMeshPhi used in alternative way to reset mesh motion (see below)
-//         // surfaceScalarField oldMeshPhi(mesh.phi());
-//         const floaterMotionState oldBodyState(motion().state());
-//         const scalarField noAcceleration(6,0);
-//         motion().setAcceleration(Zero);
-//         motion().setAngularAcceleration(Zero);
-//         motion().updateFloaterState(noAcceleration, deltaT);
-//         Info << "Body state after zero acceleration time step:" << endl;
-//         motion().status();
-
-//         // Update mesh points in accordance with 0-acceleration body motion
-//         fvMesh& nonConstPMesh = const_cast<fvMesh&>(mesh_);
-//         #include "updateMesh0.H"
-//         // Calculate fluid motion corresponding to 0-acceleration body motion
-//         #include "updateFluid0.H" //alphaEqn, UEqn and Piso loop
-//         // Recording fluid force associated with 0-acceleration motion
-//         vector F0(Zero);
-//         vector tau0(Zero);
-//         motion().calcForceAndTorque(rho0, p0, U0, F0, tau0);
-//         Info << "F0 = " << F0 << ", tau0 = " << tau0 << endl;
-
-//         // Resetting mesh going first two steps back, then one forward to
-//         // regain correct mesh.phi()
-
-//         nonConstPMesh.movePoints(oldOldPoints);
-//         nonConstPMesh.movePoints(oldPoints);
-//         // Alternative approach with storage of old meshPhi
-//         // mesh.setPhi() = oldMeshPhi;
-//         // mesh.movePoints(oldPoints);
-
-//         //Reset body state
-//         motion().setState(oldBodyState);
-//         Info << "Body state after reset:" << endl;
-//         motion().status();
-
-//         // Calculating the 6 columns of the added mass tensor
-// //        const labelList DoFs = DoFs();
-
-//         if (motion().MaddUpdateTime())
-//         {
-//             nonConstPMesh.moving(false);
-//             motion().calcAddedMass(mesh_, DoFs());
-//             nonConstPMesh.moving(true);
-//         }
-//         // Calculating 6 element acceleration vector 
-//         scalarField dvwdt = motion().calcAcceleration(F0, tau0, DoFs());
-//         // Updating body state to new time
-//         motion().updateFloaterState(dvwdt, deltaT);
-//         Info << "Body state in real time step:" << endl;
-//         motion().status();
-
-//     }
-// }
+    // Body update was here but is now handled by floaterMotion
 
     // Update the displacements
     pointDisplacement_.primitiveFieldRef() =
