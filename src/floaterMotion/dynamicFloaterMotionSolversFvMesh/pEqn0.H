@@ -42,7 +42,7 @@
     if (p_rgh0.needReference())
     {
         fvc::makeRelative(phiHbyA, U0);
-        adjustPhi(phiHbyA, U0, p_rgh0);
+        myAdjustPhi(phiHbyA, U0, p_rgh0);
         fvc::makeAbsolute(phiHbyA, U0);
     }
 

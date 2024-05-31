@@ -40,7 +40,7 @@ License
 #include "floaterMotionSolver.H"
 #include "fvCFD.H"
 #include "isoAdvection.H"
-#include "CorrectPhi.H"
+#include "myCorrectPhi.H"
 #include "pimpleControl.H"
 #include "subCycle.H"
 #include "immiscibleIncompressibleTwoPhaseMixture.H"

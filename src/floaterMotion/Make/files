@@ -24,4 +24,7 @@ dynamicFloaterMotionSolversFvMesh/dynamicFloaterMotionSolversFvMesh.C
 fvPatchFields/floaterVelocity/floaterVelocityFvPatchVectorField.C
 fvPatchFields/sixDoFRigidBodySlipVelocity/sixDoFRigidBodySlipVelocityFvPatchVectorField.C
 
+myAdjustPhi/myAdjustPhi.C
+myCorrectPhi/myCorrectUphiBCs.C
+
 LIB = $(FOAM_USER_LIBBIN)/libfloaterMotion

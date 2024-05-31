@@ -4,7 +4,7 @@
     License:           GNU General Public License (GPL) version 3
     Copyright:         2023 Johan Roenby, STROMNING APS
 \*---------------------------------------------------------------------------*/
-Foam::CorrectPhi
+Foam::myCorrectPhi
 (
     U0,
     phi0,
