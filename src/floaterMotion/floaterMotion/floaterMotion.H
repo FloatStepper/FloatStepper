@@ -89,6 +89,9 @@ class floaterMotion
         //- Rotational constraint tensor
         //tensor rConstraints_;
 
+        //- Centre of mass in body fixed coordinates
+        point centreOfMass_;
+/*
         //- Centre of mass of initial state
         point initialCentreOfMass_;
 
@@ -97,7 +100,7 @@ class floaterMotion
 
         //- Orientation of initial state
         tensor initialQ_;
-
+*/
         //- Mass of the body
         scalar mass_;
 
@@ -141,23 +144,25 @@ class floaterMotion
             //inline const PtrList<floaterMotionConstraint>&
             //    constraints() const;
 
+/*
             //- Return the initial centre of rotation
             inline const point& initialCentreOfRotation() const;
 
             //- Return the initial orientation
             inline const tensor& initialQ() const;
-
+*/
             //- Return the orientation
             inline const tensor& Q() const;
 
 
         // Edit
-
+/*
             //- Return the centre of rotation
             inline point& initialCentreOfRotation();
 
             //- Return initial orientation
             inline tensor& initialQ();
+*/
 
             //- Return non-const access to the orientation
             inline tensor& Q();
@@ -201,9 +206,10 @@ public:
             //- Return the current centre of rotation
             inline const point& centreOfRotation() const;
 
+/*
             //- Return the initial centre of mass
             inline const point& initialCentreOfMass() const;
-
+*/
             //- Return the current centre of mass
             inline point centreOfMass() const;
 
@@ -332,7 +338,7 @@ public:
 
             //- Return the velocity of a position
             inline point velocity(const point& pt) const;
-
+/*
             //- Transform the given initial state point by the current motion
             //  state
             inline point transform(const point& initialPoints) const;
@@ -348,7 +354,7 @@ public:
                 const pointField& initialPoints,
                 const scalarField& scale
             ) const;
-
+*/
 
         //- Write
         void write(Ostream&) const;

@@ -82,7 +82,9 @@ void Foam::floaterMotionRestraints::softWall::restrain
     vector& restraintMoment
 ) const
 {
-    restraintPosition = motion.transform(refAttachmentPt_);
+//    restraintPosition = motion.transform(refAttachmentPt_);
+    restraintPosition =
+        motion.centreOfRotation() + (motion.orientation() & refAttachmentPt_);
     restraintForce = Zero;
     restraintMoment = Zero;
 

@@ -100,7 +100,9 @@ void Foam::floaterMotionRestraints::linearSpringDamper::restrain
 
     scalar t = motion.time().timeOutputValue();
 
-    restraintPosition = motion.transform(refAttachmentPt_);
+//    restraintPosition = motion.transform(refAttachmentPt_);
+    restraintPosition =
+        motion.centreOfRotation() + (motion.orientation() & refAttachmentPt_);
 
     // Current axis of the spring
     vector r = restraintPosition - anchor_->value(t);

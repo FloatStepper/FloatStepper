@@ -36,9 +36,8 @@ solvers
             distStretch     (1 0 0 0 1 0 0 0 5);
 
             mass            12;
-            centreOfMass    (2.3 0 0.4); 
-            momentOfInertia ( 1 0 0 0.15106368 0 1 );
-        // orientation     (1 0 0 0 1 0 0 0 1);
+            centreOfMass    (0 0 0); // Relative to CoR in floaterMotionState
+            momentOfInertia ( 1 0 0 0.15106368 0 1 ); //Wrt CoM
 
             linDirs   (1 0 1);
             rotDirs   (0 1 0);

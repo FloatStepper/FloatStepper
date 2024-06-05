@@ -49,6 +49,7 @@ SourceFiles
 
 #include "displacementMotionSolver.H"
 #include "floaterMotion.H"
+#include "pointField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -84,15 +85,6 @@ class floaterMotionSolver
         //  different effective di_ and do_ in different directions
         const tensor distStretch_;
 
-        //- Reference density required by the forces object for
-        //  incompressible calculations, required if rho == rhoInf
-        //scalar rhoInf_;
-
-        //- Name of density field, optional unless used for an
-        //  incompressible simulation, when this needs to be specified
-        //  as rhoInf
-        word rhoName_;
-
         //- Current interpolation scale (1 at patches, 0 at distance_)
         pointScalarField scale_;
 
@@ -101,6 +93,15 @@ class floaterMotionSolver
 
         //- List of active DoFs (e.g. [0 1 5] for 2D motion with rotation)
         labelList DoFs_;
+
+        //- Initial time
+        scalar initialTime_;
+
+        //- Centre of rotation of initial state
+        point initialCentreOfRotation_;
+
+        //- Orientation of initial state
+        tensor initialQ_;
 
     // Private Member Functions
 
@@ -163,6 +164,23 @@ public:
 
         //- Return list of active DoFs
         const labelList& DoFs();
+
+        //- Transform the given initial state point by the current motion
+        //  state
+        point transform(const point& initialPoints) const;
+
+        //- Transform the given initial state pointField by the current
+        //  motion state
+        tmp<pointField> transform(const pointField& initialPoints) const;
+
+        //- Transform the given initial state pointField by the current
+        //  motion state scaled by the given scale
+        tmp<pointField> transform
+        (
+            const pointField& initialPoints,
+            const scalarField& scale
+        ) const;
+
 };
 
 

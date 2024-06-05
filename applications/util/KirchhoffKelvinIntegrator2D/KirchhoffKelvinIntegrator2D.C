@@ -28,7 +28,7 @@ Description
     components of the body geometric centre and its orientation. The body may
     be subject to a constant gravity and buoyancy force.
 
-    The input parameters are provided by a bodyDict an exampe of which is 
+    The input parameters are provided by a bodyDict an example of which is 
     provided in the solver directory.
 
     For the meaning of the various parameters please see the comments in the 

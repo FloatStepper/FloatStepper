@@ -43,7 +43,7 @@ Foam::floaterMotionState::floaterMotionState()
     domegadt_(Zero)
 {}
 
-
+/*
 Foam::floaterMotionState::floaterMotionState
 (
     const dictionary& dict
@@ -62,6 +62,21 @@ Foam::floaterMotionState::floaterMotionState
     a_(dict.getOrDefault("acceleration", vector::zero)),
     omega_(dict.getOrDefault("omega", vector::zero)),
     domegadt_(dict.getOrDefault("domegadt", vector::zero))
+{}
+*/
+
+// New reader enforcing explicit specification of all motion parameters
+Foam::floaterMotionState::floaterMotionState
+(
+    const dictionary& dict
+)
+:
+    centreOfRotation_(dict.get<point>("centreOfRotation")),
+    Q_(dict.get<tensor>("orientation")),
+    v_(dict.get<vector>("velocity")),
+    a_(dict.get<vector>("acceleration")),
+    omega_(dict.get<vector>("omega")),
+    domegadt_(dict.get<vector>("domegadt"))
 {}
 
 

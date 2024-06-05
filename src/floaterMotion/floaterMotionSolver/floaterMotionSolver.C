@@ -34,6 +34,7 @@ License
 #include "polyMesh.H"
 #include "pointPatchDist.H"
 #include "pointConstraints.H"
+#include "septernion.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -62,14 +63,14 @@ Foam::floaterMotionSolver::floaterMotionSolver
     motion_
     (
         coeffDict(), //Inherited from motionSolver - reads from dynamicMeshDict
-        IOobject
+/*        IOobject
         (
             "floaterMotionState",
             mesh.time().timeName(),
             "uniform",
             mesh
         ).typeHeaderOk<IOdictionary>(true)
-      ? IOdictionary
+      ? */IOdictionary
         (
             IOobject
             (
@@ -77,12 +78,12 @@ Foam::floaterMotionSolver::floaterMotionSolver
                 mesh.time().timeName(),
                 "uniform",
                 mesh,
-                IOobject::READ_IF_PRESENT,
+                IOobject::MUST_READ,
                 IOobject::NO_WRITE,
                 false
             )
         )
-      : coeffDict(),
+      /*: coeffDict()*/,
         mesh.time()
     ),
     patches_(coeffDict().get<wordRes>("patches")),
@@ -90,8 +91,6 @@ Foam::floaterMotionSolver::floaterMotionSolver
     di_(coeffDict().get<scalar>("innerDistance")),
     do_(coeffDict().get<scalar>("outerDistance")),
     distStretch_(coeffDict().getOrDefault<tensor>("distStretch", tensor::I)),
-    //rhoInf_(1.0),
-    rhoName_(coeffDict().getOrDefault<word>("rho", "rho")),
     scale_
     (
         IOobject
@@ -107,8 +106,29 @@ Foam::floaterMotionSolver::floaterMotionSolver
         dimensionedScalar(dimless, Zero)
     ),
     curTimeIndex_(-1),
-    DoFs_(0)
+    DoFs_(0),
+    initialTime_(coeffDict().getOrDefault("initialTime", 0.0)),
+    initialCentreOfRotation_(Zero),
+    initialQ_(tensor::I)
 {
+
+    // Read initial centre of rotation and orintation
+    IOdictionary initialStateDict
+    (
+        IOobject
+        (
+            "floaterMotionState",
+            Foam::name(initialTime_),
+            "uniform",
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
+    initialCentreOfRotation_ = initialStateDict.get<point>("centreOfRotation");
+    initialQ_ = initialStateDict.get<tensor>("orientation");
 
     // Determining active degrees of freedom
     
@@ -240,7 +260,7 @@ void Foam::floaterMotionSolver::solve()
 
     // Update the displacements
     pointDisplacement_.primitiveFieldRef() =
-        motion_.transform(points0(), scale_) - points0();
+        transform(points0(), scale_) - points0();
 
     // Displacement has changed. Update boundary conditions
     pointConstraints::New
@@ -293,6 +313,78 @@ bool Foam::floaterMotionSolver::read()
 const Foam::labelList& Foam::floaterMotionSolver::DoFs()
 {
     return DoFs_;
+}
+
+
+Foam::point Foam::floaterMotionSolver::transform
+(
+    const point& initialPoint
+) const
+{
+    return
+    (
+        motion_.centreOfRotation()
+      + (motion_.orientation() & initialQ_.T() & (initialPoint - initialCentreOfRotation_))
+    );
+}
+
+
+Foam::tmp<Foam::pointField> Foam::floaterMotionSolver::transform
+(
+    const pointField& initialPoints
+) const
+{
+    return
+    (
+        motion_.centreOfRotation()
+      + (motion_.orientation() & initialQ_.T() & (initialPoints - initialCentreOfRotation_))
+    );
+}
+
+
+Foam::tmp<Foam::pointField> Foam::floaterMotionSolver::transform
+(
+    const pointField& initialPoints,
+    const scalarField& scale
+) const
+{
+    // Calculate the transformation septerion from the initial state
+    septernion s
+    (
+        motion_.centreOfRotation() - initialCentreOfRotation_,
+        quaternion(motion_.orientation().T() & initialQ_)
+    );
+
+    tmp<pointField> tpoints(new pointField(initialPoints));
+    pointField& points = tpoints.ref();
+
+    forAll(points, pointi)
+    {
+        // Move non-stationary points
+        if (scale[pointi] > SMALL)
+        {
+            // Use solid-body motion where scale = 1
+            if (scale[pointi] > 1 - SMALL)
+            {
+                points[pointi] = transform(initialPoints[pointi]);
+            }
+            // Slerp septernion interpolation
+            else
+            {
+                septernion ss(slerp(septernion::I, s, scale[pointi]));
+
+                points[pointi] =
+                    initialCentreOfRotation_
+                  + ss.invTransformPoint
+                    (
+                        initialPoints[pointi]
+                      - initialCentreOfRotation_
+                    );
+            }
+        }
+    }
+
+    return tpoints;
 }
 
 // ************************************************************************* //

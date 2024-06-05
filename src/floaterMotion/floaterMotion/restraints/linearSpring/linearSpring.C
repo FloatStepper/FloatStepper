@@ -86,7 +86,9 @@ void Foam::floaterMotionRestraints::linearSpring::restrain
     vector& restraintMoment
 ) const
 {
-    restraintPosition = motion.transform(refAttachmentPt_);
+//    restraintPosition = motion.transform(refAttachmentPt_);
+    restraintPosition =
+        motion.centreOfRotation() + (motion.orientation() & refAttachmentPt_);
 
     vector r = restraintPosition - anchor_;
 

@@ -46,6 +46,7 @@ Foam::floaterMotion::constraints() const
 }
 */
 
+/*
 inline const Foam::point&
 Foam::floaterMotion::initialCentreOfRotation() const
 {
@@ -58,7 +59,7 @@ Foam::floaterMotion::initialQ() const
 {
     return initialQ_;
 }
-
+*/
 
 inline const Foam::tensor& Foam::floaterMotion::Q() const
 {
@@ -71,7 +72,7 @@ inline const Foam::vector& Foam::floaterMotion::v() const
     return motionState_.v();
 }
 
-
+/*
 inline Foam::point& Foam::floaterMotion::initialCentreOfRotation()
 {
     return initialCentreOfRotation_;
@@ -82,7 +83,7 @@ inline Foam::tensor& Foam::floaterMotion::initialQ()
 {
     return initialQ_;
 }
-
+*/
 
 inline Foam::tensor& Foam::floaterMotion::Q()
 {
@@ -117,23 +118,23 @@ inline const Foam::point& Foam::floaterMotion::centreOfRotation() const
     return motionState_.centreOfRotation();
 }
 
-
+/*
 inline const Foam::point&
 Foam::floaterMotion::initialCentreOfMass() const
 {
     return initialCentreOfMass_;
 }
-
+*/
 
 inline Foam::point Foam::floaterMotion::centreOfMass() const
 {
-    return transform(initialCentreOfMass_);
+    return centreOfRotation() + (Q() & centreOfMass_);//transform(initialCentreOfMass_);
 }
 
 
 inline Foam::vector Foam::floaterMotion::momentArm() const
 {
-    return centreOfMass() - motionState_.centreOfRotation();
+    return (Q() & centreOfMass_);//centreOfMass() - motionState_.centreOfRotation();
 }
 
 
@@ -273,7 +274,7 @@ inline Foam::point Foam::floaterMotion::velocity
     return (omega() ^ (pt - centreOfRotation())) + v();
 }
 
-
+/*
 inline Foam::point Foam::floaterMotion::transform
 (
     const point& initialPoint
@@ -285,6 +286,6 @@ inline Foam::point Foam::floaterMotion::transform
       + (Q() & initialQ_.T() & (initialPoint - initialCentreOfRotation_))
     );
 }
-
+*/
 
 // ************************************************************************* //

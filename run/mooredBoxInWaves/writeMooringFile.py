@@ -26,6 +26,42 @@ rl2 = np.linalg.norm(rAp2-a2)
 rl3 = np.linalg.norm(rAp3-a3)
 rl4 = np.linalg.norm(rAp4-a4)
 
+#Making attachment points relative to body centre
+def get_centre_of_rotation(file_path):
+
+    # Initialize an empty list to store the line containing "centreOfRotation"
+    centre_of_rotation_line = None
+
+    # Open the file and read line by line
+    with open(file_path, 'r') as file:
+        for line in file:
+            if 'centreOfRotation' in line:
+                centre_of_rotation_line = line.strip()
+                break
+
+    # Check if the line was found
+    if centre_of_rotation_line:
+        # Extract the numbers from the line
+        start_idx = centre_of_rotation_line.find('(') + 1
+        end_idx = centre_of_rotation_line.find(')')
+        numbers_str = centre_of_rotation_line[start_idx:end_idx].strip()
+        
+        # Convert the string numbers to a list of floats
+        numbers_list = [float(num) for num in numbers_str.split()]
+        
+        # Convert the list to a numpy array
+        centre_of_rotation_array = np.array(numbers_list)
+        
+        return centre_of_rotation_array
+    else:
+        raise ValueError("The line containing 'centreOfRotation' was not found.")
+
+CoR = get_centre_of_rotation('0/uniform/floaterMotionState')
+rAp1 = rAp1 - CoR
+rAp2 = rAp2 - CoR
+rAp3 = rAp3 - CoR
+rAp4 = rAp4 - CoR
+
 with open('constant/mooringDict', 'w') as moorFil:
     moorFil.write('mooringLine1\n');
     moorFil.write('{\n');

@@ -53,8 +53,9 @@ void Foam::floaterMotion::write(Ostream& os) const
 {
     motionState_.write(os);
 
-    os.writeEntry("centreOfMass", initialCentreOfMass_);
-    os.writeEntry("initialOrientation", initialQ_);
+//    os.writeEntry("centreOfMass", initialCentreOfMass_);
+//    os.writeEntry("initialOrientation", initialQ_);
+    os.writeEntry("centreOfMass", centreOfMass_);
     os.writeEntry("mass", mass_);
     os.writeEntry("momentOfInertia", momentOfInertia_);
 

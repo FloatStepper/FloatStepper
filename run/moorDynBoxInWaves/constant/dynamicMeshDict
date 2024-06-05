@@ -32,9 +32,9 @@ solvers
             innerDistance   0.075;
             outerDistance   0.4;
 
-            centreOfMass    (0 0 -0.016);
+            centreOfMass    (0 0 0); // Relative to CoR in floaterMotionState
             mass            3.148;
-            momentOfInertia (0.015 0 0 0.0167 0 0.021);
+            momentOfInertia (0.015 0 0 0.0167 0 0.021); // Wrt CoM
             rotDirs   (0 1 0);
             linDirs   (1 0 1);
             MaddUpdateFreq  2;

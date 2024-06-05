@@ -15,7 +15,7 @@ FoamFile
     object          floaterMotionState;
 }
 
-centreOfRotation ( 2 0 0.4 );
+centreOfRotation ( 2.3 0 0.4 );
 
 orientation     ( 1 0 0 0 1 0 0 0 1 );
 

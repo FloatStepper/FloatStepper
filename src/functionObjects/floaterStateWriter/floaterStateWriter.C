@@ -199,6 +199,7 @@ bool Foam::functionObjects::floaterStateWriter::write()
         file()
             << endl
             << "Centre of rotation  : " << state.centreOfRotation() << endl
+            << "Centre of mass      : " << motion.centreOfMass() << endl
             << "Velocity            : " << state.v() << endl
             << "Acceleration        : " << state.a() << endl
             << "Orientation         : " << state.Q() << endl

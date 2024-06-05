@@ -11,18 +11,21 @@ FoamFile
     version         2;
     format          ascii;
     class           dictionary;
-    object          bodyParmDict;
+    location        "0/uniform";
+    object          floaterMotionState;
 }
 
-bodyDensity     0;
+centreOfRotation ( 100 52.5 100 );
 
-bodyEccentricity 0.5;
+orientation     ( 1 0 0 0 1 0 0 0 1 );
 
-vx0             1;
+velocity        ( 0 0 0 );
 
-vy0             0;
+acceleration    ( 0 0 0 );
 
-omega0          1;
+omega           ( 0 0 0 );
+
+domegadt        ( 0 0 0 );
 
 
 // ************************************************************************* //

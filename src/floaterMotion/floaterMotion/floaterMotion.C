@@ -51,9 +51,11 @@ Foam::floaterMotion::floaterMotion(const Time& time)
 //    constraints_(),
 //    tConstraints_(tensor::I),
 //    rConstraints_(tensor::I),
+/*
     initialCentreOfMass_(Zero),
     initialCentreOfRotation_(Zero),
     initialQ_(I),
+*/
     mass_(VSMALL),
     momentOfInertia_(symmTensor::one*VSMALL),
     Madd_({6, 6}, 0),
@@ -80,6 +82,7 @@ Foam::floaterMotion::floaterMotion
 //    constraints_(),
 //    tConstraints_(tensor::I),
 //    rConstraints_(tensor::I),
+/*
     initialCentreOfMass_
     (
         dict.getOrDefault
@@ -101,6 +104,9 @@ Foam::floaterMotion::floaterMotion
             dict.getOrDefault("orientation", tensor::I)
         )
     ),
+*/
+    centreOfMass_(dict.get<vector>("centreOfMass")),
+//    centreOfMass_(Zero),
     mass_(dict.get<scalar>("mass")),
     momentOfInertia_(dict.get<symmTensor>("momentOfInertia")),
     Madd_(dict.getOrDefault("Madd", SquareMatrix<scalar>({6, 6}, 0))),
@@ -117,20 +123,31 @@ Foam::floaterMotion::floaterMotion
     // if different to the centre of mass
     //addConstraints(dict);
 
-    // If the centres of mass and rotation are different ...
-    vector R(initialCentreOfMass_ - initialCentreOfRotation_);
-    if (magSqr(R) > VSMALL)
+
+    // The solver uses the moment of inertia relative to the centre of rotation
+    // but with axes aligned with the lab axes. We assume that the provided
+    // moment of inertia is with respect to the centre of mass and along
+    // lab axes. Therefore we must apply the parallel axis theorem to get the 
+    // moment of inertia with respect to the centre of rotation:
+//    vector R(initialCentreOfMass_ - initialCentreOfRotation_);
+    if (magSqr(centreOfMass_) > VSMALL)
     {
         // ... correct the moment of inertia tensor using parallel axes theorem
-        momentOfInertia_ += mass_*(I*magSqr(R) - sqr(R));
+        momentOfInertia_ += mass_*(I*magSqr(centreOfMass_) - sqr(centreOfMass_));
 
+        Info << "Moment of inertia with respect to centre of rotation: "
+            << momentOfInertia_ << endl;
+
+/*
         // ... and if the centre of rotation is not specified for motion state
         // update it
         if (!stateDict.found("centreOfRotation"))
         {
             motionState_.centreOfRotation() = initialCentreOfRotation_;
         }
+*/
     }
+
 
     // Save the old-time motion state
     motionState0_ = motionState_;
@@ -149,9 +166,11 @@ Foam::floaterMotion::floaterMotion
 //    constraints_(rbm.constraints_),
 //    tConstraints_(rbm.tConstraints_),
 //    rConstraints_(rbm.rConstraints_),
+/*
     initialCentreOfMass_(rbm.initialCentreOfMass_),
     initialCentreOfRotation_(rbm.initialCentreOfRotation_),
     initialQ_(rbm.initialQ_),
+*/
     mass_(rbm.mass_),
     momentOfInertia_(rbm.momentOfInertia_),
     Madd_(rbm.Madd_),
@@ -388,7 +407,8 @@ Foam::scalarField Foam::floaterMotion::calcAcceleration
     vector omega = motionState_.omega();
     vector wxIw = omega ^ (I_lf & omega);
     vector wxmXcmw = omega ^ (mXcm & omega);
-    RHS[0] = F0[0] - wxmXcmw[0]; RHS[1] = F0[1] - wxmXcmw[1]; RHS[2] = F0[2] - wxmXcmw[2];
+    RHS[0] = F0[0] + wxmXcmw[0]; RHS[1] = F0[1] + wxmXcmw[1]; RHS[2] = F0[2] + wxmXcmw[2];
+//    RHS[0] = F0[0] - wxmXcmw[0]; RHS[1] = F0[1] - wxmXcmw[1]; RHS[2] = F0[2] - wxmXcmw[2];
     RHS[3] = tau0[0] - wxIw[0]; RHS[4] = tau0[1] - wxIw[1]; RHS[5] = tau0[2] - wxIw[2];
     dvwdt = RHS;
 
@@ -579,7 +599,7 @@ void Foam::floaterMotion::status() const
     Info << "---------------------------------------------" << endl;
 }
 
-
+/*
 Foam::tmp<Foam::pointField> Foam::floaterMotion::transform
 (
     const pointField& initialPoints
@@ -637,6 +657,6 @@ Foam::tmp<Foam::pointField> Foam::floaterMotion::transform
 
     return tpoints;
 }
-
+*/
 
 // ************************************************************************* //
