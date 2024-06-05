@@ -1,0 +1,17 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+outdir=${1:-trajectory}
+mkdir $outdir
+cd  $outdir
+
+#Note: will only work if you do not change the function object name during run
+#If you do, there will be several rigidBodyStateWriter*dat files
+stateFile=$(find ../postProcessing/ -name *StateWriter.dat)
+grep "Centre of mass      : " ${stateFile} | cut -d'(' -f2 | cut -d')' -f1 > x
+grep "Velocity            : " ${stateFile} | cut -d'(' -f2 | cut -d')' -f1 > v
+grep "Acceleration        : " ${stateFile} | cut -d'(' -f2 | cut -d')' -f1 > a
+grep "Orientation         : " ${stateFile} | cut -d'(' -f2 | cut -d')' -f1 > Q
+grep "Angular velocity    : " ${stateFile} | cut -d'(' -f2 | cut -d')' -f1 > omega
+grep "Angular acceleration: " ${stateFile} | cut -d'(' -f2 | cut -d')' -f1 > alpha
+grep "^Time = " ${stateFile} | cut -d' ' -f3 > t

@@ -1,0 +1,15 @@
+Non-zero Centre of mass-Centre of rotation displacement test
+
+Test of rigid body motion solution with body coordinate system centre of
+rotation chosen at (x, y) = (0, 1) and with centre of mass at (x, y) = (0, 0).
+Body is an ellipse and has density VERY much larger than fluid so fluid force
+should have no effect at all.
+Body started with vx = 1, vy = 0 and omega = 1 for the centre of mass which
+amounts to zero velocity of geometric centre, which accelerates with (0,-1)
+m/s^2.
+
+Inspection of body motion with paraview and plotting of coordinates with
+plotCoordinates.py confirm essentially constant CoM motion produced by the
+oscillating centre of rotation motion.
+
+Johan Roenby, 2024

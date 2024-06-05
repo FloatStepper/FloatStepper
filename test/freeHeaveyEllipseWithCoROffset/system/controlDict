@@ -1,0 +1,78 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     floatStepper;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime	        10;
+
+deltaT	        0.005;
+
+writeControl    adjustable;
+
+writeInterval   0.1;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  12;
+
+writeCompression no;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  no;
+
+maxCo           .5;
+maxAlphaCo      .5;
+
+maxDeltaT       1;
+
+functions
+{
+
+    floaterMotion
+    {
+        type           floaterStateWriter;
+        libs           (floaterStateWriter);
+        writeControl   timeStep;
+        writeInterval  1;
+        bodyName body;
+        classicWriteFormat false;
+    }
+
+    addedMass
+    {
+        type           addedMassWriter;
+        libs           (addedMassWriter);
+        writeControl   timeStep;
+        writeInterval  1;
+        bodyName body;
+    }
+}
+
+// ************************************************************************* //

@@ -1,0 +1,4 @@
+        mass            1e6;
+        centreOfMass    (0 -1 0);
+        momentOfInertia (1e6 0 0 1e6 0 1e6);
+        orientation     (1 0 0 0 1 0 0 0 1);

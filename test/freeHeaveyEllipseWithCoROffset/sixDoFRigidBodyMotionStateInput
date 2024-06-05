@@ -1,0 +1,11 @@
+centreOfRotation ( 0 0 0 );
+
+orentation      ( 6.12323e-17 1 0 -1 6.12323e-17 0 0 0 1 );
+
+velocity        ( 1 0 0 );
+
+acceleration    ( 1.30629e-22 -1.06667e-06 0 );
+
+angularMomentum ( 0 0 1.56466e+06 );
+
+torque          ( 0 0 -1.92367e-16 );
