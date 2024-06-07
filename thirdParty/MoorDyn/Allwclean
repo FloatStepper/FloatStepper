@@ -2,13 +2,23 @@
 cd ${0%/*} || exit 1    # run from this directory
 
 echo "=========================================="
-echo "    Uninstalling moorDyn lib              "
+echo "    Uninstalling moorDyn v1 lib              "
 echo "=========================================="
 echo "removing $FOAM_USER_LIBBIN/libmoorDyn.so"
-rm $FOAM_USER_LIBBIN/libmoorDyn.so
+rm -rf $FOAM_USER_LIBBIN/libmoorDyn.so
+(cd MoorDyn_v1/compileSO; make clean)
+
+echo "=========================================="
+echo "    Uninstalling moorDyn v2 lib              "
+echo "=========================================="
+# MoorDyn v2
+rm –r $FOAM_USER_LIBBIN/cmake  
+rm –r $FOAM_USER_LIBBIN/../include 
+rm -rf thirdParty/MoorDyn.build
 
 echo "==============================================="
 echo "    Cleaning MoorDyn-FloatStepper extension    "
 echo "==============================================="
-
 wclean src
+
+echo "Compilation clean!"

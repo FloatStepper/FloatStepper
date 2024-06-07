@@ -1,5 +1,6 @@
 EXE_INC = \
     -DWITH_LAPACK \
+    -DDEBUG \
     -DLINUX \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
@@ -8,16 +9,20 @@ EXE_INC = \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I../MoorDyn_v1 \
+    -I$(WM_PROJECT_USER_DIR)/FloatStepper/thirdParty/MoorDyn/src/include \
+    -I$(FOAM_USER_LIBBIN)/../include/moordyn \
     -I../../../src/floaterMotion/lnInclude \
     -I../../../src/functionObjects/forceContributions/lnInclude \
     -I../../../src/addedMass/lnInclude
 
 LIB_LIBS = \
+    -lfiniteVolume \
     -lmeshTools \
     -ldynamicMesh \
     -ldynamicFvMesh \
-    -L$(FOAM_USER_LIBBIN) \
     -lfloaterMotion \
+    -L$(FOAM_USER_LIBBIN) \
     -lforceContributions \
     -laddedMass \
-    -lmoorDyn
+    -lmoorDyn \
+    -lmoordyn
