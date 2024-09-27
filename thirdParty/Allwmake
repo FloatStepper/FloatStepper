@@ -6,8 +6,6 @@ set -e
 
 # compile the 3rd parties (modules)
 # =======================
-git submodule add -b v1 https://github.com/FloatingArrayDesign/MoorDyn.git MoorDyn/MoorDyn_v1
-git submodule add -b master https://github.com/FloatingArrayDesign/MoorDyn.git MoorDyn/MoorDyn
 git submodule init
 git submodule update --remote
 cd MoorDyn
