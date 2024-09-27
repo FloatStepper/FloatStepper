@@ -1,0 +1,60 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # run from this directory
+
+# Stop if something fails
+set -e
+
+# compile the 3rd parties (modules)
+# =======================
+git submodule init
+git submodule update --remote
+cd MoorDyn
+
+echo "==========================================="
+echo "    COMPILE Thirdparty lib - MoorDyn v1    "
+echo "==========================================="
+cd MoorDyn_v1/compileSO/; 
+make -j
+mkdir -p $FOAM_USER_LIBBIN
+mkdir -p $WM_PROJECT_USER_DIR/FloatStepper/src/include
+cp -f MoorDyn.so $FOAM_USER_LIBBIN/libmoordynv1.so
+cp -f ../MoorDyn.h $WM_PROJECT_USER_DIR/FloatStepper/src/include/MoorDynv1.h
+echo "MoorDyn v1 compilation done! Library location:"
+echo "$FOAM_USER_LIBBIN/libmoorDyn.so"
+cd ../../
+
+echo "=========================================="
+echo "    COMPILE Thirdparty lib - MoorDynv2    "
+echo "=========================================="
+echo "configuring MoorDyn v2..."
+configure_moordyn_v2 () {
+    cmake -DBUILD_TESTING=OFF -DEXTERNAL_EIGEN=OFF -DFORTRAN_WRAPPER=OFF -DMATLAB_WRAPPER=OFF -DPYTHON_WRAPPER=OFF -DUSE_VTK=$1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$FOAM_USER_LIBBIN/.. ../MoorDyn
+    return $?
+} 
+echo "compile MoorDyn v2 with VTK"
+MOORDYN2_HAVE_VTK=true
+mkdir -p MoorDyn.build
+cd MoorDyn.build
+set +e  # Do not exit if the configuration fail, so we can try without VTK
+configure_moordyn_v2 ON
+CMAKE_RESULT=$?
+set -e
+if [ $CMAKE_RESULT -ne 0 ]; then
+    MOORDYN2_HAVE_VTK=false
+    echo "compile MoorDyn v2 without VTK"
+    configure_moordyn_v2 OFF
+fi
+make -j
+make install
+echo "MoorDyn v2 compilation done! Library location:"
+#echo "$FOAM_USER_LIBBIN/libmoorDyn.so"
+cd ../..
+
+echo "==============================================="
+echo "    COMPILE MoorDyn-FloatStepper extension     "
+echo "==============================================="
+echo "compile FloatStepper mooring restraints"
+(cd src && wmake libso )
+#wmake src
+
+echo "Compilation done!"

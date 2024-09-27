@@ -1,0 +1,9 @@
+[submodule "thirdParty/MoorDyn_v1"]
+	path = thirdParty/MoorDyn_v1
+	url = https://github.com/FloatingArrayDesign/MoorDyn.git
+	branch = v1
+[submodule "thirdParty/MoorDyn"]
+	path = thirdParty/MoorDyn
+	url = https://github.com/FloatingArrayDesign/MoorDyn.git
+	branch = master
+
