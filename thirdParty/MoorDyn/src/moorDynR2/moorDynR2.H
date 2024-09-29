@@ -5,7 +5,7 @@
     \\  /    A nd           | www.openfoam.com
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
-    Copyright (C) 2019 OpenCFD Ltd.
+    Copyright (C) 2024
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -24,7 +24,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::floaterMotionRestraints::moorDynR1
+    Foam::floaterMotionRestraints::moorDynR2
 
 Description
     floaterMotionRestraints model.  Mooring dynamics resolved.
@@ -38,8 +38,16 @@ Description
     mooring dynamics: Coupling MoorDyn with OpenFOAM. Applied Ocean Research,
     124, 103210. https://doi.org/10.1016/j.apor.2022.103210
 
+    Roenby, J., Aliyar, S., Bredmose, H. (2024). A robust algorithm for
+    computational floating body dynamics. Royal Society Open Science,
+    11:231453, https://doi.org/10.1098/rsos.231453
+
+    Almeida Medina, T., Cercos-Pita, J.L., Gosset, A., Díaz Casás, V. (2024).
+    A methodology for CFD simulations of floating structures in waves coupled
+    with mooring dynamics.
+
 SourceFiles
-    moorDynR1.C
+    moorDynR2.C
 
 \*---------------------------------------------------------------------------*/
 

@@ -1,11 +1,10 @@
 #!/bin/bash
 cd ${0%/*} || exit 1    # run from this directory
 
-# Stop if something fails
+# Stop in case of errors
 set -e
 
-# compile the 3rd parties (modules)
-# =======================
+# Compile thirdparty/MoorDyn_v1 and thirdparty/MoorDyn
 git submodule init
 git submodule update --remote
 cd MoorDyn
@@ -13,7 +12,8 @@ cd MoorDyn
 echo "==========================================="
 echo "    COMPILE Thirdparty lib - MoorDyn v1    "
 echo "==========================================="
-cd MoorDyn_v1/compileSO/; 
+cd MoorDyn_v1/compileSO/;
+echo "compile MoorDyn v1"
 make -j
 mkdir -p $FOAM_USER_LIBBIN
 mkdir -p $WM_PROJECT_USER_DIR/FloatStepper/src/include
@@ -26,11 +26,11 @@ cd ../../
 echo "=========================================="
 echo "    COMPILE Thirdparty lib - MoorDynv2    "
 echo "=========================================="
-echo "configuring MoorDyn v2..."
+echo "setting up MoorDyn v2..."
 configure_moordyn_v2 () {
     cmake -DBUILD_TESTING=OFF -DEXTERNAL_EIGEN=OFF -DFORTRAN_WRAPPER=OFF -DMATLAB_WRAPPER=OFF -DPYTHON_WRAPPER=OFF -DUSE_VTK=$1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$FOAM_USER_LIBBIN/.. ../MoorDyn
     return $?
-} 
+}
 echo "compile MoorDyn v2 with VTK"
 MOORDYN2_HAVE_VTK=true
 mkdir -p MoorDyn.build
@@ -47,7 +47,7 @@ fi
 make -j
 make install
 echo "MoorDyn v2 compilation done! Library location:"
-#echo "$FOAM_USER_LIBBIN/libmoorDyn.so"
+echo "$FOAM_USER_LIBBIN/libmoorDyn.so"
 cd ../..
 
 echo "==============================================="

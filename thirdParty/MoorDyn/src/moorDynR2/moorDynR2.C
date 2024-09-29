@@ -5,7 +5,7 @@
     \\  /    A nd           | www.openfoam.com
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
-    Copyright (C) 2019 OpenCFD Ltd.
+    Copyright (C) 2024
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -23,16 +23,23 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-\*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
+Application
+    - moorDynR2 restrain
+
 References
 
     Chen, H., & Hall, M. (2022). CFD simulation of floating body motion with
     mooring dynamics: Coupling MoorDyn with OpenFOAM. Applied Ocean Research,
     124, 103210. https://doi.org/10.1016/j.apor.2022.103210
 
-\*---------------------------------------------------------------------------*/
+    Roenby, J., Aliyar, S., Bredmose, H. (2024). A robust algorithm for
+    computational floating body dynamics. Royal Society Open Science,
+    11:231453, https://doi.org/10.1098/rsos.231453
 
+    Almeida Medina, T., Cercos-Pita, J.L., Gosset, A., Díaz Casás, V. (2024).
+    A methodology for CFD simulations of floating structures in waves coupled
+    with mooring dynamics.
+\*---------------------------------------------------------------------------*/
 #include "moorDynR2.H"
 #include "addToRunTimeSelectionTable.H"
 #include "floaterMotion.H"
@@ -43,9 +50,7 @@ References
 #include "error.H"
 #include "quaternion.H"
 #include "foamVtkSeriesWriter.H"
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
 namespace Foam
 {
 namespace floaterMotionRestraints
@@ -60,8 +65,6 @@ namespace floaterMotionRestraints
     );
 }
 }
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::floaterMotionRestraints::moorDynR2::moorDynR2
@@ -515,5 +518,4 @@ void Foam::floaterMotionRestraints::moorDynR2::writeVTK(const Time& time) const
         start_node += nodesPerLine[i];
     }
 }
-
 // ************************************************************************* //
