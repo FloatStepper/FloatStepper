@@ -6,7 +6,7 @@ echo "    Uninstalling moorDyn v1 lib              "
 echo "=========================================="
 echo "removing $FOAM_USER_LIBBIN/libmoorDyn.so"
 rm -rf $FOAM_USER_LIBBIN/libmoorDyn.so
-(cd MoorDyn_v1/compileSO; make clean)
+(cd submodules/MoorDyn_v1/compileSO; make clean)
 
 echo "=========================================="
 echo "    Uninstalling moorDyn v2 lib              "
@@ -14,7 +14,8 @@ echo "=========================================="
 # MoorDyn v2
 rm –r $FOAM_USER_LIBBIN/cmake  
 rm –r $FOAM_USER_LIBBIN/../include 
-rm -rf thirdParty/MoorDyn.build
+rm -rf submodules/MoorDyn.build
+rm -rf submodules/MoorDyn
 
 echo "==============================================="
 echo "    Cleaning MoorDyn-FloatStepper extension    "
