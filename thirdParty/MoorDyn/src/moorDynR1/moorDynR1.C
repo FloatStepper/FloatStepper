@@ -81,9 +81,6 @@ Foam::floaterMotionRestraints::moorDynR1::moorDynR1
 
     Info << "Create moorDynR1 using MoorDyn v1." << endl;
 
-    DecayTranslation_ = rBMRDict.lookupOrDefault<vector>("DecayTranslation", vector(0, 0, 0));
-    DecayRotation_ = rBMRDict.lookupOrDefault<vector>("DecayRotation", vector(0, 0, 0));
-
     // Read the Initial CoM vector from the dynamic mesh dictionary
     // const auto& initialCoM = rBMRDict.lookupOrDefault<vector>("centreOfMass", vector(0, 0, 0));
 
@@ -123,11 +120,6 @@ void Foam::floaterMotionRestraints::moorDynR1::restrain
     vector initialCoM = motion.initialCentreOfMass();
     Info << "Initial CoM for Mooring initialisation : " << initialCoM << endl;
 
-    vector DecayTranslation = DecayTranslation_;
-    vector DecayRotation = DecayRotation_;
-    Info<< "DecayTranslation[3]: " << vector(DecayTranslation[0], DecayTranslation[1], DecayTranslation[2]) << endl;
-    Info<< "DecayRotation[3]: " << vector(DecayRotation[0], DecayRotation[1], DecayRotation[2]) << endl;
-
     point CoM = motion.centreOfMass();
     vector rotationAngle
     (
@@ -144,8 +136,8 @@ void Foam::floaterMotionRestraints::moorDynR1::restrain
 
     for (int ii = 0; ii < 3; ii++)
     {
-        X[ii] = (CoM[ii]-initialCoM[ii] + DecayTranslation[ii]) ; // Added a variable to substract initial reading of CoM
-       X[ii+3] = rotationAngle[ii]+ DecayRotation[ii];
+       X[ii] = (CoM[ii] - initialCoM[ii]) ; // Added a variable to substract initial reading of CoM
+       X[ii+3] = rotationAngle[ii];
        XD[ii] = v[ii];
        XD[ii+3] = omega[ii];
     }
@@ -199,7 +191,7 @@ void Foam::floaterMotionRestraints::moorDynR1::restrain
     // centreOfRotation to be sure of no spurious moment
     restraintPosition = motion.centreOfRotation();
 
-    // if (motion.report())
+    //if (motion.report())
     {
         Info<< t << ": force " << restraintForce << ", moment "
             << restraintMoment << endl;
