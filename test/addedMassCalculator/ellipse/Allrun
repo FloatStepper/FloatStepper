@@ -1,0 +1,36 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+caseName=$(basename $(dirname $(readlink -f "$0")))
+touch ${caseName}.foam
+restore0Dir
+
+./generateMesh
+
+foamDictionary -entry addedMassModel -set pisoAddedMass constant/dynamicMeshDict
+
+runApplication $(getApplication)
+
+mv ma.dat ma_piso.dat
+
+echo "Piso added mass: "
+cat ma_piso.dat
+
+mv log.$(getApplication) log.$(getApplication)_piso
+
+foamDictionary -entry addedMassModel -set potentialAddedMass constant/dynamicMeshDict
+
+runApplication $(getApplication)
+
+mv ma.dat ma_potential.dat
+
+echo "Potential added mass: "
+cat ma_potential.dat
+
+mv log.$(getApplication) log.$(getApplication)_potential
+
+
+#------------------------------------------------------------------------------

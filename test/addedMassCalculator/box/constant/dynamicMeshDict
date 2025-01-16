@@ -1,0 +1,32 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2312                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          dynamicMeshDict;
+}
+
+dynamicFvMesh   staticFvMesh;
+
+addedMassModel  potentialAddedMass;
+
+CofR            ( 0 0 0 );
+
+Q               ( 1 0 0 0 1 0 0 0 1 );
+
+patches         ( floatingObject );
+
+linDirs         ( 1 0 1 );
+
+rotDirs         ( 0 1 0 );
+
+
+// ************************************************************************* //
