@@ -214,7 +214,7 @@ void Foam::floaterMotion::calcAddedMass
     );
 
     // Changing to body frame
-    changeFrame(Madd_, Q());
+    Madd_ = changeFrame(Madd_, Q());
 
     Info << "Added mass matrix in body frame:" << endl;
     MatrixTools::printMatrix(Info, Madd_) << nl;
