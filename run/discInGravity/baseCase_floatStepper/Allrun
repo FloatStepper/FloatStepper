@@ -4,21 +4,20 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-./setCaseParms
-
 caseName=$(basename $(dirname $(readlink -f "$0")))
 touch ${caseName}.foam
 restore0Dir
 
+./setCaseParms
 ./generateMesh
 
 # Calculating body mass, centre of mass and inertia
 runApplication surfaceMeshExtract -time 0 -patches floatingObject floater.stl
 runApplication surfaceOrient -inside floater.stl "(0 0 0)" floater.stl
 bodyDensity=$(foamDictionary -entry rhob -value bodyDict)
-runApplication mySurfaceInertia floater.stl -density ${bodyDensity}
-grep -A4 'Entries for floatStepper' log.mySurfaceInertia > tmp
-tail -4 tmp > constant/floaterMassAndInertia
+runApplication floaterInertia floater.stl -density ${bodyDensity}
+grep -A4 'Entries for floatStepper' log.floaterInertia > tmp
+tail -4 tmp > 0/uniform/floaterMassAndInertia
 rm tmp axes.obj
 
 runApplication $(getApplication)

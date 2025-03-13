@@ -35,11 +35,11 @@ Application
 
 
 Description
-    Testing added mass calculator class.
+    Application for calculating the added mass of a rigid body.
     Based on interFoam to get its createFields.H.
 
 Author
-    Johan Roenby
+    Johan Roenby, 2025
 
 \*---------------------------------------------------------------------------*/
 
@@ -65,10 +65,17 @@ int main(int argc, char *argv[])
 {
     argList::addNote
     (
-        "Solver for two incompressible, isothermal immiscible fluids"
-        " using VOF phase-fraction based interface capturing.\n"
-        "With optional mesh motion and mesh topology changes including"
-        " adaptive re-meshing."
+        "Calculates the added mass of a body whose patches are specified in\n"
+        "dynamicMeshDict under solvers.<bodyName>.\n"
+        "<bodyName> must be specified using the -body argument."
+    );
+
+    argList::addOption
+    (
+        "body",
+        "body",
+        "Specify the name of the body whose added mass to calculate."
+        " (no default)"
     );
 
     #include "postProcess.H"
@@ -77,10 +84,11 @@ int main(int argc, char *argv[])
     #include "setRootCaseLists.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
-    #include "initContinuityErrs.H"
     #include "createDyMControls.H"
     #include "createFields.H"
 
+    // Reading motionSolver coeff dict from dynamicMeshDict needed for creating
+    // floaterMotion object.
     IOdictionary dynamicMeshDict
     (
         IOobject
@@ -88,26 +96,34 @@ int main(int argc, char *argv[])
             "dynamicMeshDict",
             mesh.time().constant(),
             mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::MUST_READ,
             IOobject::NO_WRITE,
             false
         )
     );
+    const word body = args.get<word>("body");
+    const dictionary& bodyDict =
+        dynamicMeshDict.subDict("solvers").subDict(body);
+    const word motionSolverType = bodyDict.get<word>("motionSolver");
+    const dictionary& solverDict =
+        bodyDict.subDict(motionSolverType + "Coeffs");
 
     autoPtr<addedMass> addedM = addedMass::New
     (
-        dynamicMeshDict.get<word>("addedMassModel"),
+        solverDict.get<word>("addedMassModel"),
         mesh,
         dynamicMeshDict
     );
 
+    wordRes patches = solverDict.get<wordRes>("patches");
+
     // Determining active degrees of freedom
     
-    Vector<bool> linDirs(dynamicMeshDict.getOrDefault
+    Vector<bool> linDirs(solverDict.getOrDefault
     (
         "linDirs", Vector<bool>(1, 1, 1))
     );
-    Vector<bool> rotDirs(dynamicMeshDict.getOrDefault
+    Vector<bool> rotDirs(solverDict.getOrDefault
     (
         "rotDirs", Vector<bool>(1, 1, 1))
     );
@@ -148,10 +164,23 @@ int main(int argc, char *argv[])
 
     OFstream osI("ma.dat");
 
-    // Reading center of rotation and orientation matrix from dicitonary
-    vector CoR = dynamicMeshDict.get<vector>("CofR");
-    tensor Q = dynamicMeshDict.get<tensor>("Q");
-    wordRes patches = dynamicMeshDict.get<wordRes>("patches");
+    // Read floaterMotionState
+    IOdictionary floaterStateDict
+    (
+        IOobject
+        (
+            "floaters",
+            mesh.time().timeName(),
+            "uniform",
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
+    vector CoR = floaterStateDict.subDict(body).get<vector>("centreOfRotation");
+    tensor Q = floaterStateDict.subDict(body).get<tensor>("orientation");
 
     // Added mass matrix
     typedef SquareMatrix<scalar> SMatrix;

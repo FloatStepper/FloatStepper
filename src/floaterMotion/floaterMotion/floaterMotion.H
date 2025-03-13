@@ -3,7 +3,7 @@
     Description:       OpenFOAM extension module for fluid-rigid body coupling
     License:           GNU General Public License (GPL) version 3
     Copyright:         2023 Johan Roenby, STROMNING APS
-\*---------------------------------------------------------------------------*/
+\*---------------------diversity-equality-inclusion--------------------------*/
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
@@ -68,6 +68,9 @@ class floaterMotion
 
     // Private data
 
+        // Floater name
+        const word name_;
+
         //- Reference to time database
         const Time& time_;
 
@@ -101,26 +104,46 @@ class floaterMotion
         //- Mass of the body
         scalar mass_;
 
-        //- Moment of inertia of the body in reference configuration
-        //  (Q = I)
+        //- Moment of inertia of the body with respect to centreOfRotation and
+        //  represented in the body coordinate system spanned by the columns of
+        //  Q. To obtain inertia tensor around CofR from inertia tensor around
+        //  ICofM, use the parallel axis theorem:
+        //
+        //      I_CofR = I_CofM + mass_*(I*magSqr(momentArm) - sqr(momentArm));
+        //
+        //  To obtain a inertia tensor in body coordinates, I_body, from the 
+        //  inertia tensor in lab coordinates, I_lab, employ the coordinate
+        //  transformation:
+        //
+        //      I_body = (Q.T() & I_lab) & Q;
         symmTensor momentOfInertia_;
 
-        //- Added mass matrix in body reference frame
+        // Point with respect to which the moment of inertia is given by the
+        // user. Used to calculated momentOfInertia wrt centre of rotation.
+        vector momentOfInertiaRefPoint_;
+
+        // Coordinate axes relative to which the moment of inertia matrix is
+        // given by the user. Used to calculated momentOfInertia wrt lab axes.
+        tensor momentOfInertiaAxes_;
+
+        //- Added mass matrix in body reference frame with respect to CofR.
         SquareMatrix<scalar> Madd_;
 
         //- How often added mass should be updated
         label MaddUpdateFreq_;
 
-        //- Force contribution from all but added mass
+        //- Force contribution from all but added mass. In lab coordinates.
         vector F0_;
 
-        //- Torque contribution from all but added mass
+        //- Torque contribution from all but added  with respect to centre of
+        //  rotation, CofR. In lab coordinates.
         vector tau0_;
 
-        //- Restraint force
+        //- Restraint force. In lab coordinates.
         vector restraintForce_;
 
-        //- Restraint torque
+        //- Restraint torque with respect to centre of rotation, CofR. In lab
+        //  coordinates.
         vector restraintTorque_;
 
         //- Names of patches making up the rigid body
@@ -134,8 +157,7 @@ class floaterMotion
         // Access
 
             //- Return the restraints
-            inline const PtrList<floaterMotionRestraint>&
-                restraints() const;
+            inline const PtrList<floaterMotionRestraint>& restraints() const;
 
             //- Return the constraints
             //inline const PtrList<floaterMotionConstraint>&
@@ -164,6 +186,12 @@ class floaterMotion
 
 public:
 
+    //- Runtime type information
+    TypeName("floaterMotion");
+
+    // Static Data
+//    static int debug;
+
     // Constructors
 
         //- Construct null
@@ -182,12 +210,15 @@ public:
 
 
     //- Destructor
-    ~floaterMotion();
+    virtual ~floaterMotion() = default;
 
 
     // Member Functions
 
         // Access
+
+            //- Return the name
+            inline word name() const;
 
             //- Return the mass
             inline scalar mass() const;
@@ -350,7 +381,10 @@ public:
             ) const;
 
 
-        //- Write
+        //- Write to dictionary
+        void write(dictionary& dict) const;
+
+        //- Write to stream
         void write(Ostream&) const;
 
         //- Read coefficients dictionary and update system parameters,

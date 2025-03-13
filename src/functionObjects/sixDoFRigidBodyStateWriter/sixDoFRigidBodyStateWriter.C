@@ -80,7 +80,7 @@ void Foam::functionObjects::sixDoFRigidBodyStateWriter::writeFileHeader(Ostream&
             << "centreOfMass" << tab
             << "rotation" << tab
             << "velocity" << tab
-            << "omega" << endl;
+            << "angularVelocity" << endl;
     }
     else
     {

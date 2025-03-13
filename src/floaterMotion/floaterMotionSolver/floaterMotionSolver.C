@@ -62,27 +62,19 @@ Foam::floaterMotionSolver::floaterMotionSolver
     motion_
     (
         coeffDict(), //Inherited from motionSolver - reads from dynamicMeshDict
-        IOobject
-        (
-            "floaterMotionState",
-            mesh.time().timeName(),
-            "uniform",
-            mesh
-        ).typeHeaderOk<IOdictionary>(true)
-      ? IOdictionary
+        IOdictionary
         (
             IOobject
             (
-                "floaterMotionState",
+                "floaters",
                 mesh.time().timeName(),
                 "uniform",
                 mesh,
-                IOobject::READ_IF_PRESENT,
+                IOobject::MUST_READ,
                 IOobject::NO_WRITE,
                 false
             )
-        )
-      : coeffDict(),
+        ).subDict(dict.dictName()),
         mesh.time()
     ),
     patches_(coeffDict().get<wordRes>("patches")),
@@ -260,7 +252,7 @@ bool Foam::floaterMotionSolver::writeObject
     (
         IOobject
         (
-            "floaterMotionState",
+            "floaters",
             mesh().time().timeName(),
             "uniform",
             mesh(),
@@ -270,7 +262,11 @@ bool Foam::floaterMotionSolver::writeObject
         )
     );
 
-    motion_.state().write(dict);
+    // Create or get the sub-dictionary with the name from motion_.name()
+    dictionary& floaterDict = dict.subDictOrAdd(motion_.name());
+    motion_.write(floaterDict);
+
+//    motion_.write(dict);
     return dict.regIOobject::write();
 }
 

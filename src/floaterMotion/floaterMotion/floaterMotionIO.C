@@ -39,6 +39,11 @@ bool Foam::floaterMotion::read(const dictionary& dict)
     dict.readEntry("mass", mass_);
     dict.readEntry("momentOfInertia", momentOfInertia_);
 
+    Info << "Warning: momentOfInertia read by floaterMotion::read() but " 
+        << "momentOfInertia not transformed!" << endl;
+    Info << "Please make sure it also reads momentOfInertiaRefPoint and "
+        << "momentOfInertiaAxes and transform accordingly." << endl;
+
     restraints_.clear();
     addRestraints(dict);
 
@@ -49,14 +54,40 @@ bool Foam::floaterMotion::read(const dictionary& dict)
 }
 
 
+void Foam::floaterMotion::write(dictionary& dict) const
+{
+    motionState_.write(dict);
+
+    dict.add("mass", mass_);
+    dict.add("centreOfMass", centreOfMass());
+    dict.add("momentOfInertia", momentOfInertia_);
+//    dict.add("momentOfInertiaRefPoint", momentOfInertiaRefPoint_);
+//    dict.add("momentOfInertiaAxes", momentOfInertiaAxes_);
+    dict.add("initialCentreOfRotation", initialCentreOfRotation_);
+    dict.add("initialOrientation", initialQ_);
+    dict.add("initialCentreOfMass", initialCentreOfMass_);
+    dict.add("addedMass", Madd_);
+    dict.add("F0", F0_);
+    dict.add("tau0", tau0_);
+
+}
+
+
 void Foam::floaterMotion::write(Ostream& os) const
 {
     motionState_.write(os);
 
-    os.writeEntry("centreOfMass", initialCentreOfMass_);
-    os.writeEntry("initialOrientation", initialQ_);
     os.writeEntry("mass", mass_);
+    os.writeEntry("centreOfMass", centreOfMass());
     os.writeEntry("momentOfInertia", momentOfInertia_);
+//    os.writeEntry("momentOfInertiaRefPoint", momentOfInertiaRefPoint_);
+//    os.writeEntry("momentOfInertiaAxes", momentOfInertiaAxes_);
+    os.writeEntry("initialCentreOfRotation", initialCentreOfRotation_);
+    os.writeEntry("initialOrientation", initialQ_);
+    os.writeEntry("initialCentreOfMass", initialCentreOfMass_);
+    os.writeEntry("addedMass", Madd_);
+    os.writeEntry("F0", F0_);
+    os.writeEntry("tau0", tau0_);
 
     if (!restraints_.empty())
     {

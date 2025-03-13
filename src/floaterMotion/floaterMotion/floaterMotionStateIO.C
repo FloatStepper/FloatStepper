@@ -40,8 +40,8 @@ void Foam::floaterMotionState::write(dictionary& dict) const
     dict.add("orientation", Q_);
     dict.add("velocity", v_);
     dict.add("acceleration", a_);
-    dict.add("omega", omega_);
-    dict.add("domegadt", domegadt_);
+    dict.add("angularVelocity", omega_);
+    dict.add("angularAcceleration", domegadt_);
 }
 
 
@@ -51,8 +51,8 @@ void Foam::floaterMotionState::write(Ostream& os) const
     os.writeEntry("orientation", Q_);
     os.writeEntry("velocity", v_);
     os.writeEntry("acceleration", a_);
-    os.writeEntry("omega", omega_);
-    os.writeEntry("domegadt", domegadt_);
+    os.writeEntry("angularVelocity", omega_);
+    os.writeEntry("angularAcceleration", domegadt_);
 }
 
 

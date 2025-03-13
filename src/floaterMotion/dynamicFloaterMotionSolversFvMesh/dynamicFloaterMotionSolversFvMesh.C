@@ -76,7 +76,8 @@ Foam::dynamicFloaterMotionSolversFvMesh::dynamicFloaterMotionSolversFvMesh
 )
 :
     dynamicFvMesh(io, doInit),
-    motionSolvers_()
+    motionSolvers_(),
+    onlyMeshMotion_(false)
 {
     if (doInit)
     {
@@ -108,6 +109,9 @@ bool Foam::dynamicFloaterMotionSolversFvMesh::init
 
     IOdictionary dict(ioDict);
 
+    // Read onlyMeshMotion used to only move mesh with moveDynamicMesh
+    onlyMeshMotion_ = dict.getOrDefault<bool>("onlyMeshMotion", false);
+
     label i = 0;
     if (dict.found("solvers"))
     {
@@ -130,7 +134,6 @@ bool Foam::dynamicFloaterMotionSolversFvMesh::init
                     io,
                     dEntry.dict()
                 );
-
 
                 motionSolvers_.set
                 (
@@ -194,7 +197,7 @@ bool Foam::dynamicFloaterMotionSolversFvMesh::update()
         {
             if (!isA<floaterMotionSolver>(motionSolvers_[i]))
             {
-                Info << "motionSolver_[" << i << "] is not a floaterMotionSolver" << endl;
+//                Info << "motionSolver_[" << i << "] is not a floaterMotionSolver" << endl;
                 if (isA<displacementMotionSolver>(motionSolvers_[i]))
                 {
                     Info << "is a displacementMotionSolver" << endl;
@@ -214,7 +217,7 @@ bool Foam::dynamicFloaterMotionSolversFvMesh::update()
         {
             if (isA<floaterMotionSolver>(motionSolvers_[i]))
             {
-                Info << "motionSolver_[" << i << "] is a floaterMotionSolver" << endl;
+//                Info << "motionSolver_[" << i << "] is a floaterMotionSolver" << endl;
 
                 // Grab handle to mesh motion solver
                 floaterMotionSolver& bodySolver =
@@ -224,9 +227,9 @@ bool Foam::dynamicFloaterMotionSolversFvMesh::update()
 
                 const scalar deltaT = time().deltaTValue();
 
-                if (time().timeIndex() == time().startTimeIndex() + 1)
+                if (onlyMeshMotion_)
                 {
-                    Info << "First time step - not calculating added mass" << endl;
+                    Info << "Only moving mesh - no body state update." << endl;
                     vector a = bodySolver.motion().state().a();
                     vector alpha = bodySolver.motion().state().domegadt();
                     scalarField dvwdt(6, 0);
@@ -282,7 +285,7 @@ bool Foam::dynamicFloaterMotionSolversFvMesh::update()
                         bodySolver.motion().calcAddedMass(*this, DoFs);
                         moving(true);
                     }
-                    // Calculating 6 element acceleration vector 
+                    // Calculating 6 element acceleration vector
                     scalarField dvwdt = bodySolver.motion().calcAcceleration(F0, tau0, DoFs);
                     // Updating body state to new time
                     bodySolver.motion().updateFloaterState(dvwdt, deltaT);
@@ -294,10 +297,13 @@ bool Foam::dynamicFloaterMotionSolversFvMesh::update()
 
                 bodySolver.solve();
                 disp += bodySolver.pointDisplacement().primitiveField();
-                fvMesh::movePoints(bodySolver.points0() + disp);
             }
         }
 
+        // Moving mesh with accummulated point displacement, disp
+        floaterMotionSolver& bodySolver =
+            static_cast<floaterMotionSolver&>(motionSolvers_[0]);
+        fvMesh::movePoints(bodySolver.points0() + disp);
 
         volVectorField* Uptr = getObjectPtr<volVectorField>("U");
 

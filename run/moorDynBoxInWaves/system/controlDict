@@ -52,7 +52,7 @@ maxAlphaCo      1;
 maxDeltaT       1;
 
 
-libs    (moorDynForFloatStepper);
+libs    (moorDynForFloatStepper waveModels);
 
 functions
 {

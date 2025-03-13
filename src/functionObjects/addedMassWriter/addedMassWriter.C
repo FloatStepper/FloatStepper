@@ -102,15 +102,6 @@ bool Foam::functionObjects::addedMassWriter::read(const dictionary& dict)
 {
     if (fvMeshFunctionObject::read(dict))
     {
-/*
-        angleFormat_ =
-            angleTypeNames_.lookupOrDefault
-            (
-                "angleFormat",
-                dict,
-                angleTypes::RADIANS
-            );
-*/
         MaddInBodyFrame_ = dict.lookupOrDefault("MaddInBodyFrame", true);
 
         return true;
@@ -133,47 +124,11 @@ bool Foam::functionObjects::addedMassWriter::write()
         mesh_.lookupObject<floaterMotionSolver>(bodyName_);
 
     const floaterMotion& motion(bodySolver.motion());
-
-/*
-    vector rotationAngle
-    (
-        quaternion(motion.orientation()).eulerAngles(quaternion::XYZ)
-    );
-
-    vector angularVelocity(motion.omega());
-
-    switch (angleFormat_)
-    {
-        case angleTypes::RADIANS:
-        {
-            // Nothing to do - already in radians
-            break;
-        }
-        case angleTypes::DEGREES:
-        {
-            rotationAngle.x() = radToDeg(rotationAngle.x());
-            rotationAngle.y() = radToDeg(rotationAngle.y());
-            rotationAngle.z() = radToDeg(rotationAngle.z());
-
-            angularVelocity.x() = radToDeg(angularVelocity.x());
-            angularVelocity.y() = radToDeg(angularVelocity.y());
-            angularVelocity.z() = radToDeg(angularVelocity.z());
-            break;
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "Unhandled enumeration " << angleTypeNames_[angleFormat_]
-                << abort(FatalError);
-        }
-    }
-*/
-
     scalarSquareMatrix Madd = motion.Madd();
-    if (MaddInBodyFrame_)
+    if (!MaddInBodyFrame_)
     {
         const tensor Q = motion.orientation();
-        Madd = motion.changeFrame(Madd, Q);
+        Madd = motion.changeFrame(Madd, Q.T());
     }
 
     file() << "Time = ";

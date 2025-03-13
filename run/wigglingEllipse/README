@@ -3,8 +3,10 @@ computational floating body dynamics" to validate the hydrodynamic coupling of
 translational and rotational degrees of freedom via added mass coefficients.
 
 The body is an ellipse in a 2D inviscid fluid with boundaries very far away.
-In the limit of an infinite fluid, the Kirchhoff-Kelvin ODE equations can be
-numerically integrated to get exact solution for the body trajectory.
+In the limit of an infinite fluid, the Kelvin-Kirchhoff ODE equations (also
+sometimes called the Kirchhoff-Kelvin equations) can be numerically integrated
+to get exact solution for the body trajectory.
+
 The ellipse shape is controlled by the parameters R and a in the bodyDict file,
 via the Joukowski transformation,
 
@@ -14,16 +16,29 @@ where zeta = exp(i*theta), theta = [0,2pi], so a = 0 corresponds to a circle of
 radius R, a = 1 corresponds to a plate of length 2R and values inbetwee
 correspond to ellipses of various eccentricity.
 
-The bodyDict file is also used to specify the initial position and velocity of
-the ellipse. This file is also read by KirchhoffKelvinIntegrator2D to produce
-the theoretical orbit.
-
 By default the elliptic body has a = 0.5 and is started at the origin with its
 major axis along the y-axis, vx = 1, vy = 0 and omega = 1.
 This gives rise to steady motion along the x-axis superimposed with angular
-wiggling and wobbling.
+wiggling and wobbling. The initial conditions are specified in the
+0.orig/uniform/floaters file. For comparison with the "exact" solution obtained
+by integrating the Kelvin-Kirchhoff ODE's, run the case with the application
+kelvinKirchhoffEquationSolver instead of floatStepper. A script called
+makeAnalyticCase.sh is included which copies the base case and runs it with
+kelvinKirchhoffEquationSolver. To compare the floatStepper and ODE results,
+execute the python script compareTrajectories.py.
 
-For Kirchhoff-Kelvin equations, see e.g. Milne-Thomson's Theoretical
+The case called liftedCentreOfRotation is identical to baseCase but uses a
+centre of rotation at y = 1 instead of at the centre of the ellipse. The
+velocity and acceleration initial conditions are modified to correspond to the
+initial conditions of this point. The resulting ellipse motion should be
+identical to the baseCase but the trajectory will look different since we now
+follow another point fixed in the body. The case is included to verify that
+solutions are independent of the choice of centre of rotation. This is the case
+when time steps are small, but for large time steps, the body motion may depend
+on choice of centre of rotation because e.g. trajectories with a cusp are more
+demanding for the body motion integrator in floatStepper.
+
+For Kelvin-Kirchhoff equations, see e.g. Milne-Thomson's Theoretical
 Hydrodynamics.
 
 Note that the finest cases generated with the nxMaxCoScanner script take a VERY

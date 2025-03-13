@@ -60,8 +60,8 @@ Foam::floaterMotionState::floaterMotionState
     Q_(dict.getOrDefault("orientation", tensor::I)),
     v_(dict.getOrDefault("velocity", vector::zero)),
     a_(dict.getOrDefault("acceleration", vector::zero)),
-    omega_(dict.getOrDefault("omega", vector::zero)),
-    domegadt_(dict.getOrDefault("domegadt", vector::zero))
+    omega_(dict.getOrDefault("angularVelocity", vector::zero)),
+    domegadt_(dict.getOrDefault("angularAcceleration", vector::zero))
 {}
 
 

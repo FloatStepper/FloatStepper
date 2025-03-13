@@ -6,5 +6,5 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 cleanCase0
 rm -rf floater.stl 0 trajectory forceAndTorque KKtrajectory
-rm constant/floaterMassAndInertia rigidBodyMotionStateInput
+rm rigidBodyMotionStateInput
 #------------------------------------------------------------------------------

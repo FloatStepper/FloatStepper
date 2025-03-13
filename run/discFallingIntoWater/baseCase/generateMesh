@@ -4,7 +4,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-python writeMeshParmFile.py
+python3 writeMeshParmFile.py
 runApplication blockMesh
 cp system/mirrorMeshDict.X system/mirrorMeshDict
 runApplication mirrorMesh -overwrite
@@ -16,8 +16,3 @@ runApplication topoSet
 runApplication createPatch -overwrite
 sed -i '0,/auto0.*$/s//floatingObject/' constant/polyMesh/boundary
 sed -i '0,/auto1.*$/s//rim/' constant/polyMesh/boundary
-#runApplication transformPoints -scale '(0.75 1.25 1)'
-#eccentricity=$(foamDictionary -entry bodyEccentricity constant/bodyParmDict -value)
-#runApplication joukowskiTransformPoints -joukowski $eccentricity
-#runApplication transformPoints -rotate-angle '((0 0 1) 90)'
-#runApplication renumberMesh -overwrite

@@ -3,5 +3,4 @@ cd ${0%/*} || exit 1                        # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions  # Tutorial clean functions
 
 cleanCase0
-rm constant/floaterMassAndInertia constant/CofR
 #------------------------------------------------------------------------------

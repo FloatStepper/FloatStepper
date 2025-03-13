@@ -24,7 +24,7 @@ boundaryField
 {
     inlet
     {
-        type            waveAlphaOla;
+        type            waveAlpha;
         waveType        aaa;
         waterDepth      -0.5;
         genAbs          0;

@@ -65,8 +65,11 @@ class dynamicFloaterMotionSolversFvMesh
 {
     // Private data
 
+        // List of motionSolvers. Only displacementMotionSolvers are used.
         PtrList<motionSolver> motionSolvers_;
 
+        // Switch to allow initial pure mesh motion with moveDynamicMesh
+        bool onlyMeshMotion_;
 
     // Private Member Functions
 

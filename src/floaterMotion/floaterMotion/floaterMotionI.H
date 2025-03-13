@@ -92,6 +92,12 @@ inline Foam::tensor& Foam::floaterMotion::Q()
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 
+inline Foam::word Foam::floaterMotion::name() const
+{
+    return name_;
+}
+
+
 inline Foam::scalar Foam::floaterMotion::mass() const
 {
     return mass_;

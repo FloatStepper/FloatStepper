@@ -16,14 +16,11 @@ FoamFile
 
 dynamicFvMesh        dynamicFloaterMotionSolversFvMesh;
 
-addedMassModel      pisoAddedMass;
-
 solvers
 {
     box
     {
         motionSolverLibs    ("libfloaterMotion.so");
-
         motionSolver        floaterMotion;
 
         floaterMotionCoeffs
@@ -31,11 +28,12 @@ solvers
             patches         (floatingObject);
             innerDistance   10;
             outerDistance   60;
-            MaddUpdateFreq  1;
+
             linDirs         (1 1 1);
             rotDirs         (1 1 1);
 
-            #include "floaterMassAndInertia"
+            MaddUpdateFreq  1;
+            addedMassModel  pisoAddedMass;
 
             restraints
             {

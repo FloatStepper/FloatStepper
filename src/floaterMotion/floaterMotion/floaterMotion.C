@@ -36,6 +36,14 @@ License
 #include "forceContributions.H"
 #include "uniformDimensionedFields.H"
 #include "symmTransformField.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(floaterMotion, 0);
+}
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -44,6 +52,7 @@ License
 
 Foam::floaterMotion::floaterMotion(const Time& time)
 :
+    name_(),
     time_(time),
     motionState_(),
     motionState0_(),
@@ -56,6 +65,8 @@ Foam::floaterMotion::floaterMotion(const Time& time)
     initialQ_(I),
     mass_(VSMALL),
     momentOfInertia_(symmTensor::one*VSMALL),
+    momentOfInertiaRefPoint_(Zero),
+    momentOfInertiaAxes_(Zero),
     Madd_({6, 6}, 0),
     MaddUpdateFreq_(1),
     F0_(Zero),
@@ -73,6 +84,7 @@ Foam::floaterMotion::floaterMotion
     const Time& time
 )
 :
+    name_(stateDict.dictName()),
     time_(time),
     motionState_(stateDict),
     motionState0_(),
@@ -80,57 +92,62 @@ Foam::floaterMotion::floaterMotion
 //    constraints_(),
 //    tConstraints_(tensor::I),
 //    rConstraints_(tensor::I),
-    initialCentreOfMass_
-    (
-        dict.getOrDefault
-        (
-            "initialCentreOfMass",
-            dict.get<vector>("centreOfMass")
-        )
-    ),
-    initialCentreOfRotation_(initialCentreOfMass_),
-    // Isn't it problematic that CoR is set to CoM if we want the possibility to
-    // have different values? I tested this:
-    //initialCentreOfRotation_(motionState_.centreOfRotation()),
-    // but it caused a bug where mesh was not updated on simulation restart
-    initialQ_
-    (
-        dict.getOrDefault
-        (
-            "initialOrientation",
-            dict.getOrDefault("orientation", tensor::I)
-        )
-    ),
-    mass_(dict.get<scalar>("mass")),
-    momentOfInertia_(dict.get<symmTensor>("momentOfInertia")),
-    Madd_(dict.getOrDefault("Madd", SquareMatrix<scalar>({6, 6}, 0))),
+    initialCentreOfMass_(stateDict.get<point>("initialCentreOfMass")),
+    initialCentreOfRotation_(stateDict.get<point>("initialCentreOfRotation")),
+    initialQ_(stateDict.get<tensor>("initialOrientation")),
+    mass_(stateDict.get<scalar>("mass")),
+    momentOfInertia_(stateDict.get<symmTensor>("momentOfInertia")),
+    momentOfInertiaRefPoint_(stateDict.getOrDefault<vector>("momentOfInertiaRefPoint", centreOfRotation())),
+    momentOfInertiaAxes_(stateDict.getOrDefault<tensor>("momentOfInertiaAxes", orientation())),
+    Madd_(stateDict.getOrDefault("Madd", SquareMatrix<scalar>({6, 6}, 0))),
     MaddUpdateFreq_(dict.getOrDefault("MaddUpdateFreq", 1)),
-    F0_(Zero),
-    tau0_(Zero),
+    F0_(stateDict.getOrDefault("F0", vector::zero)),
+    tau0_(stateDict.getOrDefault("tau0", vector::zero)),
     restraintForce_(Zero),
     restraintTorque_(Zero),
     patches_(dict.get<wordRes>("patches"))
 {
+
+    Info << endl;
+    Info << "Inertia for body: " << name_ << endl;
+    Info << "mass: " << mass_ << endl;
+    Info << "centreOfMass: " << centreOfMass() << endl;
+    Info << "momentOfInertia: " << momentOfInertia_
+        << " with respect to" << endl;
+    Info << "momentOfInertiaRefPoint: " << momentOfInertiaRefPoint_ << " and "
+        << endl;
+    Info << "momentOfInertiaAxes: " << momentOfInertiaAxes_ << endl;
+
+    // Transform momentOfInertia tensor to lab axes
+    tensor J = (momentOfInertiaAxes_ & momentOfInertia_) & momentOfInertiaAxes_;
+ 
+    // Calculate momentOfInertia with respect to centreOfMass
+    vector d = momentOfInertiaRefPoint_ - centreOfMass();
+    tensor JCofM = J - mass_*((d & d)*I - d*d);
+ 
+    // Calculating momentOfInertia with respect to centreOfRotation
+    d = centreOfRotation() - centreOfMass();
+    tensor ICofR = JCofM + mass_*((d & d)*I - d*d);
+
+    // Transforming momentOfInertia to body axes
+    ICofR = (orientation().T() & ICofR) & orientation();
+
+    // Changing momentOfInertia_ to be with respect to centre of rotation and in
+    // body axes.
+    momentOfInertia_ = symmTensor
+    (
+        ICofR.xx(), ICofR.xy(), ICofR.xz(),
+        ICofR.yy(), ICofR.yz(), ICofR.zz()
+    );
+    momentOfInertiaRefPoint_ = centreOfRotation();
+    momentOfInertiaAxes_ = orientation();
+
+    Info << "momentOfInertia with respect to centre of rotation in body axes:"
+        << endl;
+    Info << momentOfInertia_ << endl;
+    Info << endl;
+
     addRestraints(dict);
-    
-    // Set constraints and initial centre of rotation
-    // if different to the centre of mass
-    //addConstraints(dict);
-
-    // If the centres of mass and rotation are different ...
-    vector R(initialCentreOfMass_ - initialCentreOfRotation_);
-    if (magSqr(R) > VSMALL)
-    {
-        // ... correct the moment of inertia tensor using parallel axes theorem
-        momentOfInertia_ += mass_*(I*magSqr(R) - sqr(R));
-
-        // ... and if the centre of rotation is not specified for motion state
-        // update it
-        if (!stateDict.found("centreOfRotation"))
-        {
-            motionState_.centreOfRotation() = initialCentreOfRotation_;
-        }
-    }
 
     // Save the old-time motion state
     motionState0_ = motionState_;
@@ -142,6 +159,7 @@ Foam::floaterMotion::floaterMotion
     const floaterMotion& rbm
 )
 :
+    name_(rbm.name_),
     time_(rbm.time_),
     motionState_(rbm.motionState_),
     motionState0_(rbm.motionState0_),
@@ -166,8 +184,8 @@ Foam::floaterMotion::floaterMotion
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::floaterMotion::~floaterMotion()
-{} // Define here (incomplete type in header)
+//Foam::floaterMotion::~floaterMotion()
+//{} // Define here (incomplete type in header)
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
@@ -191,10 +209,26 @@ void Foam::floaterMotion::calcAddedMass
             false
         )
     );
+    const dictionary& solvertDict = dynamicMeshDict.subDict("solvers");
+
+    word bodyName;
+    word motionSolverType;
+    for (const entry& dEntry : solvertDict)
+    {
+        // Note! If more than one motionSolver, this ends up with the last one
+        if (dEntry.isDict())
+        {
+            bodyName = dEntry.dict().dictName();
+            const dictionary& bodyDict = solvertDict.subDict(bodyName);
+            motionSolverType = bodyDict.get<word>("motionSolver");
+        }
+    }
+    const dictionary& solverDict =
+        solvertDict.subDict(bodyName).subDict(motionSolverType + "Coeffs");
 
     autoPtr<addedMass> addedM = addedMass::New
     (
-        dynamicMeshDict.get<word>("addedMassModel"),
+        solverDict.get<word>("addedMassModel"),
         mesh,
         dynamicMeshDict
     );
@@ -214,10 +248,7 @@ void Foam::floaterMotion::calcAddedMass
     );
 
     // Changing to body frame
-    changeFrame(Madd_, Q());
-
-    Info << "Added mass matrix in body frame:" << endl;
-    MatrixTools::printMatrix(Info, Madd_) << nl;
+    Madd_ = changeFrame(Madd_, Q());
 }
 
 
@@ -350,7 +381,6 @@ void Foam::floaterMotion::updateFloaterState
 
 Foam::scalarField Foam::floaterMotion::calcAcceleration
 (
-//    const SquareMatrix<scalar>& Madd,
     const vector& F0,
     const vector& tau0,
     const labelList& DoFs
@@ -360,8 +390,7 @@ Foam::scalarField Foam::floaterMotion::calcAcceleration
     typedef SquareMatrix<scalar> SMatrix;
     SMatrix Mbody({6, 6}, 0);
     tensor Q = motionState_.Q();
-    symmTensor I_bf = momentOfInertia(); // body frame
-    tensor I_lf = (Q & I_bf) & Q.T(); // lab frame
+    tensor I_lf = (Q & momentOfInertia_) & Q.T(); // lab frame inertia wrt CofR.
 //    tensor Mtensor = mass()*(tensor::I); // Q mI QT = m Q Qt = mI
     vector marm = mass()*momentArm();
     tensor mXcm
@@ -382,18 +411,19 @@ Foam::scalarField Foam::floaterMotion::calcAcceleration
     // Defining RHS in the equation Meff*ddt[v, w] = [F0 - wxmXcmw, tau0 - wxIw]
     SMatrix Meff({6, 6}, 0);
     Meff = changeFrame(Madd_, Q.T()) + Mbody;
-    Info << "Effective mass matrix in lab frame:" << endl;
-    MatrixTools::printMatrix(Info, Meff) << nl;
     scalarField RHS(6), dvwdt(6);
     vector omega = motionState_.omega();
     vector wxIw = omega ^ (I_lf & omega);
     vector wxmXcmw = omega ^ (mXcm & omega);
-    RHS[0] = F0[0] - wxmXcmw[0]; RHS[1] = F0[1] - wxmXcmw[1]; RHS[2] = F0[2] - wxmXcmw[2];
-    RHS[3] = tau0[0] - wxIw[0]; RHS[4] = tau0[1] - wxIw[1]; RHS[5] = tau0[2] - wxIw[2];
+    RHS[0] = F0[0] - wxmXcmw[0];
+    RHS[1] = F0[1] - wxmXcmw[1];
+    RHS[2] = F0[2] - wxmXcmw[2];
+    RHS[3] = tau0[0] - wxIw[0];
+    RHS[4] = tau0[1] - wxIw[1];
+    RHS[5] = tau0[2] - wxIw[2];
     dvwdt = RHS;
 
     // Clean inactive DoF
-    Info << "DoFs = " << DoFs << endl;
     const label nDoFs = DoFs.size();
     SMatrix Meff_reduced({nDoFs, nDoFs}, 0);
     scalarField dvwdt_reduced(nDoFs, 0);
@@ -405,13 +435,22 @@ Foam::scalarField Foam::floaterMotion::calcAcceleration
         }
         dvwdt_reduced[di] = dvwdt[DoFs[di]];
     }
-    Info << "Reduced effective mass matrix in lab frame:" << endl;
-    MatrixTools::printMatrix(Info, Meff_reduced) << nl;
+
+    if (debug)
+    {
+        Info << "Effective mass matrix in lab frame:" << endl;
+        MatrixTools::printMatrix(Info, Meff) << nl;
+
+        Info << "Reduced effective mass matrix in lab frame:" << endl;
+        MatrixTools::printMatrix(Info, Meff_reduced) << nl;
+
+        Info << "Before LUsolve: dvwdt_reduced = " << dvwdt_reduced << endl;
+    }
 
     // Solving Meff*ddt[v, w] = [F0 - wxmXcmw, tau0 - wxIw] with LU decomposition
-    Info << "Before LUsolve: dvwdt_reduced = " << dvwdt_reduced << endl;
     LUsolve(Meff_reduced, dvwdt_reduced);
-    Info << "After LUsolve: dvwdt_reduced = " << dvwdt_reduced << endl;
+
+    // Populating 6 DoF accelereation vector to be returned
     dvwdt = 0;
     forAll(dvwdt_reduced, di)
     {
@@ -419,9 +458,13 @@ Foam::scalarField Foam::floaterMotion::calcAcceleration
     }
 
     //Printing out Meff in body frame
-    SMatrix Meff_bf = changeFrame(Meff, Q);
-    Info << "Meff in body frame:" << endl;
-    MatrixTools::printMatrix(Info, Meff_bf) << nl;
+    if (debug)
+    {
+        SMatrix Meff_bf = changeFrame(Meff, Q);
+        Info << "After LUsolve: dvwdt_reduced = " << dvwdt_reduced << endl;
+        Info << "Meff in body frame:" << endl;
+        MatrixTools::printMatrix(Info, Meff_bf) << nl;
+    }
 
     return dvwdt;
 }

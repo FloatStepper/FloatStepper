@@ -52,13 +52,10 @@ maxAlphaCo      0.5;
 maxDeltaT       1;
 
 libs
-( 
-    "libwaveGeneration.so"
-    "libwaveAbsorption.so"
-    "libsampling.so"
-    "libfieldFunctionObjects.so"
-    "librigidBodyMotion.so" 
-    "libmoordyn.so" 
+(
+    waveGeneration      // NB: Requires install of github.com/phicau/olaFlow
+    waveAbsorption      // NB: Requires install of github.com/phicau/olaFlow
+    moorDynForFloatStepper // NB: Requires install of ThirdParty/MoorDyn
 );
 
 

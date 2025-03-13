@@ -108,6 +108,8 @@ public:
         //- Construct as copy
         floaterMotionState(const floaterMotionState&);
 
+        //- Explicitly default the copy assignment operator
+        floaterMotionState& operator=(const floaterMotionState&) = default;
 
     //- Destructor
     ~floaterMotionState();

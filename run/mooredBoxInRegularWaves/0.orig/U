@@ -38,7 +38,8 @@ boundaryField
     }
     inlet
     {
-        type            waveVelocityOla;
+        type            waveVelocity;
+        waveDictName    waveDict;
         value           uniform ( 0 0 0 );
     }
     outlet

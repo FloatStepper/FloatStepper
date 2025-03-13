@@ -3,16 +3,26 @@ cd ${0%/*} || exit 1    # run from this directory
 
 wcmd="${1:-wmake}"
 
-$wcmd src/functionObjects/forceContributions
-$wcmd src/addedMass
-$wcmd src/floaterMotion
-$wcmd src/functionObjects/floaterStateWriter
-$wcmd src/functionObjects/sixDoFRigidBodyStateWriter
-$wcmd src/functionObjects/addedMassWriter
-$wcmd src/waveMakerMotionSolver
+if [ "$wcmd" = "wmake" ] || [ "$wcmd" = "wclean" ]; then
 
-$wcmd applications/floatStepper
-$wcmd applications/util/joukowskiTransformPoints
-$wcmd applications/util/mySurfaceInertia
-$wcmd applications/util/KirchhoffKelvinIntegrator2D
-$wcmd applications/util/addedMassCalculator
+    $wcmd src/functionObjects/forceContributions
+    $wcmd src/addedMass
+    $wcmd src/floaterMotion
+    $wcmd src/functionObjects/floaterStateWriter
+    $wcmd src/functionObjects/sixDoFRigidBodyStateWriter
+    $wcmd src/functionObjects/addedMassWriter
+    $wcmd src/waveMakerMotionSolver
+
+    $wcmd applications/floatStepper
+    $wcmd applications/util/joukowskiTransformPoints
+    $wcmd applications/util/mySurfaceInertia
+    $wcmd applications/util/KirchhoffKelvinIntegrator2D
+    $wcmd applications/util/addedMassCalculator
+    $wcmd applications/util/kelvinKirchhoffEquationSolver
+    $wcmd applications/util/floaterMotionPotentialFlow
+
+else
+    # Invalid input
+    echo "Error: Input must be either 'wmake' or 'wclean'"
+    exit 1
+fi

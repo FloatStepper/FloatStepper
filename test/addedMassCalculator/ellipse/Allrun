@@ -10,7 +10,7 @@ restore0Dir
 
 ./generateMesh
 
-foamDictionary -entry addedMassModel -set pisoAddedMass constant/dynamicMeshDict
+foamDictionary -entry solvers.body.floaterMotionCoeffs.addedMassModel -set pisoAddedMass constant/dynamicMeshDict
 
 runApplication $(getApplication)
 
@@ -21,7 +21,7 @@ cat ma_piso.dat
 
 mv log.$(getApplication) log.$(getApplication)_piso
 
-foamDictionary -entry addedMassModel -set potentialAddedMass constant/dynamicMeshDict
+foamDictionary -entry solvers.body.floaterMotionCoeffs.addedMassModel -set potentialAddedMass constant/dynamicMeshDict
 
 runApplication $(getApplication)
 

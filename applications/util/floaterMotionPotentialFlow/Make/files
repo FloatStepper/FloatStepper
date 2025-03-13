@@ -1,0 +1,3 @@
+floaterMotionPotentialFlow.C
+
+EXE = $(FOAM_USER_APPBIN)/floaterMotionPotentialFlow

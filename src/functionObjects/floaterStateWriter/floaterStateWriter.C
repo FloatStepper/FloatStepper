@@ -81,7 +81,7 @@ void Foam::functionObjects::floaterStateWriter::writeFileHeader(Ostream& os)
             << "centreOfMass" << tab
             << "rotation" << tab
             << "velocity" << tab
-            << "omega" << endl;
+            << "angularVelocity" << endl;
     }
     else
     {

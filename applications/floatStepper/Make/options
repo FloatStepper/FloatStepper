@@ -33,7 +33,6 @@ EXE_LIBS = \
     -limmiscibleIncompressibleTwoPhaseMixture \
     -lturbulenceModels \
     -lincompressibleTurbulenceModels \
-    -lwaveModels \
     -lgeometricVoF \
     -ltwoPhaseMixture \
     -ltwoPhaseProperties \

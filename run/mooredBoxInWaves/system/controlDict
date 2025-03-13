@@ -51,6 +51,8 @@ maxCo           0.5;
 maxAlphaCo      0.5;
 maxDeltaT       1;
 
+libs ( waveModels );
+
 functions
 {
     floaterMotion
@@ -81,7 +83,7 @@ functions
         log             on;
         writeControl    timeStep;
         writeInterval   1;
-        #include "../constant/CofR"
+        CofR            (0 0 0); //Note: Correct CofR?
     }
 }
 

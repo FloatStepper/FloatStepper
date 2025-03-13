@@ -55,23 +55,23 @@ maxDeltaT       1;
 
 functions
 {
-    floaterMotion
+    bodyState
     {
         type            floaterStateWriter;
         libs            ( floaterStateWriter );
         writeControl    timeStep;
         writeInterval   1;
         classicWriteFormat false;
-        bodyName body;
+        bodyName        body;
     }
 
-    addedMass
+    bodyAddedMass
     {
-        type           addedMassWriter;
-        libs           (addedMassWriter);
-        writeControl   timeStep;
-        writeInterval  1;
-        bodyName body;
+        type            addedMassWriter;
+        libs            (addedMassWriter);
+        writeControl    timeStep;
+        writeInterval   1;
+        bodyName        body;
     }
 }
 

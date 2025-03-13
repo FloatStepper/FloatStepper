@@ -2,11 +2,12 @@
 cd ${0%/*} || exit 1                        # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions    # Tutorial run functions
 
-touch dum.foam constant/CofR
+caseName=$(basename $(dirname $(readlink -f "$0")))
+touch ${caseName}.foam
 restore0Dir
 
 # Write mooring file for inclusion in constant/dynamicMeshDict
-python writeMooringFile.py
+python3 writeMooringFile.py
 
 # Generate base mesh
 runApplication blockMesh
@@ -26,11 +27,9 @@ density=500
 inside="(100 50 100)"
 runApplication surfaceMeshExtract -time 0 -patches floatingObject floater.stl
 runApplication surfaceOrient -inside floater.stl "${inside}" floater.stl
-runApplication mySurfaceInertia floater.stl -density ${density}
-grep -A4 'Entries for floatStepper' log.mySurfaceInertia > tmp
-tail -4 tmp > constant/floaterMassAndInertia
-grep "centreOfMass" constant/floaterMassAndInertia > constant/CofR
-sed -i 's/centreOfMass/CofR/g' constant/CofR
+runApplication floaterInertia floater.stl -density ${density}
+grep -A4 'Entries for floatStepper' log.floaterInertia > tmp
+tail -4 tmp > 0/uniform/inertia
 rm tmp floater.stl axes.obj
 
 # Set initial free surface

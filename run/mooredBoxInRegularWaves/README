@@ -4,7 +4,10 @@ project with wave period T = 2 s and wave height H = 0.12 m.
 Presented in section 5.5 of "A robust algorithm for computational floating body
 dynamics".
 
-NOTE! VERY HEAVY CASE RUNNING ON MANY CORES!
+Notes:
+ - Case requires install of olaFlow from www.github.com/phicau/olaFlow
+ - Case requires compilation of thirdParty/MoorDyn
+ - Heavy case using many cores (see system/decomposeParDict)
 
 For details on the experiment see:
 

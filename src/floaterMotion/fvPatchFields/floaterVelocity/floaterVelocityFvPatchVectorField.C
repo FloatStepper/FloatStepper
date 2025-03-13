@@ -203,7 +203,7 @@ void Foam::floaterVelocityFvPatchVectorField::updateCoeffs()
     {
         WarningInFunction
         << "floaterMotionSolver named " << bodyName_ 
-        << " not found in objectRegistry."
+        << " not found in objectRegistry. "
         << "Velocity set to zero on patch " << patch().name() << endl;
     }
 
