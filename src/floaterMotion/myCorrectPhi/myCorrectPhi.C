@@ -60,7 +60,10 @@ void Foam::myCorrectPhi
     wordList pcorrTypes
     (
         p.boundaryField().size(),
-        fvPatchFieldBase::zeroGradientType()
+        zeroGradientFvPatchScalarField::typeName
+        // The line above is replaced by the outcommented line below from
+        // v2312, but this prevents compilation with v2206-v2306
+//        fvPatchFieldBase::zeroGradientType()
     );
 
     // Set BCs of pcorr to fixed-value for patches at which p is fixed
@@ -107,8 +110,11 @@ void Foam::myCorrectPhi
 
         pcorrEqn.solve
         (
-            pcorr.select(pimple.finalNonOrthogonalIter())
-        );
+            mesh.solver(pcorr.select(pimple.finalNonOrthogonalIter()))
+            // The line above is replaced by the outcommented line below from
+            // v2312, but this prevents compilation with v2206-v2306
+//            pcorr.select(pimple.finalNonOrthogonalIter())
+);
 
         if (pimple.finalNonOrthogonalIter())
         {
@@ -140,7 +146,10 @@ void Foam::myCorrectPhi
     wordList pcorrTypes
     (
         p.boundaryField().size(),
-        fvPatchFieldBase::zeroGradientType()
+        zeroGradientFvPatchScalarField::typeName
+        // The line above is replaced by the outcommented line below from
+        // v2312, but this prevents compilation with v2206-v2306
+//        fvPatchFieldBase::zeroGradientType()
     );
 
     // Set BCs of pcorr to fixed-value for patches at which p is fixed
@@ -182,8 +191,11 @@ void Foam::myCorrectPhi
 
         pcorrEqn.solve
         (
-            pcorr.select(pimple.finalNonOrthogonalIter())
-        );
+            mesh.solver(pcorr.select(pimple.finalNonOrthogonalIter()))
+            // The line above is replaced by the outcommented line below from
+            // v2312, but this prevents compilation with v2206-v2306
+//            pcorr.select(pimple.finalNonOrthogonalIter())
+);
 
         if (pimple.finalNonOrthogonalIter())
         {
