@@ -35,7 +35,7 @@ In terms of code maturity, it is at the proof-of-concept stage so users should e
 *floaterMotion* (code structure based on *sixDoFRigidBodyMotion*)
 
 ## Requirements
-OpenFOAM-v2206 to v2406. 
+OpenFOAM-v2206 to v2412. 
 Only openfoam.com versions supported.
 
 ## Installation
