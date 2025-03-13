@@ -256,8 +256,8 @@ bool Foam::floaterMotionSolver::writeObject
             mesh().time().timeName(),
             "uniform",
             mesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE,
             false
         )
     );
@@ -266,7 +266,6 @@ bool Foam::floaterMotionSolver::writeObject
     dictionary& floaterDict = dict.subDictOrAdd(motion_.name());
     motion_.write(floaterDict);
 
-//    motion_.write(dict);
     return dict.regIOobject::write();
 }
 
