@@ -12,12 +12,16 @@ FoamFile
     format          ascii;
     class           dictionary;
     location        "0/uniform";
-    object          floaterMotionState;
+    object          floaters;
 }
 
+body
+{
 
-centreOfRotation  ( 0 1 0 );
+    centreOfRotation    ( 0 1 0 );
 
-orientation     ( 1 0 0 0 1 0 0 0 1 );
+    orientation         ( 1 0 0 0 1 0 0 0 1 );
+
+}
 
 // ************************************************************************* //

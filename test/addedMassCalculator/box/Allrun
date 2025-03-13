@@ -15,7 +15,7 @@ restore0Dir
 
 foamDictionary -entry solvers.body.floaterMotionCoeffs.addedMassModel -set pisoAddedMass constant/dynamicMeshDict
 
-runApplication $(getApplication)
+runApplication $(getApplication) -body body
 
 mv ma.dat ma_piso.dat
 
@@ -26,7 +26,7 @@ mv log.$(getApplication) log.$(getApplication)_piso
 
 foamDictionary -entry solvers.body.floaterMotionCoeffs.addedMassModel -set potentialAddedMass constant/dynamicMeshDict
 
-runApplication $(getApplication)
+runApplication $(getApplication)  -body body
 
 mv ma.dat ma_potential.dat
 
