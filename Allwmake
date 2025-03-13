@@ -15,7 +15,7 @@ if [ "$wcmd" = "wmake" ] || [ "$wcmd" = "wclean" ]; then
 
     $wcmd applications/floatStepper
     $wcmd applications/util/joukowskiTransformPoints
-    $wcmd applications/util/mySurfaceInertia
+    $wcmd applications/util/floaterInertia
     $wcmd applications/util/KirchhoffKelvinIntegrator2D
     $wcmd applications/util/addedMassCalculator
     $wcmd applications/util/kelvinKirchhoffEquationSolver
