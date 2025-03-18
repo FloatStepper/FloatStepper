@@ -17,7 +17,7 @@ runApplication surfaceOrient -inside floater.stl "(0 0 0)" floater.stl
 bodyDensity=$(foamDictionary -entry rhob -value bodyDict)
 runApplication floaterInertia floater.stl -density ${bodyDensity}
 grep -A4 'Entries for floatStepper' log.floaterInertia > tmp
-tail -4 tmp > 0/uniform/floaterMassAndInertia
+tail -4 tmp > 0/uniform/inertia
 rm tmp axes.obj
 
 runApplication $(getApplication)

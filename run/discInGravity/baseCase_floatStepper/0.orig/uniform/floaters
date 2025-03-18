@@ -29,9 +29,7 @@ body
 
     angularAcceleration        ( 0 0 0 );
 
-    #include        "floaterMassAndInertia"
-
-    momentOfInertia           $ICoM;
+    #include        "inertia"
 
     initialCentreOfRotation $centreOfRotation;
 
