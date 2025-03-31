@@ -1,9 +1,11 @@
-/*---------------------------------------------------------------------------*\
-    Module Name:       FloatStepper
-    Description:       OpenFOAM extension module for fluid-rigid body coupling
-    License:           GNU General Public License (GPL) version 3
-    Copyright:         2025 Johan Roenby, STROMNING APS
-\*---------------------------------------------------------------------------*/
+/*--------------------------------------------------- -----------------------*\
+|   Module Name:     FloatStepper                                             |
+|   Description:     OpenFOAM extension module for fluid-rigid body coupling  |
+|   License:         GNU General Public License (GPL) version 3               |
+|   Copyright:       2025 Johan Roenby, STROMNING APS                         |
+|---------------------------------------------------- ------------------------|
+|-------Diversity-Equality-Inclusion----Slava-Ukraini----Free-Palestine-------|
+\*--------------------------------------------------- -----------------------*/
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
@@ -21,12 +23,12 @@
 License
     This file is part of FloatStepper.
 
-    OpenFOAM is free software: you can redistribute it and/or modify it
+    FloatStepper is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    FloatStepper is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
     for more details.
@@ -35,7 +37,7 @@ License
     along with FloatStepper.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    kelvinKirchhoffFoam
+    kirchhoffKelvinEquationSolver
 
 Description
     Solves the 6-DoF Kelvin-Kirchhoff equations of motion for a rigid body in an

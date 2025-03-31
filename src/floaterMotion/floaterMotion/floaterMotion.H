@@ -1,46 +1,11 @@
-/*---------------------------------------------------------------------------*\
-    Module Name:       FloatStepper
-    Description:       OpenFOAM extension module for fluid-rigid body coupling
-    License:           GNU General Public License (GPL) version 3
-    Copyright:         2023 Johan Roenby, STROMNING APS
-\*---------------------diversity-equality-inclusion--------------------------*/
-/*---------------------------------------------------------------------------*\
-  =========                 |
-  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
-     \\/     M anipulation  |
--------------------------------------------------------------------------------
-License
-    This file is part of FloatStepper.
-
-    OpenFOAM is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-    for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with FloatStepper.  If not, see <http://www.gnu.org/licenses/>.
-
-Class
-    Foam::floaterMotion
-
-Description
-    Six degree of freedom motion for a floating rigid body.
-
-    Can add restraints (e.g. a spring).
-
-SourceFiles
-    floaterMotionI.H
-    floaterMotion.C
-    floaterMotionIO.C
-
-\*---------------------------------------------------------------------------*/
+/*--------------------------------------------------- -----------------------*\
+|   Module Name:     FloatStepper                                             |
+|   Description:     OpenFOAM extension module for fluid-rigid body coupling  |
+|   License:         GNU General Public License (GPL) version 3               |
+|   Copyright:       2025 Johan Roenby, STROMNING APS                         |
+|---------------------------------------------------- ------------------------|
+|-------Diversity-Equality-Inclusion----Slava-Ukraini----Free-Palestine-------|
+\*--------------------------------------------------- -----------------------*/
 
 #ifndef floaterMotion_H
 #define floaterMotion_H
