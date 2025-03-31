@@ -1,25 +1,25 @@
-/*--------------------------------------------------- -----------------------*\
+/*---------------------------------------------------------------------------*\
 |   Module Name:     FloatStepper                                             |
 |   Description:     OpenFOAM extension module for fluid-rigid body coupling  |
 |   License:         GNU General Public License (GPL) version 3               |
 |   Copyright:       2025 Johan Roenby, STROMNING APS                         |
 |---------------------------------------------------- ------------------------|
 |-------Diversity-Equality-Inclusion----Slava-Ukraini----Free-Palestine-------|
-\*--------------------------------------------------- -----------------------*/
+\*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
     \\  /    A nd           | www.openfoam.com
      \\/     M anipulation  |
--------------------------------------------------------------------------------
+-----------------------------------------------------------------------------
     Copyright (C) 2011-2017 OpenFOAM Foundation
     Copyright (C) 2016 DHI
     Copyright (C) 2017 OpenCFD Ltd.
     Copyright (C) 2018 Johan Roenby
     Copyright (C) 2019-2020 DLR
     Copyright (C) 2020 OpenCFD Ltd.
--------------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 License
     This file is part of FloatStepper.
 

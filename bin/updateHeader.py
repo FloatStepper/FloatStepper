@@ -6,9 +6,9 @@ def replace_header(file_path, new_header):
     """
     Replaces the header in a file with the new header.
     The header is identified by the first occurrence of text between
-    /*--------------------------------------------------- -----------------------*\
+    /*---------------------------------------------------------------------------*\
     and 
-    \*--------------------------------------------------- -----------------------*/
+    \*---------------------------------------------------------------------------*/
     """
     with open(file_path, 'r') as f:
         content = f.read()
