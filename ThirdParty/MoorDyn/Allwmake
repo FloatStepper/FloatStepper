@@ -10,27 +10,25 @@ git submodule init
 git submodule update --remote
 
 echo "=========================================="
-echo "    COMPILE Thirdparty lib - MoorDynv1    "
+echo "           Compiling MoorDyn_v1           "
 echo "=========================================="
-# compile MoorDyn v1
-echo "compile MoorDyn v1"
 cd submodules/MoorDyn_v1/compileSO/;
-make 
-mv MoorDyn.so $FOAM_USER_LIBBIN/libmoorDyn.so
+make
+mv MoorDyn.so $FOAM_USER_LIBBIN/libmoordyn_v1.so
 echo "Compilation done! Library location:"
-echo "$FOAM_USER_LIBBIN/libmoorDyn.so"
+echo "$FOAM_USER_LIBBIN/libmoordyn_v1.so"
 cd ../../
 
 echo "=========================================="
-echo "    COMPILE Thirdparty lib - MoorDynv2    "
+echo "           Compiling MoorDyn_v2           "
 echo "=========================================="
-echo "compiling MoorDyn v2..."
 mkdir -p MoorDyn.build
 cd MoorDyn.build
-cmake -DBUILD_TESTING=OFF -DEXTERNAL_EIGEN=OFF -DFORTRAN_WRAPPER=OFF -DMATLAB_WRAPPER=OFF -DPYTHON_WRAPPER=OFF -DUSE_VTK=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$FOAM_USER_LIBBIN/.. ../MoorDyn
+cmake -DBUILD_TESTING=OFF -DEXTERNAL_EIGEN=OFF -DFORTRAN_WRAPPER=OFF -DMATLAB_WRAPPER=OFF -DPYTHON_WRAPPER=OFF -DUSE_VTK=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=. ../MoorDyn
 CMAKE_RESULT=$?
 make -j
-make install
+make install #Note: Placing header files in MoorDyn.build/include/moordyn where they are used by the OpenFOAM library
+mv source/libmoordyn.so* $FOAM_USER_LIBBIN
 cd ../..
 
 echo "==============================================="

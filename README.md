@@ -77,6 +77,7 @@ Johan Roenby, STROMNING APS and Roskilde University
 - Henrik Bredmose (conceptualisation)
 - Sithik Aliyar (validation, verification, MoorDyn coupling)
 - Henning Scheufler (code structure)
+- Tanausú Almeida Medina (MoorDyn v2 coupling)
 
 ## Contributing
 Please report bugs on the issue tracker of this repository or write to

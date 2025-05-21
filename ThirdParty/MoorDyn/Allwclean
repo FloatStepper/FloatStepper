@@ -2,18 +2,13 @@
 cd ${0%/*} || exit 1    # run from this directory
 
 echo "=========================================="
-echo "    Uninstalling moorDyn v1 lib              "
+echo "        Cleaning MoorDyn_v1 lib           "
 echo "=========================================="
-echo "removing $FOAM_USER_LIBBIN/libmoorDyn.so"
-rm -rf $FOAM_USER_LIBBIN/libmoorDyn.so
-(cd submodules/MoorDyn_v1/compileSO; make clean)
+rm -rf submodules/MoorDyn_v1
 
 echo "=========================================="
-echo "    Uninstalling moorDyn v2 lib              "
+echo "        Cleaning MoorDyn_v2 lib           "
 echo "=========================================="
-# MoorDyn v2
-rm –r $FOAM_USER_LIBBIN/cmake  
-rm –r $FOAM_USER_LIBBIN/../include 
 rm -rf submodules/MoorDyn.build
 rm -rf submodules/MoorDyn
 
@@ -23,3 +18,4 @@ echo "==============================================="
 wclean src
 
 echo "Compilation clean!"
+echo "To remove libraries remove libmoordyn*so* files from $FOAM_USER_LIBBIN"

@@ -16,6 +16,6 @@ runApplication setFields
 runApplication $(getApplication)
 
 #PostProcessing Mooringlines - load .pvd from Mooring folder to visualise the mooring lines together
-python3 MooringVisualizationInParaview.py
+#python3 MooringVisualizationInParaview.py
 
 #------------------------------------------------------------------------------
