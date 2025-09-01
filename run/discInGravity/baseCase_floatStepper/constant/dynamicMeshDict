@@ -14,7 +14,7 @@ FoamFile
     object          dynamicMeshDict;
 }
 
-dynamicFvMesh        dynamicFloaterMotionSolversFvMesh;
+dynamicFvMesh        dynamicMotionSolverListFvMesh;
 
 solvers
 {

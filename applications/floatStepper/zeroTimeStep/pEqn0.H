@@ -10,26 +10,25 @@
         pRefValue
     );
 
-/*
+
     if (correctPhi)
     {
-        rAU0.ref() = 1.0/UEqn.A();
+        rAU.ref() = 1.0/UEqn.A();
     }
     else
-*/
     {
-        rAU0 = 1.0/UEqn.A();
+        rAU = 1.0/UEqn.A();
     }
 
-    surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU0));
-    volVectorField HbyA(constrainHbyA(rAU0*UEqn.H(), U0, p_rgh0));
+    surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU()));
+    volVectorField HbyA(constrainHbyA(rAU()*UEqn.H(), U0, p_rgh0));
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
         fvc::flux(HbyA)
 //      + MRF.zeroFilter(fvc::interpolate(rho*rAU())*fvc::ddtCorr(U, phi, Uf))
 // If mesh.dynamic() ddtCorr(U,phi,Uf) redirects to ddtCorr(U, Uf())
-      + fvc::interpolate(rho0*rAU0)*fvc::ddtCorr(U0, Uf0)
+      + fvc::interpolate(rho0*rAU())*fvc::ddtCorr(U0, Uf0)
     );
 //    MRF.makeRelative(phiHbyA);
 
@@ -43,9 +42,9 @@
     surfaceScalarField phig
     (
         (
-//            mixture.surfaceTensionForce()
+            mixture.surfaceTensionForce() //NOTE: Uses alpha1, not alpha10 as it should. So term is lagged in time!!!
           - ghf*fvc::snGrad(rho0)
-        )*rAUf*magSf()
+        )*rAUf*mesh.magSf()
     );
 
     phiHbyA += phig;
@@ -63,7 +62,7 @@
 
         p_rghEqn.setReference(pRefCell, getRefCellValue(p_rgh, pRefCell));
 
-        p_rghEqn.solve(this->solver(p_rgh.select(pimple.finalInnerIter())));
+        p_rghEqn.solve(mesh.solver(p_rgh.select(pimple.finalInnerIter())));
 
         if (pimple.finalNonOrthogonalIter())
         {
@@ -71,7 +70,7 @@
 
             p_rgh0.relax();
 
-            U0 = HbyA + rAU0*fvc::reconstruct((phig - p_rghEqn.flux())/rAUf);
+            U0 = HbyA + rAU()*fvc::reconstruct((phig - p_rghEqn.flux())/rAUf);
             U0.correctBoundaryConditions();
 //            fvOptions.correct(U);
         }
@@ -97,11 +96,12 @@
 */
     // Correct Uf if the mesh is moving
 //    fvc::correctUf(Uf0, U0, phi0);
-    if (dynamic())
+    // Replaced by identical code below but with Uf() -> Uf0, see fvcMeshPhi.C
+    if (mesh.dynamic())
     {
         Uf0 = fvc::interpolate(U0);
-        surfaceVectorField n(Sf()/magSf());
-        Uf0 += n*(phi0/magSf() - (n & Uf0));
+        surfaceVectorField n(mesh.Sf()/mesh.magSf());
+        Uf0 += n*(phi0/mesh.magSf() - (n & Uf0));
     }
 
 
@@ -124,6 +124,6 @@
 
     if (!correctPhi)
     {
-//        rAU0.clear();
+        rAU.clear();
     }
 }

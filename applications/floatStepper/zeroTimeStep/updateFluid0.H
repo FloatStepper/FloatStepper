@@ -6,6 +6,26 @@
 |---------------------------------------------------- ------------------------|
 |-------Diversity-Equality-Inclusion----Slava-Ukraini----Free-Palestine-------|
 \*---------------------------------------------------------------------------*/
-zeroField Su;
-zeroField Sp;
-//zeroField divU;
+// --- Pressure-velocity PIMPLE corrector loop
+while (pimple.loop())
+{
+
+    #include "alphaControls.H"
+    #include "alphaEqnSubCycle0.H"
+
+//    mixture.correct();
+
+    #include "UEqn0.H"
+
+    // --- Pressure corrector loop
+    while (pimple.correct())
+    {
+        #include "pEqn0.H"
+    }
+
+
+    if (pimple.turbCorr())
+    {
+//        turbulence->correct();
+    }
+}

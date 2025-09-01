@@ -10,7 +10,7 @@ if (pimple.nCorrPIMPLE() > 1)
         // To recalculate the alpha1 update in subsequent iterations, we
         // must store its current value before overwriting with the new
         // value
-        alpha0.storePrevIter();
+//        alpha10.storePrevIter();
         // Storing initial phi and U for use in later outer iterations.
 //        phi.storePrevIter();
 //        U.storePrevIter();
@@ -21,7 +21,7 @@ if (pimple.nCorrPIMPLE() > 1)
         // Resetting alpha1 to value before advection in first PIMPLE
         // iteration.
 //        Info << "set to prev Iter " << endl;
-        alpha0 = alpha0.prevIter();
+//        alpha10 = alpha10.prevIter();
 
         // Setting U and phi with which to advect interface.
 //        U = 0.5*U.prevIter() + 0.5*U;
@@ -29,33 +29,29 @@ if (pimple.nCorrPIMPLE() > 1)
     }
 }
 
-const dimensionedScalar& rho1 = mixture.rho1();
-const dimensionedScalar& rho2 = mixture.rho2();
-
-
 if (nAlphaSubCycles > 1)
 {
-    dimensionedScalar totalDeltaT = time().deltaT();
+    dimensionedScalar totalDeltaT = mesh.time().deltaT();
     surfaceScalarField rhoPhiSum
     (
         IOobject
         (
             "rhoPhiSum",
-            time().timeName(),
-            *this
+            mesh.time().timeName(),
+            mesh
         ),
-        *this,
+        mesh,
         dimensionedScalar(rhoPhi0.dimensions(), Zero)
     );
 
     for
     (
-        subCycle<volScalarField> alphaSubCycle(alpha0, nAlphaSubCycles);
+        subCycle<volScalarField> alphaSubCycle(alpha10, nAlphaSubCycles);
         !(++alphaSubCycle).end();
     )
     {
         #include "alphaEqn0.H"
-        rhoPhiSum += (time().deltaT()/totalDeltaT)*rhoPhi0;
+        rhoPhiSum += (mesh.time().deltaT()/totalDeltaT)*rhoPhi0;
     }
 
     rhoPhi0 = rhoPhiSum;
@@ -65,7 +61,7 @@ else
     #include "alphaEqn0.H"
 }
 
-rho0 == alpha0*rho1 + alpha20*rho2;
+rho0 == alpha10*rho1 + alpha20*rho2;
 
 if (!pimple.firstIter())
 {

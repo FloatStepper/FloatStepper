@@ -373,8 +373,7 @@ void Foam::floaterMotion::updateFloaterState
         // Rodrigues rotation formula
         tensor Qnew =
         (
-            tensor::I + B*Foam::sin(magw*dt) + (B & B)*(1
-            - Foam::cos(magw*dt))
+            tensor::I + B*Foam::sin(magw*dt) + (B & B)*(1 - Foam::cos(magw*dt))
         ) & motionState_.Q();
         motionState_.Q() = Qnew;
     }

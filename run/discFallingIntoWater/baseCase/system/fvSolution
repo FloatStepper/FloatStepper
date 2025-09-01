@@ -19,24 +19,15 @@ solvers
 {
     "alpha.water.*"
     {
-        interfaceMethod isoAdvector;
-        isoFaceTol      1e-6;
+        isoFaceTol      1e-10;
         surfCellTol     1e-6;
         nAlphaBounds    3;
         snapTol         1e-12;
         clip            true;
+        reconstructionScheme isoAlpha;
 
-        nAlphaCorr      2;
         nAlphaSubCycles 1;
         cAlpha          1;
-
-        MULESCorr       yes;
-        nLimiterIter    3;
-
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-8;
-        relTol          0;
     }
 
     "(pcorr|pcorrFinal)"
@@ -78,7 +69,6 @@ solvers
     nCorrectors         3;
     nNonOrthogonalCorrectors 2;
     correctPhi          yes;
-    moveMeshOuterCorrectors yes;
     pRefCell            0;
     pRefValue           0;
 }

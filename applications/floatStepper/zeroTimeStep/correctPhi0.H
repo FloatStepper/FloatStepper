@@ -3,7 +3,7 @@ Foam::myCorrectPhi
     U0,
     phi0,
     p_rgh0,
-    surfaceScalarField("rAUf0", fvc::interpolate(rAU0)),
+    surfaceScalarField("rAUf", fvc::interpolate(rAU())),
     geometricZeroField(),
     pimple
 );

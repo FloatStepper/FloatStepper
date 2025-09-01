@@ -13,7 +13,7 @@ volScalarField p_rgh
     ),
     mesh
 );
-p_rgh.oldTime();
+//p_rgh.oldTime();
 
 Info<< "Reading field U\n" << endl;
 volVectorField U
@@ -28,7 +28,7 @@ volVectorField U
     ),
     mesh
 );
-U.oldTime();
+//U.oldTime();
 
 #include "createPhi.H"
 
@@ -38,8 +38,8 @@ immiscibleIncompressibleTwoPhaseMixture mixture(U, phi);
 
 volScalarField& alpha1(mixture.alpha1());
 volScalarField& alpha2(mixture.alpha2());
-alpha1.oldTime();
-alpha2.oldTime();
+//alpha1.oldTime();
+//alpha2.oldTime();
 
 const dimensionedScalar& rho1 = mixture.rho1();
 const dimensionedScalar& rho2 = mixture.rho2();
@@ -73,7 +73,7 @@ surfaceScalarField rhoPhi
     ),
     fvc::interpolate(rho)*phi
 );
-rhoPhi.oldTime();
+//rhoPhi.oldTime();
 
 typedef incompressibleInterPhaseTransportModel
     <
@@ -106,7 +106,7 @@ volScalarField p
     ),
     p_rgh + rho*gh
 );
-p.oldTime();
+//p.oldTime();
 
 label pRefCell = 0;
 scalar pRefValue = 0.0;
@@ -137,3 +137,53 @@ mesh.setFluxRequired(alpha1.name());
 #include "createFvOptions.H"
 
 isoAdvection advector(alpha1, phi, U);
+
+// Read floater name (only one floater currently supported)
+word floaterName;
+{
+    IOdictionary floatersDict
+    (
+        IOobject
+        (
+            "floaters",
+            mesh.time().timeName(),
+            "uniform",
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    );
+
+    for (const word& entryName : floatersDict.toc())
+    {
+        if (floatersDict.isDict(entryName))
+        {
+            floaterName = entryName;
+            break;
+        }
+    }
+}
+// Get handle to floater motion solver
+floaterMotionSolver& bodySolver =
+    const_cast<floaterMotionSolver&>
+    (
+        mesh.lookupObject<floaterMotionSolver>(floaterName)
+    );
+
+
+// Read onlyMeshMotion used to only move mesh with moveDynamicMesh
+bool onlyMeshMotion(false);
+{
+    IOdictionary dynMeshDict
+    (
+        IOobject
+        (
+            "dynamicMeshDict",
+            runTime.constant(),
+            runTime,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    );
+    onlyMeshMotion = dynMeshDict.getOrDefault<bool>("onlyMeshMotion", false);
+}

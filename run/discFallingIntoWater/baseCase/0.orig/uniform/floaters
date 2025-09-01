@@ -31,8 +31,6 @@ circle
 
     #include "floaterMassAndInertia"
 
-    momentOfInertia           $ICoM;
-
     initialCentreOfRotation $centreOfRotation;
 
     initialOrientation $orientation;

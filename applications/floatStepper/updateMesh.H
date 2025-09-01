@@ -1,7 +1,5 @@
 mesh.update();
 
-Info << "Taking actual time step for fluid..." << endl;
-
 gh = (g & mesh.C()) - ghRef;
 ghf = (g & mesh.Cf()) - ghRef;
 

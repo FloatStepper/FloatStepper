@@ -37,10 +37,7 @@ License
     along with FloatStepper.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    floaterFoam
-
-Group
-    grpMultiphaseSolvers
+    floatStepper
 
 Description
     Solver for coupled motion of a rigid floating body and a surrounding fluid
@@ -66,6 +63,9 @@ Description
 #include "fvOptions.H"
 #include "CorrectPhi.H"
 #include "fvcSmooth.H"
+#include "floaterMotionSolver.H"
+#include "myAdjustPhi.H"
+#include "myCorrectPhi.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -109,6 +109,76 @@ int main(int argc, char *argv[])
 
         Info << "Time = " << runTime.timeName() << nl << endl;
 
+        const scalar deltaT = runTime.deltaTValue();
+
+        if (onlyMeshMotion)
+        {
+            Info << "Only moving mesh - no body state update." << endl;
+            vector a = bodySolver.motion().state().a();
+            vector alpha = bodySolver.motion().state().domegadt();
+            scalarField dvwdt(6, 0);
+            dvwdt[0] = a[0], dvwdt[1] = a[1], dvwdt[2] = a[2];
+            dvwdt[3] = alpha[0], dvwdt[4] = alpha[1], dvwdt[5] = alpha[2];
+            bodySolver.motion().updateFloaterState(dvwdt, deltaT);
+            //Info << "Body state after first time step:" << endl;
+            //bodySolver.motion().status();
+        }
+        else
+        {
+
+            // Copying point fields for resetting.
+            //pointField oldPoints(mesh.points());
+            //pointField oldOldPoints(mesh.oldPoints());
+
+            // Saving previous time step body state
+            const floaterMotionState oldBodyState(bodySolver.motion().state());
+            // Calculating the 6 columns of the added mass tensor
+            const labelList DoFs = bodySolver.DoFs();
+
+            if (bodySolver.motion().MaddUpdateTime())
+            {
+                mesh.moving(false);
+                bodySolver.motion().calcAddedMass(mesh, DoFs);
+                mesh.moving(true);
+            }
+
+            // Taking zero acceleration time step to get F0 and tau0
+            const scalarField noAcceleration(6,0);
+            bodySolver.motion().setAcceleration(Zero);
+            bodySolver.motion().setAngularAcceleration(Zero);
+            bodySolver.motion().updateFloaterState(noAcceleration, deltaT);
+            //Info << "Body state after zero acceleration time step:" << endl;
+            //bodySolver.motion().status();
+
+            vector F0(Zero), tau0(Zero);
+            {
+                // Update mesh points in accordance with 0-acceleration body motion
+                #include "updateMesh0.H"
+
+                // Calculate fluid motion response to 0-acceleration body motion
+                #include "updateFluid0.H" //alphaEqn, UEqn and Piso loop
+
+                // Recording fluid force associated with 0-acceleration motion
+                bodySolver.motion().calcForceAndTorque(rho0, p0, U0, F0, tau0);
+                Info << "F0 = " << F0 << ", tau0 = " << tau0 << endl;
+
+                // Reset fluid, mesh and body state
+                #include "reset.H"
+            }
+
+            // Update body state based on added mass, F0 and tau0
+            scalarField dvwdt =
+                bodySolver.motion().calcAcceleration(F0, tau0, DoFs);
+            // Updating body state to new time
+            bodySolver.motion().updateFloaterState(dvwdt, deltaT);
+            Info << "Body state after real time step:" << endl;
+            bodySolver.motion().status();
+            Info << "Centre of mass      : "
+                << bodySolver.motion().centreOfMass() << endl;
+        }
+
+        // Updating mesh and fluid state corresponding to body motion
+        Info << "Taking actual time step for fluid..." << endl;
         #include "updateMesh.H"
         #include "updateFluid.H"
 

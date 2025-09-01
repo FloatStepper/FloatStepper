@@ -2,9 +2,9 @@
 
 This repo contains all OpenFOAM cases used to generate figures in the
 FloatStepper method paper entitled "A robust algorithm for computational
-floating body dynamics", a preprint of which can be found here:
+floating body dynamics", published in Royal Society Open Science:
 
-https://doi.org/10.48550/arXiv.2310.01199
+https://doi.org/10.1098/rsos.231453
 
 All cases should contain a baseCase, and each baseCase should
 contain the following:

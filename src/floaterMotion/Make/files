@@ -19,8 +19,6 @@ $(restraints)/oscillatingForce/oscillatingForce.C
 
 floaterMotionSolver/floaterMotionSolver.C
 
-dynamicFloaterMotionSolversFvMesh/dynamicFloaterMotionSolversFvMesh.C
-
 fvPatchFields/floaterVelocity/floaterVelocityFvPatchVectorField.C
 fvPatchFields/sixDoFRigidBodySlipVelocity/sixDoFRigidBodySlipVelocityFvPatchVectorField.C
 

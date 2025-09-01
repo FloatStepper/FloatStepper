@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh        dynamicFloaterMotionSolversFvMesh;
+dynamicFvMesh        dynamicMotionSolverListFvMesh;
 
 solvers
 {

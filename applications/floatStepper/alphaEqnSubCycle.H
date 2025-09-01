@@ -10,7 +10,7 @@ if (pimple.nCorrPIMPLE() > 1)
         // To recalculate the alpha1 update in subsequent iterations, we
         // must store its current value before overwriting with the new
         // value
-        alpha1.storePrevIter();
+//        alpha1.storePrevIter();
         // Storing initial phi and U for use in later outer iterations.
 //        phi.storePrevIter();
 //        U.storePrevIter();
@@ -21,7 +21,7 @@ if (pimple.nCorrPIMPLE() > 1)
         // Resetting alpha1 to value before advection in first PIMPLE
         // iteration.
 //        Info << "set to prev Iter " << endl;
-        alpha1 = alpha1.prevIter();
+//        alpha1 = alpha1.prevIter();
 
         // Setting U and phi with which to advect interface.
 //        U = 0.5*U.prevIter() + 0.5*U;

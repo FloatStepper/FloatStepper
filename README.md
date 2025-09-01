@@ -35,8 +35,8 @@ In terms of code maturity, it is at the proof-of-concept stage so users should e
 *floaterMotion* (code structure based on *sixDoFRigidBodyMotion*)
 
 ## Requirements
-OpenFOAM-v2206 to v2412. 
-Only openfoam.com versions supported.
+OpenFOAM-v2206 to v2506.
+Only openfoam.com versions supported (not openfoam.org versions).
 
 ## Installation
 1. Source OpenFOAM-v2XYZ
@@ -50,11 +50,14 @@ Execute `./Allrun` in `run/mooredBoxInWaves`
 Note that case syntax is different from *sixDoFRigidBodyMotion* cases.
 In particular:
 1.  Set application to `floatStepper` in `system/controlDict`.
-2.  Use *dynamicFloaterMotionSolversFvMesh* in `constant/dynamicMeshDict`.
+2.  Use *dynamicMotionSolverFvMesh* or *dynamicMotionSolverListFvMesh* in `constant/dynamicMeshDict`.
+    Note: Previous versions of floatStepper required a special *dynamicFloaterMotionSolversFvMesh* in which the 
+    floatStepping was done but this has now (August 2025) been moved to the floatStepper application and so the
+    dynamicFloaterMotionSolversFvMesh class is no longer needed and has been removed.
     See examples of usage: 
     - [`run/discFallingIntoWater/constant/dynamicMeshDict`](run/discFallingIntoWater/constant/dynamicMeshDict).
     - [`run/mooredBoxInWaves/constant/dynamicMeshDict`](run/mooredBoxInWaves/constant/dynamicMeshDict).
-    
+
     Restraints and their syntax is like *sixDoFRigidBodyMotion* but class names are changed, where "sixDoFRigidBody" is replaced with "floater".
     Constraints are specified with two vectors e.g.
     - `linDirs (1 0 1);`
@@ -64,11 +67,11 @@ In particular:
     
     The integer parameter *MaddUpdateFreq* (default 1) determines how often the (computationally expensive) added mass update is done, so setting *MaddUpdateFreq* e.g. to 3 means that the added mass matrix is only updated evert 3rd time step.
     
-    sixDofRigidBodyMotionCoeffs subdicts *constraints{}*, *solver{}* and parameters *accelerationRelexation* and *accelerationDamping* is not read or used by **FloatStepper**.
+    sixDofRigidBodyMotionCoeffs subdicts *constraints{}*, *solver{}* and parameters *accelerationRelaxation* and *accelerationDamping* is not read or used by **FloatStepper**.
 3.  Use *floaterVelocity* for U on floating object patches. Set `slip true;` to run with slip boundary condition (default is `no-slip`).
 4.  Specify in `0.orig/uniform/floaters` the initial body centre of rotation, orientation, linear and angular velocity and acceleration as well as the mass, centre of mass and moment of inertia. These must be specified in a dictionary with the name of the body. For examples of a floaters file, see any of the cases in the run directory. The body name used for the body dictionary in the 0.orig/uniform/floaters file must be the same as the body name used in the constant/dynamicMeshDict.solvers subdictionary for the body. Note that body properties specified in constant/dynamicMeshDict are not used by floatStepper.
 
-To test the MoorDyn installation, go to the run/moorDynBoxInWaves and execute the Allrun script. The mooring line parameters are located in the lines.txt file in run/moorDynBoxInWaves/Mooring. Mooring line forces will be written to files in the same folder.
+To test the MoorDyn installation, go to the run/moorDynBoxInWaves_v2 and execute the Allrun script. The mooring line parameters are located in the lines_v2_bodyC.txt file in run/moorDynBoxInWaves_v2/Mooring. Mooring line forces will be written to files in the same folder.
 
 ## Main author
 Johan Roenby, STROMNING APS and Roskilde University
@@ -81,7 +84,7 @@ Johan Roenby, STROMNING APS and Roskilde University
 
 ## Contributing
 Please report bugs on the issue tracker of this repository or write to
-johan[at]ruc[dot]dk
+johan[at]stromning[dot]com
 
 ## Citing software
 Roenby J, Aliyar S, Bredmose H. 2023 Data from: Floatstepper. Zenodo. (doi:10.5281/zenodo.8146515)
@@ -106,7 +109,7 @@ Roenby J, Aliyar S, Bredmose H., 2024 A robust algorithm for computational float
 	title = {A robust algorithm for computational floating body dynamics},
 	volume = {11},
 	issn = {2054-5703},
-	url = {http://rsos.royalsocietypublishing.org/lookup/doi/10.1098/rsos.160405},
+	url = {https://doi.org/10.1098/rsos.231453},
 	doi = {10.1098/rsos.231453},
 	language = {en},
 	journal = {Royal Society Open Science},
@@ -120,9 +123,7 @@ Roenby J, Aliyar S, Bredmose H., 2024 A robust algorithm for computational float
 ## Known limitations
 -   Currently only runs with morphing mesh (not overset mesh).
 -   Currently only supports a single rigid body.
--   Has not been tested with turbulence modelling.
 -   Currently only runs with isoAdvector (not MULES).
--   Plenty of field copying that can probably be avoided to increase efficiency.
 -   Currently a simple time integration of the 6-DoF equations of motion are hardcoded in the *floaterMotion* class. The chosen method for Q update guarantees that it stays an orthogonal matrix to machine precision.
 
 ## Funding

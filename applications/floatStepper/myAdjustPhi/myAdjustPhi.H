@@ -6,31 +6,32 @@
 |---------------------------------------------------- ------------------------|
 |-------Diversity-Equality-Inclusion----Slava-Ukraini----Free-Palestine-------|
 \*---------------------------------------------------------------------------*/
-// --- Pressure-velocity PIMPLE corrector loop
-while (pimple.loop())
+
+#ifndef myAdjustPhi_H
+#define myAdjustPhi_H
+
+#include "volFieldsFwd.H"
+#include "surfaceFieldsFwd.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
 {
 
-//    #include "alphaControls.H"
-    const dictionary& alphaControls = solverDict(alpha0.name());
+//- Adjust the balance of fluxes to obey continuity.
+//  For cases which do not have a pressure boundary.
+//  Return true if the domain is closed.
+bool myAdjustPhi
+(
+    surfaceScalarField& phi,
+    const volVectorField& U,
+    volScalarField& p
+);
 
-    label nAlphaSubCycles(alphaControls.get<label>("nAlphaSubCycles"));
+} // End namespace Foam
 
-    #include "alphaEqnSubCycle0.H"
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//    mixture.correct();
+#endif
 
-    #include "UEqn0.H"
-
-    // --- Pressure corrector loop
-    while (pimple.correct())
-    {
-        #include "pEqn0.H"
-    }
-
-/*
-    if (pimple.turbCorr())
-    {
-        turbulence->correct();
-    }
-*/
-}
+// ************************************************************************* //
