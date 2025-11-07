@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2506                                  |
+|  \\    /   O peration     | Version:  2206                                  |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -11,26 +11,20 @@ FoamFile
     version         2;
     format          ascii;
     class           dictionary;
-    object          dynamicMeshDict;
+    location        "0/uniform";
+    object          floaters;
 }
 
-dynamicFvMesh   staticFvMesh;
-
-solvers
+body
 {
-    body
-    {
-        motionSolverLibs ( floaterMotion );
-        motionSolver    floaterMotion;
-        floaterMotionCoeffs
-        {
-            addedMassModel  potentialAddedMass;
-            patches         ( floatingObject );
-            linDirs         ( 1 0 1 );
-            rotDirs         ( 0 1 0 );
-        }
-    }
-}
 
+    centreOfRotation    ( 0 1 0 );
+
+    orientation         ( 1 0 0 0 1 0 0 0 1 );
+
+    velocity            ( 1 1 0 );
+
+    angularVelocity     ( 0 0 1 );
+}
 
 // ************************************************************************* //

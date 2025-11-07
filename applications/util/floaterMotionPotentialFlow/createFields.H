@@ -1,17 +1,17 @@
-    Info<< "Creating velocity potential Phi\n" << endl;
+    Info<< "Creating velocity potential Pot\n" << endl;
 
-    volScalarField Phi
+    volScalarField Pot
     (
         IOobject
         (
-            "Phi",
+            "Pot",
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("Phi", dimless, 0),
+        dimensionedScalar("Pot", dimless, 0),
         "fixedGradient"
     );
 

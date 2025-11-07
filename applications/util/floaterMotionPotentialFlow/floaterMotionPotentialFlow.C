@@ -51,13 +51,9 @@ Description
 
     Where:
     \vartable
-        phi     | is the velocity potential.
+        Pot             | is the velocity potential.
+        U = grad(Pot)   | is the velocity field.
     \endvartable
-
-    \heading Required fields
-    \plaintable
-        phi     | Scalar field which is solved for, e.g. velocity potential
-    \endplaintable
 
     Based on laplacianFoam.
 
@@ -67,7 +63,6 @@ Description
 #include "fvCFD.H"
 #include "fvOptions.H"
 #include "simpleControl.H"
-//#include "rigidBodyVelocityPotentialFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -168,32 +163,32 @@ int main(int argc, char *argv[])
                 = mesh.boundaryMesh().findPatchID(patches[patchi], false);
 
             // Access the boundary condition and cast to fixedGradient
-            fixedGradientFvPatchField<scalar>& Phipatch =
-            refCast<fixedGradientFvPatchField<scalar>>(Phi.boundaryFieldRef()[patchId]);
+            fixedGradientFvPatchField<scalar>& Potpatch =
+            refCast<fixedGradientFvPatchField<scalar>>(Pot.boundaryFieldRef()[patchId]);
             // Set the gradient (e.g., to 100)
             const vectorField nf(bMesh[patchId].nf());
             const vectorField Cf(bMesh[patchId].Cf());
-            Phipatch.gradient() = (nf & (v0 + (omega ^ (Cf - CoR))));
+            Potpatch.gradient() = (nf & (v0 + (omega ^ (Cf - CoR))));
         }
     }
 
     // Solve Laplace equation for velocity potential 
     while (simple.correctNonOrthogonal())
     {
-        fvScalarMatrix PhiEqn(fvm::laplacian(Phi));
+        fvScalarMatrix PotEqn(fvm::laplacian(Pot));
 
-        PhiEqn.solve();
+        PotEqn.solve();
     }
 
     // Calculate velocity field from potential
-    volVectorField gradPhi(fvc::grad(Phi));
-    const vectorField& gradPhiIn = gradPhi.primitiveField();
+    volVectorField gradPot(fvc::grad(Pot));
+    const vectorField& gradPotIn = gradPot.primitiveField();
     vectorField& UIn = U.primitiveFieldRef();
     forAll(UIn, celli)
     {
-        UIn[celli] = gradPhiIn[celli];
+        UIn[celli] = gradPotIn[celli];
     }
-//        U.correctBoundaryConditions();
+
     U.write();
 
     runTime.printExecutionTime(Info);

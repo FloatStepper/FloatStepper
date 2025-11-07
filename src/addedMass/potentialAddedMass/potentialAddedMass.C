@@ -136,9 +136,11 @@ Foam::SquareMatrix<Foam::scalar> Foam::potentialAddedMass::computeAddedMass
                     Pot_.boundaryFieldRef()[patchId]
                 ).updateSnGrad((nf & (v + (omega ^ (Cf - CoR)))));
 
+                Pot_.correctBoundaryConditions();
             }
 
             fvScalarMatrix potEqn(fvm::laplacian(rho, Pot_));
+
 
             potEqn.solve();
 

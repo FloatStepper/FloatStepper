@@ -145,7 +145,6 @@ void Foam::pisoAddedMass::calcPressureForceAndTorque
     // rigid body slip conditions.
     forAll(patches, patchi)
     {
-        // Fatal error if patch does not excist
         const label patchId
             = mesh.boundaryMesh().findPatchID(patches[patchi], false);
 
@@ -164,7 +163,6 @@ void Foam::pisoAddedMass::calcPressureForceAndTorque
         (
             U2.boundaryFieldRef()[patchId]
         ).updateCoeffs(CoR, v, omega);
-
     }
 
     surfaceScalarField phi2(phi);
@@ -178,7 +176,7 @@ void Foam::pisoAddedMass::calcPressureForceAndTorque
     fvVectorMatrix U2Eqn(fvm::ddt(rho, U2));
 
     // --- Pressure corrector loop
-    for (int m = 0; m <= pimple.nCorrPISO(); m++)
+    for (int m = 1; m <= pimple.nCorrPISO(); m++)
     {
 
         volScalarField rAU2(1.0/U2Eqn.A());
@@ -196,7 +194,7 @@ void Foam::pisoAddedMass::calcPressureForceAndTorque
         scalar pRefValue = 0.0;
         setRefCell(p, p_rgh2, pimple.dict(), pRefCell, pRefValue);
 
-        for (label n = 1; n <= pimple.nNonOrthCorr(); n++)
+        for (label n = 0; n < pimple.nNonOrthCorr() + 1 ; n++)
         {
             fvScalarMatrix p_rgh2Eqn
             (
