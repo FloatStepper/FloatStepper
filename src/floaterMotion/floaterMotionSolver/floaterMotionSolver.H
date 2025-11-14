@@ -86,6 +86,14 @@ class floaterMotionSolver
         //  different effective di_ and do_ in different directions
         const tensor distStretch_;
 
+        const bool separateTransRotPointDisplacement_;
+        vector horDir1_; // e.g. latDir1 = (1 0 0)
+        scalarList horPos1_; // e.g. x1 = (5 25 65 95)
+        vector horDir2_; // e.g. latDir2 = (0 1 0)
+        scalarList horPos2_; // e.g. x2 = (5 25 65 95)
+        vector verDir_; // e.g. verDir = (0 0 1)
+        scalarList verPos_; // e.g. y = (-40 -30 20 30)
+
         //- Reference density required by the forces object for
         //  incompressible calculations, required if rho == rhoInf
         //scalar rhoInf_;
@@ -95,7 +103,7 @@ class floaterMotionSolver
         //  as rhoInf
         word rhoName_;
 
-        //- Current interpolation scale (1 at patches, 0 at distance_)
+        //- Current interpolation scale 
         pointScalarField scale_;
 
         //- Current time index (used for updating)
@@ -149,6 +157,19 @@ public:
 
         //- Solve for motion
         virtual void solve();
+
+        //- Transform the given initial state pointField by the current
+        //  motion state scaled by the given scale
+        tmp<pointField> pointDisp() const;
+
+
+        void calcTransDispScale
+        (
+            const pointField& X,
+            const scalarList& pts,
+            const vector& dir,
+            scalarField& scale
+        ) const;
 
 
         //- Write state using stream options

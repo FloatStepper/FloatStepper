@@ -84,6 +84,11 @@ Foam::floaterMotionSolver::floaterMotionSolver
     di_(coeffDict().get<scalar>("innerDistance")),
     do_(coeffDict().get<scalar>("outerDistance")),
     distStretch_(coeffDict().getOrDefault<tensor>("distStretch", tensor::I)),
+    separateTransRotPointDisplacement_
+    (
+        coeffDict().getOrDefault<bool>
+        ("separateTransRotPointDisplacement", false)
+    ),
     //rhoInf_(1.0),
     rhoName_(coeffDict().getOrDefault<word>("rho", "rho")),
     scale_
@@ -147,7 +152,8 @@ Foam::floaterMotionSolver::floaterMotionSolver
     }
    Info << "Active degrees of freedom: " << DoFs_ << endl;
 
-    // Calculate scaling factor everywhere
+
+   // Calculate scaling factor everywhere
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     {
@@ -185,6 +191,18 @@ Foam::floaterMotionSolver::floaterMotionSolver
 
         pointConstraints::New(pMesh).constrain(scale_);
         scale_.write();
+    }
+
+    // Reading settings for translational point displacement
+    if (separateTransRotPointDisplacement_)
+    {
+        horDir1_ = coeffDict().get<vector>("horDir1");
+        horDir2_ = coeffDict().get<vector>("horDir2");
+        verDir_ = coeffDict().get<vector>("verDir");
+
+        horPos1_ = coeffDict().get<scalarList>("horPos1");
+        horPos2_ = coeffDict().get<scalarList>("horPos2");
+        verPos_ = coeffDict().get<scalarList>("verPos");
     }
 }
 
@@ -233,14 +251,125 @@ void Foam::floaterMotionSolver::solve()
     // Body update was here but is now handled by floaterMotion
 
     // Update the displacements
-    pointDisplacement_.primitiveFieldRef() =
-        motion_.transform(points0(), scale_) - points0();
+    pointDisplacement_.primitiveFieldRef() = pointDisp();
 
     // Displacement has changed. Update boundary conditions
     pointConstraints::New
     (
         pointDisplacement_.mesh()
     ).constrainDisplacement(pointDisplacement_);
+}
+
+
+Foam::tmp<Foam::pointField> Foam::floaterMotionSolver::pointDisp() const
+{
+
+    point centreOfRotation(motion().centreOfRotation());
+
+    if (separateTransRotPointDisplacement_)
+    {
+        centreOfRotation = motion().initialCentreOfRotation();
+    }
+
+    // Calculate the transformation septerion from the initial state
+    septernion s
+    (
+        centreOfRotation - motion().initialCentreOfRotation(),
+        quaternion(motion().Q().T() & motion().initialQ())
+    );
+
+    tmp<pointField> tdisp(new pointField(points0().size(), Zero));
+    pointField& disp = tdisp.ref();
+
+    forAll(disp, pointi)
+    {
+        // Move non-stationary points
+        if (scale_[pointi] > SMALL)
+        {
+            // Use solid-body motion where scale = 1
+            if (scale_[pointi] > 1 - SMALL)
+            {
+                disp[pointi] = centreOfRotation 
+                    + ((motion().Q() & motion().initialQ().T())
+                        & 
+                      (points0()[pointi] - motion().initialCentreOfRotation()))
+                    - points0()[pointi];
+            }
+            // Slerp septernion interpolation
+            else
+            {
+                septernion ss(slerp(septernion::I, s, scale_[pointi]));
+
+                disp[pointi] =
+                    motion().initialCentreOfRotation()
+                  + ss.invTransformPoint
+                    (
+                        points0()[pointi]
+                      - motion().initialCentreOfRotation()
+                    )
+                  - points0()[pointi];
+            }
+        }
+    }
+
+    if (separateTransRotPointDisplacement_)
+    {
+        const vector bodyDisp
+        (
+            motion().centreOfRotation() - motion().initialCentreOfRotation()
+        );
+        scalarField s(scale_.size(), 1.0);
+
+        // Mesh point displacement due to x body displacement
+        vector xhat(horDir1_/mag(horDir1_));
+        calcTransDispScale(points0(), horPos1_, xhat, s);
+        const scalar Lx(xhat & bodyDisp);
+        disp += Lx * xhat * max
+        (
+            min(0.5 - 0.5*cos(Foam::constant::mathematical::pi*s), 1.0),
+            0.0
+        );
+
+        // Mesh point displacement due to y body displacement
+        s = 1.0;
+        vector yhat(horDir2_/mag(horDir2_));
+        calcTransDispScale(points0(), horPos2_, yhat, s);
+        const scalar Ly(yhat & bodyDisp);
+        disp += Ly * yhat * max
+        (
+            min(0.5 - 0.5*cos(Foam::constant::mathematical::pi*s), 1.0),
+            0.0
+        );
+
+        // Mesh point displacement due to y body displacement
+        s = 1.0;
+        vector zhat(verDir_/mag(verDir_));
+        calcTransDispScale(points0(), horPos1_, xhat, s);
+        calcTransDispScale(points0(), horPos2_, yhat, s);
+        calcTransDispScale(points0(), verPos_, zhat, s);
+        const scalar Lz(zhat & bodyDisp);
+        disp += Lz * zhat * max
+        (
+            min(0.5 - 0.5*cos(Foam::constant::mathematical::pi*s), 1.0),
+            0.0
+        );
+    }
+
+    return tdisp;
+}
+
+
+void Foam::floaterMotionSolver::calcTransDispScale
+(
+    const pointField& X,
+    const scalarList& pts,
+    const vector& dir,
+    scalarField& scale
+) const
+{
+    const vector unitDir(dir/mag(dir));
+    scale *= max(min(((X & unitDir) - pts[0])/(pts[1] - pts[0]), 1.0), 0.0);
+    scale *= max(min((pts[3] - (X & unitDir)) / (pts[3] - pts[2]), 1.0), 0.0);
 }
 
 

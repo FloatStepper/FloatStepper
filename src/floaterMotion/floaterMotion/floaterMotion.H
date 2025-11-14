@@ -114,10 +114,9 @@ class floaterMotion
         //- Names of patches making up the rigid body
         wordRes patches_;
 
-    // Private Member Functions
+public:
 
-        // Access functions retained as private because of the risk of
-        // confusion over what is a body local frame vector and what is global
+    // Member Functions
 
         // Access
 
@@ -149,8 +148,7 @@ class floaterMotion
             //- Return non-const access to the orientation
             inline tensor& Q();
 
-public:
-
+            
     //- Runtime type information
     TypeName("floaterMotion");
 
@@ -336,14 +334,6 @@ public:
             //- Transform the given initial state pointField by the current
             //  motion state
             tmp<pointField> transform(const pointField& initialPoints) const;
-
-            //- Transform the given initial state pointField by the current
-            //  motion state scaled by the given scale
-            tmp<pointField> transform
-            (
-                const pointField& initialPoints,
-                const scalarField& scale
-            ) const;
 
 
         //- Write to dictionary

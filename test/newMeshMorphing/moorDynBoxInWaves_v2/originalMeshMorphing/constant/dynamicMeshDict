@@ -1,0 +1,58 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v1806                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dynamicFvMesh   dynamicMotionSolverListFvMesh;
+
+solvers
+{
+    box
+    {
+        motionSolverLibs ( floaterMotion );
+
+        motionSolver    floaterMotion;
+
+        floaterMotionCoeffs
+        {
+            patches         (box);
+            innerDistance   0.075;
+            outerDistance   0.4;
+
+            linDirs   (1 0 1);
+            rotDirs   (0 1 0);
+            addedMassModel  pisoAddedMass;
+            MaddUpdateFreq  1;
+
+            restraints
+            {
+
+                moorDynR2_body
+                {
+                    floaterMotionRestraint  moorDynR2;
+                    couplingMode        "BODY";
+                    inputFile           "Mooring/lines_v2_bodyC.txt";
+                    vtkPrefix           "mdv2_body";
+                    writeMooringVTK     true;
+                    vtkStartTime        0;
+                    outerCorrector      1;
+                }
+
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //

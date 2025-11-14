@@ -1,0 +1,227 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5                                     |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      blockMeshDict;
+}
+
+scale 1;
+
+nxCells     96;
+nxBox       8;
+nz_L1A5     2;
+nz_L2A4     5;
+nz_Box      5;
+
+vertices
+(
+    (-2.5 -0.1 -0.5)     // Vertex 0
+    (-0.1 -0.1 -0.5)      // Vertex 1
+    (0.1 -0.1 -0.5)      // Vertex 2
+    (2.5 -0.1 -0.5)       // Vertex 3
+    (-2.5 0.1 -0.5)      // Vertex 4
+    (-0.1 0.1 -0.5)       // Vertex 5
+    (0.1 0.1 -0.5)       // Vertex 6
+    (2.5 0.1 -0.5)        // Vertex 7
+    (-2.5 -0.1 -0.2)     // Vertex 8
+    (-0.1 -0.1 -0.2)      // Vertex 9
+    (0.1 -0.1 -0.2)      // Vertex 10
+    (2.5 -0.1 -0.2)       // Vertex 11
+    (-2.5 0.1 -0.2)      // Vertex 12
+    (-0.1 0.1 -0.2)       // Vertex 13
+    (0.1 0.1 -0.2)       // Vertex 14
+    (2.5 0.1 -0.2)        // Vertex 15
+    (-2.5 -0.1 -0.0786)     // Vertex 16
+    (-0.1 -0.1 -0.0786)      // Vertex 17
+    (0.1 -0.1 -0.0786)      // Vertex 18
+    (2.5 -0.1 -0.0786)       // Vertex 19
+    (-2.5 0.1 -0.0786)      // Vertex 20
+    (-0.1 0.1 -0.0786)       // Vertex 21
+    (0.1 0.1 -0.0786)       // Vertex 22
+    (2.5 0.1 -0.0786)        // Vertex 23
+    (-2.5 -0.1 0.053)     // Vertex 24
+    (-0.1 -0.1 0.053)      // Vertex 25
+    (0.1 -0.1 0.053)      // Vertex 26
+    (2.5 -0.1 0.053)       // Vertex 27
+    (-2.5 0.1 0.053)      // Vertex 28
+    (-0.1 0.1 0.053)       // Vertex 29
+    (0.1 0.1 0.053)       // Vertex 30
+    (2.5 0.1 0.053)        // Vertex 31
+    (-2.5 -0.1 0.2)     // Vertex 32
+    (-0.1 -0.1 0.2)      // Vertex 33
+    (0.1 -0.1 0.2)      // Vertex 34
+    (2.5 -0.1 0.2)       // Vertex 35
+    (-2.5 0.1 0.2)      // Vertex 36
+    (-0.1 0.1 0.2)       // Vertex 37
+    (0.1 0.1 0.2)       // Vertex 38
+    (2.5 0.1 0.2)        // Vertex 39
+    (-2.5 -0.1 0.5)     // Vertex 40
+    (-0.1 -0.1 0.5)      // Vertex 41
+    (0.1 -0.1 0.5)      // Vertex 42
+    (2.5 -0.1 0.5)       // Vertex 43
+    (-2.5 0.1 0.5)      // Vertex 44
+    (-0.1 0.1 0.5)       // Vertex 45
+    (0.1 0.1 0.5)       // Vertex 46
+    (2.5 0.1 0.5)        // Vertex 47
+
+);
+
+blocks
+(
+    hex (0 1 5 4 8 9 13 12) ($nxCells 1 $nz_L1A5) simpleGrading (1 1 1)
+    hex (1 2 6 5 9 10 14 13) ($nxBox 1 $nz_L1A5) simpleGrading (1 1 1)
+    hex (2 3 7 6 10 11 15 14) ($nxCells 1 $nz_L1A5) simpleGrading (1 1 1)
+    hex (8 9 13 12 16 17 21 20) ($nxCells 1 $nz_L2A4) simpleGrading (1 1 1)
+    hex (9 10 14 13 17 18 22 21) ($nxBox 1 $nz_L2A4) simpleGrading (1 1 1)
+    hex (10 11 15 14 18 19 23 22) ($nxCells 1 $nz_L2A4) simpleGrading (1 1 1)
+    hex (16 17 21 20 24 25 29 28) ($nxCells 1 $nz_Box) simpleGrading (1 1 1)
+    hex (18 19 23 22 26 27 31 30) ($nxCells 1 $nz_Box) simpleGrading (1 1 1)
+    hex (24 25 29 28 32 33 37 36) ($nxCells 1 $nz_L2A4) simpleGrading (1 1 1)
+    hex (25 26 30 29 33 34 38 37) ($nxBox 1 $nz_L2A4) simpleGrading (1 1 1)
+    hex (26 27 31 30 34 35 39 38) ($nxCells 1 $nz_L2A4) simpleGrading (1 1 1)
+    hex (32 33 37 36 40 41 45 44) ($nxCells 1 $nz_L1A5) simpleGrading (1 1 1)
+    hex (33 34 38 37 41 42 46 45) ($nxBox 1 $nz_L1A5) simpleGrading (1 1 1)
+    hex (34 35 39 38 42 43 47 46) ($nxCells 1 $nz_L1A5) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 4 12 8)
+            (8 12 20 16)
+            (16 20 28 24)
+            (24 28 36 32)
+            (32 36 44 40)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (3 7 15 11)
+            (11 15 23 19)
+            (19 23 31 27)
+            (27 31 39 35)
+            (35 39 47 43)
+        );
+    }
+
+    bottom
+    {
+        type patch;
+        faces
+        (
+            (0 1 5 4)
+            (1 2 6 5)
+            (2 3 7 6)
+        );
+    }
+    
+    wall1
+    {
+        type empty;
+        faces
+        (
+            (0 1 9 8)
+            (8 9 17 16)
+            (16 17 25 24)
+            (24 25 33 32)
+            (32 33 41 40)
+            (1 2 10 9)
+            (9 10 18 17)
+            (25 26 34 33)
+            (33 34 42 41)
+            (2 3 11 10)
+            (10 11 19 18)
+            (18 19 27 26)
+            (26 27 35 34)
+            (34 35 43 42)
+        );
+    }
+    
+    wall2
+    {
+        type empty;
+        faces
+        (
+            (4 5 13 12)
+            (12 13 21 20)
+            (20 21 29 28)
+            (28 29 37 36)
+            (36 37 45 44)
+            (5 6 14 13)
+            (13 14 22 21)
+            (29 30 38 37)
+            (37 38 46 45)
+            (6 7 15 14)
+            (14 15 23 22)
+            (22 23 31 30)
+            (30 31 39 38)
+            (38 39 47 46)
+
+        );
+    }
+    
+    box
+    {
+        type patch;
+        faces
+        (
+            (17 18 22 21)
+            (25 26 30 29)
+            (17 25 29 21)
+            (18 26 30 22)
+
+        );
+    }
+
+   atmosphere
+    {
+        type patch;
+        faces
+        (
+            (40 41 45 44)
+            (41 42 46 45)
+            (42 43 47 46)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //
+
+
+// ************************************************************************* //
+
+
