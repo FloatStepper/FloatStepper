@@ -14,6 +14,30 @@ volScalarField& p0 = p;
 surfaceVectorField& Uf0(Uf());//(Uf());
 //volScalarField rAU0(rAU.ref());//(rAU());
 
+// Accumulated displacement
+// Copied and adapted from dynamicMotionSolverListMesh::update()
+// Note: Only updates body motion solvers - not others.
+mesh.update();
+/*
+{
+    pointField disp(bodySolvers[0].newPoints() - mesh.points());
+
+    for (label i = 1; i < bodySolvers.size(); i++)
+    {
+        disp += bodySolvers[i].newPoints() - mesh.points();
+    }
+
+    mesh.movePoints(mesh.points() + disp);
+
+    volVectorField* Uptr = mesh.getObjectPtr<volVectorField>("U0");
+
+    if (Uptr)
+    {
+        Uptr->correctBoundaryConditions();
+    }
+}
+*/
+/* //Implementation before multibody support
 bodySolver.solve();
 mesh.movePoints
 (
@@ -21,6 +45,7 @@ mesh.movePoints
 );
 
 U0.correctBoundaryConditions();
+*/
 
 // At this stage, the mesh points have been moved but all the fields are from
 // the old mesh

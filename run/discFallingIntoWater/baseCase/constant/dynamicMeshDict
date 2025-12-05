@@ -14,7 +14,7 @@ FoamFile
     object          dynamicMeshDict;
 }
 
-dynamicFvMesh       dynamicMotionSolverListFvMesh;
+dynamicFvMesh       dynamicPointDisplacementFvMesh;
 
 solvers
 {
@@ -22,9 +22,9 @@ solvers
     {
 
         motionSolverLibs ( floaterMotion );
-        motionSolver    floaterMotion;
+        motionSolver    floaterMeshMotionSolver;
 
-        floaterMotionCoeffs
+        floaterMeshMotionSolverCoeffs
         {
             addedMassModel  pisoAddedMass;
             patches         ( floatingObject );

@@ -38,7 +38,7 @@ Group
 Description
     This boundary condition provides a rigid body motion boundary condition
     with slip where the velocity field is set to rigid body motion with velocity,
-    angular velocity and centre of rotation read from a floaterMotionSolver
+    angular velocity and centre of rotation read from a floaterMeshMotionSolver
     that is looked up from the object registry.
 
     This BC is intended for use for moving rigid body when body motion is

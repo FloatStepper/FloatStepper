@@ -35,7 +35,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "floaterStateWriter.H"
-#include "floaterMotionSolver.H"
+#include "floaterMeshMotionSolver.H"
 #include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -144,8 +144,8 @@ bool Foam::functionObjects::floaterStateWriter::execute()
 bool Foam::functionObjects::floaterStateWriter::write()
 {
 
-    const floaterMotionSolver& bodySolver =
-        mesh_.lookupObject<floaterMotionSolver>(bodyName_);
+    const floaterMeshMotionSolver& bodySolver =
+        mesh_.lookupObject<floaterMeshMotionSolver>(bodyName_);
     const floaterMotion& motion(bodySolver.motion());
     const floaterMotionState& state(motion.state());
 

@@ -1,8 +1,6 @@
 EXE_INC = \
     -I../VoF \
     -IzeroTimeStep \
-    -ImyAdjustPhi \
-    -ImyCorrectPhi \
     -I$(LIB_SRC)/phaseSystemModels/twoPhaseInter/incompressibleInterPhaseTransportModel/lnInclude \
     -I$(LIB_SRC)/phaseSystemModels/twoPhaseInter/VoFphaseIncompressibleTurbulenceModels/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \

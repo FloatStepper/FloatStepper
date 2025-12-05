@@ -1,9 +1,12 @@
 //Reset body state
-bodySolver.motion().setState(oldBodyState);
-//Note: would be nice to be able to do bodySolver.motion().setState(bodySolver.motion().oldState());
-//Info << "Body state after reset:" << endl;
-//bodySolver.motion().status();
-
+forAll(bodySolvers, bsi)
+{
+    floaterMeshMotionSolver& bodySolver = bodySolvers[bsi];
+    bodySolver.motion().setState(oldBodyStates[bsi]);
+    //Note: would be nice to be able to do bodySolver.motion().setState(bodySolver.motion().oldState());
+    //Info << "Body state after reset:" << endl;
+    //bodySolver.motion().status();
+}
 
 // Reset mesh and swept face volumes
 mesh.movePoints(mesh.oldPoints());

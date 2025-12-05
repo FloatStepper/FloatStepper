@@ -15,15 +15,15 @@ FoamFile
     object          dynamicMeshDict;
 }
 
-dynamicFvMesh   dynamicMotionSolverListFvMesh;
+dynamicFvMesh   dynamicPointDisplacementFvMesh;
 
 solvers
 {
     myBox
     {
         motionSolverLibs ( floaterMotion );
-        motionSolver    floaterMotion;
-        floaterMotionCoeffs
+        motionSolver    floaterMeshMotionSolver;
+        floaterMeshMotionSolverCoeffs
         {
             patches         ( box );
             innerDistance   0.02;

@@ -35,7 +35,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "addedMassWriter.H"
-#include "floaterMotionSolver.H"
+#include "floaterMeshMotionSolver.H"
 //#include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
 #include "MatrixTools.H"
@@ -122,8 +122,8 @@ bool Foam::functionObjects::addedMassWriter::execute()
 bool Foam::functionObjects::addedMassWriter::write()
 {
 
-    const floaterMotionSolver& bodySolver =
-        mesh_.lookupObject<floaterMotionSolver>(bodyName_);
+    const floaterMeshMotionSolver& bodySolver =
+        mesh_.lookupObject<floaterMeshMotionSolver>(bodyName_);
 
     const floaterMotion& motion(bodySolver.motion());
     scalarSquareMatrix Madd = motion.Madd();

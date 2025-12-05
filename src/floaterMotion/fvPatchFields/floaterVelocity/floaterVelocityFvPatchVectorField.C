@@ -39,7 +39,7 @@ License
 #include "symmTransformField.H"
 
 #include "motionSolver.H"
-#include "floaterMotionSolver.H"
+#include "floaterMeshMotionSolver.H"
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -93,7 +93,7 @@ floaterVelocityFvPatchVectorField
             if (dEntry.isDict() && dEntry.dict().found("motionSolver"))
             {
                 const word ms(dEntry.dict().lookup("motionSolver"));
-                if ( ms == "floaterMotion" )
+                if ( ms == "floaterMeshMotionSolver" )
                 {
                     const dictionary& RBMDict = dEntry.dict().subDict(ms+"Coeffs");
                     const wordRes patchNames(RBMDict.get<wordRes>("patches"));
@@ -190,10 +190,10 @@ void Foam::floaterVelocityFvPatchVectorField::updateCoeffs()
 
     const fvMesh& mesh = this->internalField().mesh();
 
-    if (mesh.foundObject<floaterMotionSolver>(bodyName_))
+    if (mesh.foundObject<floaterMeshMotionSolver>(bodyName_))
     {
-        const floaterMotionSolver& bodySolver =
-            mesh.lookupObject<floaterMotionSolver>(bodyName_);
+        const floaterMeshMotionSolver& bodySolver =
+            mesh.lookupObject<floaterMeshMotionSolver>(bodyName_);
 
         const floaterMotionState& bodyState(bodySolver.motion().state());
 
@@ -204,7 +204,7 @@ void Foam::floaterVelocityFvPatchVectorField::updateCoeffs()
     else
     {
         WarningInFunction
-        << "floaterMotionSolver named " << bodyName_ 
+        << "floaterMeshMotionSolver named " << bodyName_ 
         << " not found in objectRegistry. "
         << "Velocity set to zero on patch " << patch().name() << endl;
     }

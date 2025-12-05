@@ -17,7 +17,9 @@ $(restraints)/linearSpringDamper/linearSpringDamper.C
 $(restraints)/softWall/softWall.C
 $(restraints)/oscillatingForce/oscillatingForce.C
 
-floaterMotionSolver/floaterMotionSolver.C
+dynamicFvMesh/dynamicPointDisplacementFvMesh/dynamicPointDisplacementFvMesh.C
+dynamicFvMesh/pointDisplacementMotionSolver/pointDisplacementMotionSolver.C
+dynamicFvMesh/floaterMeshMotionSolver/floaterMeshMotionSolver.C
 
 fvPatchFields/floaterVelocity/floaterVelocityFvPatchVectorField.C
 fvPatchFields/sixDoFRigidBodySlipVelocity/sixDoFRigidBodySlipVelocityFvPatchVectorField.C

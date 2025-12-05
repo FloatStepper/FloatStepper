@@ -138,38 +138,73 @@ mesh.setFluxRequired(alpha1.name());
 
 isoAdvection advector(alpha1, phi, U);
 
-// Read floater name (only one floater currently supported)
-word floaterName;
+// Read floater names
+wordList floaterNames;
 {
-    IOdictionary floatersDict
+    IOdictionary dynamicMeshDict
     (
         IOobject
         (
-            "floaters",
-            mesh.time().timeName(),
-            "uniform",
-            mesh,
+            "dynamicMeshDict",
+            runTime.constant(),
+            runTime,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         )
     );
 
+    const dictionary& floatersDict = dynamicMeshDict.subDict("solvers");
+
+    DynamicList<word> floaterList;
+    
     for (const word& entryName : floatersDict.toc())
     {
         if (floatersDict.isDict(entryName))
         {
-            floaterName = entryName;
-            break;
+            const dictionary& subDict = floatersDict.subDict(entryName);
+            
+            if (subDict.found("motionSolver"))
+            {
+                word motionSolver = subDict.get<word>("motionSolver");
+                
+                if (motionSolver == "floaterMeshMotionSolver")
+                {
+                    floaterList.append(entryName);
+                }
+            }
         }
     }
-}
-// Get handle to floater motion solver
-floaterMotionSolver& bodySolver =
-    const_cast<floaterMotionSolver&>
-    (
-        mesh.lookupObject<floaterMotionSolver>(floaterName)
-    );
 
+    floaterNames.transfer(floaterList);
+}
+
+// Get handles to floater motion solvers
+PtrList<floaterMeshMotionSolver> bodySolvers(floaterNames.size());
+
+/*
+forAll(floaterNames, i)
+{
+    bodySolvers.set
+    (
+        i,
+        const_cast<floaterMeshMotionSolver*>
+        (
+            &mesh.lookupObject<floaterMeshMotionSolver>(floaterNames[i])
+        )
+    );
+}
+*/
+forAll(floaterNames, i)
+{
+    bodySolvers.set
+    (
+        i,
+        &mesh.lookupObjectRef<floaterMeshMotionSolver>(floaterNames[i])
+    );
+}
+
+Info << "floaterNames" << floaterNames << endl;
+Info << "bodySolvers" << bodySolvers << endl;
 
 // Read onlyMeshMotion used to only move mesh with moveDynamicMesh
 bool onlyMeshMotion(false);

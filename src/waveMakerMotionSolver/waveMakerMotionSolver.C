@@ -63,7 +63,7 @@ Foam::waveMakerMotionSolver::waveMakerMotionSolver
     const IOdictionary& dict
 )
 :
-    displacementMotionSolver(mesh, dict, typeName),
+    pointDisplacementMotionSolver(mesh, dict, typeName),
     times_(coeffDict().lookup("times")),
     pistonPositions_(coeffDict().lookup("pistonPositions")),
     nPistons_(pistonPositions_.size()),
@@ -81,7 +81,7 @@ Foam::waveMakerMotionSolver::waveMakerMotionSolver
     yPistonCentres_(nPistons_),
     zPositions_(coeffDict().lookup("zPositions")),
     zScaling_(coeffDict().lookup("zScaling")),
-    nMovingPoints_(sum(neg(points0().component(vector::X) - xr_))),
+    nMovingPoints_(sum(neg(points0_.component(vector::X) - xr_))),
     movingPoints_(nMovingPoints_),
     xOriginal_(nMovingPoints_),
     yOriginal_(nMovingPoints_),
@@ -97,7 +97,7 @@ Foam::waveMakerMotionSolver::waveMakerMotionSolver
     pistonPositions_ = amplificationFactor_*pistonPositions_;
     
     //Finding moving mesh points
-    const pointField& p = points0();
+    const pointField& p = points0_;
     scalarField isMoving(neg(p.component(vector::X) - xr_));
     label iMov(-1);
     forAll(isMoving, ip)
@@ -153,9 +153,10 @@ Foam::waveMakerMotionSolver::curPoints() const
 {
     tmp<pointField> newPoints
     (
-        points0() + pointDisplacement_.primitiveField()
+        points0_ + pointDisplacement_.primitiveField()
     );
 
+    /*
     if (!moveAllCells())
     {
         Info << "Note: not moving all cells - returning transformed points."
@@ -168,6 +169,7 @@ Foam::waveMakerMotionSolver::curPoints() const
 
         return ttransformedPts;
     }
+    */
 
     return newPoints;
 }
@@ -269,7 +271,8 @@ void Foam::waveMakerMotionSolver::solve()
             x = xr_ - X;
         }
         scalar dx = scaling_[ip]*(x - xOrig);
-        pd[movingPoints_[ip]].replace(vector::X, dx);
+        // Adding dx to x-component of pd
+        pd[movingPoints_[ip]].component(vector::X) += dx;
     }
 }
 

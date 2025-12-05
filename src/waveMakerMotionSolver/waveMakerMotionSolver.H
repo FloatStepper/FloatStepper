@@ -50,7 +50,7 @@ SourceFiles
 #ifndef waveMakerMotionSolver_H
 #define waveMakerMotionSolver_H
 
-#include "displacementMotionSolver.H"
+#include "pointDisplacementMotionSolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,7 +63,7 @@ namespace Foam
 
 class waveMakerMotionSolver
 :
-    public displacementMotionSolver
+    public pointDisplacementMotionSolver
 {
     // Private data
 

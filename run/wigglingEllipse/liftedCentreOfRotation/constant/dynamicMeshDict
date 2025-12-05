@@ -14,16 +14,16 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh        dynamicMotionSolverListFvMesh;
+dynamicFvMesh        dynamicPointDisplacementFvMesh;
 
 solvers
 {
     body
     {
         motionSolverLibs    (floaterMotion);
-        motionSolver        floaterMotion;
+        motionSolver        floaterMeshMotionSolver;
 
-        floaterMotionCoeffs
+        floaterMeshMotionSolverCoeffs
         {
             addedMassModel  pisoAddedMass;
             patches         (floatingObject);

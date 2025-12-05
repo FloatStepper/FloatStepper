@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
     floaterMotion body(motionSolverCoeffDict, bodyStateDict, runTime);
 
     // Reading active degrees of freedom from motionSolverCoeffDict (copied from
-    // floaterMotionSolver constructor)
+    // floaterMeshMotionSolver constructor)
     Vector<bool> linDirs(motionSolverCoeffDict.getOrDefault
     (
         "linDirs", Vector<bool>(1, 1, 1))

@@ -1,0 +1,59 @@
+#!/bin/sh
+cd ${0%/*} || exit 1                        # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions    # Tutorial run functions
+
+caseName=$(basename $(dirname $(readlink -f "$0")))
+touch ${caseName}.foam
+restore0Dir
+
+# Generate base mesh
+runApplication blockMesh
+
+# Refine mesh
+#runApplication -s 1 topoSet -dict system/topoSetDict1
+#runApplication -s 1 refineMesh -dict system/refineMeshDict1 -overwrite
+#runApplication -s 2 topoSet -dict system/topoSetDict2
+#runApplication -s 2 refineMesh -dict system/refineMeshDict2 -overwrite
+
+runApplication -s 1 topoSet -dict system/topoSetDict1
+runApplication -s 1 subsetMesh -overwrite c1 -patch floatingObject
+runApplication -s 2 topoSet -dict system/topoSetDict2
+runApplication -s 2 subsetMesh -overwrite c2 -patch floatingObject2
+
+# Calculate mass, centre of mass and moment of inertia
+# Uses floatingObject patch and assumes mass density is uniform:
+density=500
+inside="(100 0 100)"
+runApplication -s 1 surfaceMeshExtract -time 0 -patches floatingObject floater.stl
+runApplication -s 1 surfaceOrient -inside floater.stl "${inside}" floater.stl
+runApplication -s 1 floaterInertia floater.stl -density ${density} # -referencePoint "$centreOfRotation"
+grep -A5 'Entries for floatStepper' log.floaterInertia.1 | tail -5 > 0/uniform/inertia1
+
+# 2nd floater
+density=500
+inside="(300 0 100)"
+runApplication -s 2 surfaceMeshExtract -time 0 -patches floatingObject2 floater2.stl
+runApplication -s 2 surfaceOrient -inside floater2.stl "${inside}" floater2.stl
+runApplication -s 2 floaterInertia floater2.stl -density ${density} # -referencePoint "$centreOfRotation"
+grep -A5 'Entries for floatStepper' log.floaterInertia.2 | tail -5 > 0/uniform/inertia2
+
+runApplication setFields
+
+# Run case
+runApplication decomposePar
+runParallel $(getApplication)
+#runApplication $(getApplication)
+
+# Reconstruct case
+runApplication reconstructPar -latestTime
+
+# Exctract floater patch as stl file
+runApplication surfaceMeshExtract -patches floatingObject floatingObject.stl
+
+# Calculating initial body volume (minus sign associated with inside/outside)
+echo "floatingObject mass at time = 0:"
+surfaceInertia floatingObject_0.stl | grep "^mass"
+
+# Calculating final body volume (minus sign associated with inside/outside)
+echo "floatingObject mass at time = 20:"
+surfaceInertia floatingObject_20.stl | grep "^mass"

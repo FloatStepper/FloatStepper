@@ -1,0 +1,6 @@
+A floating box moored with the MoorDyn library and exerted to regular waves.
+
+Very simple and fast running case for testing coupling of FloatStepper with
+MoorDyn.
+
+Uses new mesh morphing method.

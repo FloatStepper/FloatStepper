@@ -1,0 +1,77 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v1806                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dynamicFvMesh        dynamicPointDisplacementFvMesh;
+
+solvers
+{
+    box
+    {
+        motionSolverLibs    ("libfloaterMotion.so");
+        motionSolver        floaterMeshMotionSolver;
+
+        floaterMeshMotionSolverCoeffs
+        {
+            patches         (floatingObject);
+            innerDistance   20;
+            outerDistance   70;
+            separateTransRotPointDisplacement true;
+            horDir1         (1 0 0);
+            horDir2         (0 1 0);
+            verDir          (0 0 1);
+            horPos1         4 (5 65 135 265);
+            horPos2         4 (-195 -100 78 195);
+//            verPosX         $horPos1;
+            verPos         4 (5 70 1e6 1e8);
+
+            linDirs         (1 1 1);
+            rotDirs         (1 1 1);
+
+            MaddUpdateFreq  3;
+            addedMassModel  pisoAddedMass;
+        }
+    }
+
+    box2
+    {
+        motionSolverLibs    ("libfloaterMotion.so");
+        motionSolver        floaterMeshMotionSolver;
+
+        floaterMeshMotionSolverCoeffs
+        {
+            patches         (floatingObject2);
+            innerDistance   20;
+            outerDistance   70;
+            separateTransRotPointDisplacement true;
+            horDir1         (1 0 0);
+            horDir2         (0 1 0);
+            verDir          (0 0 1);
+            horPos1         4 (135 265 335 395);
+//            horPos2         4 (-195 -100 78 195);
+            horPos2         4 (-1e8 -1e6 1e6 1e8);
+//            verPosX         $horPos1;
+            verPos         4 (5 70 1e6 1e8);
+            linDirs         (1 1 1);
+            rotDirs         (1 1 1);
+
+            MaddUpdateFreq  3;
+            addedMassModel  pisoAddedMass;
+        }
+    }
+
+}
+
+// ************************************************************************* //
