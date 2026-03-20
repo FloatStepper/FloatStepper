@@ -30,6 +30,23 @@ solvers
             innerDistance   0.075;
             outerDistance   0.4;
 
+            separateMeshMorphing true;
+            xMorphing
+            {
+                // Coordinates specified relative to body or lab
+                relativeTo  body; //default: lab
+
+                innerBox { xMin -.5;  xMax  .5;}
+                outerBox { xMin -2;  xMax  2;}
+            }
+            zMorphing
+            {
+                $xMorphing;
+
+                innerBox { zMin -0.21; zMax  0.19; }
+                outerBox { zMin -0.39; zMax  0.39; }
+            }
+
             rotDirs   (0 1 0);
             linDirs   (1 0 1);
             addedMassModel  pisoAddedMass;

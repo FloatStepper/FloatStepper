@@ -84,10 +84,10 @@ Foam::floaterMeshMotionSolver::floaterMeshMotionSolver
     di_(coeffDict().get<scalar>("innerDistance")),
     do_(coeffDict().get<scalar>("outerDistance")),
     distStretch_(coeffDict().getOrDefault<tensor>("distStretch", tensor::I)),
-    separateTransRotPointDisplacement_
+    separateMeshMorphing_
     (
         coeffDict().getOrDefault<bool>
-        ("separateTransRotPointDisplacement", false)
+        ("separateMeshMorphing", false)
     ),
     //rhoInf_(1.0),
     rhoName_(coeffDict().getOrDefault<word>("rho", "rho")),
@@ -100,11 +100,14 @@ Foam::floaterMeshMotionSolver::floaterMeshMotionSolver
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
-            false
+            IOobject::NO_REGISTER
         ),
         pointMesh::New(mesh),
         dimensionedScalar(dimless, Zero)
     ),
+    xScale_(nullptr),
+    yScale_(nullptr),
+    zScale_(nullptr),
     curTimeIndex_(-1),
     DoFs_(0)
 {
@@ -194,15 +197,102 @@ Foam::floaterMeshMotionSolver::floaterMeshMotionSolver
     }
 
     // Reading settings for translational point displacement
-    if (separateTransRotPointDisplacement_)
+    if (separateMeshMorphing_)
     {
-        horDir1_ = coeffDict().get<vector>("horDir1");
-        horDir2_ = coeffDict().get<vector>("horDir2");
-        verDir_ = coeffDict().get<vector>("verDir");
+        // Read morphing boxes for x, y, and z displacements
+        morphingBoxRegion xMorphing(coeffDict().subDict("xMorphing"));
 
-        horPos1_ = coeffDict().get<scalarList>("horPos1");
-        horPos2_ = coeffDict().get<scalarList>("horPos2");
-        verPos_ = coeffDict().get<scalarList>("verPos");
+        morphingBoxRegion yMorphing
+        (
+            coeffDict().subDict
+            (
+                coeffDict().found("yMorphing") ? "yMorphing" : "xMorphing"
+            ),
+            &coeffDict().subDict("xMorphing")   // fallback
+        );
+
+        morphingBoxRegion zMorphing
+        (
+            coeffDict().subDict
+            (
+                coeffDict().found("zMorphing") ? "zMorphing" : "xMorphing"
+            ),
+            &coeffDict().subDict("xMorphing")   // fallback
+        );
+
+        // Shift box coordinates to lab coordinates if provided relative to body
+        xMorphing.shiftBoxes(motion_.initialCentreOfRotation());
+        yMorphing.shiftBoxes(motion_.initialCentreOfRotation());
+        zMorphing.shiftBoxes(motion_.initialCentreOfRotation());
+
+        // Set displacement blending fields
+        const pointMesh& pMesh = pointMesh::New(mesh);
+
+        xScale_.reset
+        (
+            new pointScalarField
+            (
+                IOobject
+                (
+                    "xScale",
+                    mesh.time().timeName(),
+                    mesh,
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE,
+                    IOobject::NO_REGISTER
+                ),
+                pointMesh::New(mesh),
+                dimensionedScalar(dimless, One)
+            )
+        );
+        xMorphing.updateBlending(points0_, xScale_->primitiveFieldRef());
+        pointConstraints::New(pMesh).constrain(xScale_());
+
+        // Set x displacement blending
+        yScale_.reset
+        (
+            new pointScalarField
+            (
+                IOobject
+                (
+                    "yScale",
+                    mesh.time().timeName(),
+                    mesh,
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE,
+                    IOobject::NO_REGISTER
+                ),
+                pointMesh::New(mesh),
+                dimensionedScalar(dimless, One)
+            )
+        );
+        yMorphing.updateBlending(points0_, yScale_->primitiveFieldRef());
+        pointConstraints::New(pMesh).constrain(yScale_());
+
+        zScale_.reset
+        (
+            new pointScalarField
+            (
+                IOobject
+                (
+                    "zScale",
+                    mesh.time().timeName(),
+                    mesh,
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE,
+                    IOobject::NO_REGISTER
+                ),
+                pointMesh::New(mesh),
+                dimensionedScalar(dimless, One)
+            )
+        );
+        zMorphing.updateBlending(points0_, zScale_->primitiveFieldRef());
+        pointConstraints::New(pMesh).constrain(zScale_());
+
+        // Coordinate directions for morphing regions
+        xhat_ = xMorphing.cs().e1();
+        yhat_ = yMorphing.cs().e2();
+        zhat_ = zMorphing.cs().e3();;
     }
 }
 
@@ -254,7 +344,6 @@ void Foam::floaterMeshMotionSolver::solve()
     // Update the displacements
     updateDisplacement();
 
-
     // Displacement has changed. Update boundary conditions
     pointConstraints::New
     (
@@ -268,7 +357,7 @@ void Foam::floaterMeshMotionSolver::updateDisplacement()
 
     point centreOfRotation(motion().centreOfRotation());
 
-    if (separateTransRotPointDisplacement_)
+    if (separateMeshMorphing_)
     {
         centreOfRotation = motion().initialCentreOfRotation();
     }
@@ -311,82 +400,54 @@ void Foam::floaterMeshMotionSolver::updateDisplacement()
                       - motion().initialCentreOfRotation()
                     )
                   - points0_[pointi];
-
-                // Test of alternative displacement interpolation to check if
-                // quaternions are to blame for non volume conservation.
-                // Not the case.
-                /*
-                point newPos = centreOfRotation 
-                  + (
-                        ((motion().Q()) & (motion().initialQ().T()))
-                          &
-                        (points0_[pointi] - motion().initialCentreOfRotation())
-                    );
-
-                disp[pointi] = scale_[pointi]*newPos
-                    + (1.0 - scale_[pointi])*points0_[pointi]
-                    - points0_[pointi];
-                */
             }
         }
     }
 
-    if (separateTransRotPointDisplacement_)
+    if (separateMeshMorphing_)
     {
         const vector bodyDisp
         (
             motion().centreOfRotation() - motion().initialCentreOfRotation()
         );
-        scalarField s(scale_.size(), 1.0);
 
-        // Mesh point displacement due to x body displacement
-        vector xhat(horDir1_/mag(horDir1_));
-        calcTransDispScale(points0_, horPos1_, xhat, s);
-        const scalar Lx(xhat & bodyDisp);
-        disp += Lx * xhat * max
-        (
-            min(0.5 - 0.5*cos(Foam::constant::mathematical::pi*s), 1.0),
-            0.0
-        );
+        // Applying x-displacement
+        const scalar Lx(xhat_ & bodyDisp);
+        disp += Lx*xhat_*xScale_->primitiveField();
 
-        // Mesh point displacement due to y body displacement
-        s = 1.0;
-        vector yhat(horDir2_/mag(horDir2_));
-        calcTransDispScale(points0_, horPos2_, yhat, s);
-        const scalar Ly(yhat & bodyDisp);
-        disp += Ly * yhat * max
-        (
-            min(0.5 - 0.5*cos(Foam::constant::mathematical::pi*s), 1.0),
-            0.0
-        );
+        // Applying y-displacement
+        const scalar Ly(yhat_ & bodyDisp);
+        disp += Ly*yhat_*yScale_->primitiveField();
 
-        // Mesh point displacement due to y body displacement
-        s = 1.0;
-        vector zhat(verDir_/mag(verDir_));
-        calcTransDispScale(points0_, horPos1_, xhat, s);
-        calcTransDispScale(points0_, horPos2_, yhat, s);
-        calcTransDispScale(points0_, verPos_, zhat, s);
-        const scalar Lz(zhat & bodyDisp);
-        disp += Lz * zhat * max
-        (
-            min(0.5 - 0.5*cos(Foam::constant::mathematical::pi*s), 1.0),
-            0.0
-        );
+        // Applying z-displacement
+        const scalar Lz(zhat_ & bodyDisp);
+        disp += Lz*zhat_*zScale_->primitiveField();
     }
 }
 
 
-void Foam::floaterMeshMotionSolver::calcTransDispScale
+void Foam::floaterMeshMotionSolver::applyGrading
 (
-    const pointField& X,
-    const scalarList& pts,
-    const vector& dir,
-    scalarField& scale
+    const vector& xdir,
+    const scalarField& pts,
+    const scalar Lx,
+    scalarField& s
 ) const
 {
-    const vector unitDir(dir/mag(dir));
-    scale *= max(min(((X & unitDir) - pts[0])/(pts[1] - pts[0]), 1.0), 0.0);
-    scale *= max(min((pts[3] - (X & unitDir)) / (pts[3] - pts[2]), 1.0), 0.0);
+    vector xhat(xdir/mag(xdir));
+
+    // Introduce grading for stretched region (compressed region uniform to
+    // avoid excessively thin cells for large compression).
+    scalarField stretching(s.size(), 0);
+    if (Lx > 0)
+    {
+        stretching = pos((points0_ & xhat) - pts[0])*neg((points0_ & xhat) - pts[1]);
+    }
+    else
+    {
+        stretching = pos((points0_ & xhat) - pts[2])*neg((points0_ & xhat) - pts[3]);
+    }
+    s = (1-stretching)*s + stretching*0.5*(1-cos(Foam::constant::mathematical::pi*s));
 }
 
 

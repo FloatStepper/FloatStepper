@@ -71,9 +71,6 @@ class dynamicPointDisplacementFvMesh
         //- The base points from which point displacements are calculated
         const pointIOField points0_;
 
-        //- Field to hold accumulated mesh point displacement
-        pointVectorField pointDisplacement_;
-
         // List of motionSolvers
         PtrList<motionSolver> motionSolvers_;
 

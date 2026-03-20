@@ -95,7 +95,10 @@ Foam::dynamicPointDisplacementFvMesh::dynamicPointDisplacementFvMesh
             )
         )
     ),
-    pointDisplacement_
+    motionSolvers_(),
+    onlyMeshMotion_(false)
+{
+    new pointVectorField
     (
         IOobject
         (
@@ -106,10 +109,8 @@ Foam::dynamicPointDisplacementFvMesh::dynamicPointDisplacementFvMesh
             IOobject::AUTO_WRITE
         ),
         pointMesh::New(*this)
-    ),
-    motionSolvers_(),
-    onlyMeshMotion_(false)
-{
+    );
+
     if (doInit)
     {
         init(false);    // do not initialise lower levels
@@ -221,7 +222,8 @@ bool Foam::dynamicPointDisplacementFvMesh::update()
     if (motionSolvers_.size())
     {
         // Accumulated displacement
-        pointField& disp = pointDisplacement_;
+        pointField& disp =
+            lookupObjectRef<pointVectorField>("pointDisplacement");
         disp = Zero;
 
         // Accumulate all point displacements
@@ -241,7 +243,7 @@ bool Foam::dynamicPointDisplacementFvMesh::update()
         // Moving mesh with accummulated point displacement, disp
         fvMesh::movePoints(points0_ + disp);
 
-        // Note: pointDisplacement_ boundary conditions are needed for restart
+        // Note: pointDisplacement boundary conditions are needed for restart
         // but internal values are recalculated. Therefore setting to zero
         // before write out to save disk space.
         disp = Zero;

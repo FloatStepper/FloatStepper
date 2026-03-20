@@ -26,16 +26,31 @@ solvers
         floaterMeshMotionSolverCoeffs
         {
             patches         (floatingObject);
-            innerDistance   20;
+            innerDistance   5;
             outerDistance   70;
-            separateTransRotPointDisplacement true;
-            horDir1         (1 0 0);
-            horDir2         (0 1 0);
-            verDir          (0 0 1);
-            horPos1         4 (5 65 135 265);
-            horPos2         4 (-1e8 -1e6 1e6 1e8);
-//            verPosX         $horPos1;
-            verPos         4 (5 70 1e6 1e8);
+            separateMeshMorphing true;
+            xMorphing
+            {
+                coordinateSystem
+                {
+                    origin  (0 0 0);
+                    e1      (1 0 0);
+                    e2      (0 1 0);
+                }
+
+                // Coordinates specified relative to body or lab
+                relativeTo  lab; //default: lab
+
+                innerBox { xMin 75;  xMax  125;}
+                outerBox { xMin 5;  xMax  275;}
+            }
+            zMorphing
+            {
+                $xMorphing;
+
+                innerBox { zMin 85; zMax  1e6; }
+                outerBox { zMin 5; zMax  1e8; }
+            }
 
             linDirs         (1 0 1);
             rotDirs         (0 1 0);
@@ -53,16 +68,33 @@ solvers
         floaterMeshMotionSolverCoeffs
         {
             patches         (floatingObject2);
-            innerDistance   20;
+            innerDistance   5;
             outerDistance   70;
-            separateTransRotPointDisplacement true;
-            horDir1         (1 0 0);
-            horDir2         (0 1 0);
-            verDir          (0 0 1);
-            horPos1         4 (135 265 335 395);
-            horPos2         4 (-1e8 -1e6 1e6 1e8);
-//            verPosX         $horPos1;
-            verPos         4 (5 70 1e6 1e8);
+
+            separateMeshMorphing true;
+            xMorphing
+            {
+                coordinateSystem
+                {
+                    origin  (0 0 0);
+                    e1      (1 0 0);
+                    e2      (0 1 0);
+                }
+
+                // Coordinates specified relative to body or lab
+                relativeTo  lab; //default: lab
+
+                innerBox { xMin 275;  xMax  325;}
+                outerBox { xMin 125;  xMax  395;}
+            }
+            zMorphing
+            {
+                $xMorphing;
+
+                innerBox { zMin 85; zMax  1e6; }
+                outerBox { zMin 5; zMax  1e8; }
+            }
+
             linDirs         (1 0 1);
             rotDirs         (0 1 0);
 

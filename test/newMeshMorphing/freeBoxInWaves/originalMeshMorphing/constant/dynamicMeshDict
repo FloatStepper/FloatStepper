@@ -29,14 +29,30 @@ solvers
             patches         (box);
             innerDistance   0.075;
             outerDistance   0.4;
-            separateTransRotPointDisplacement false;
-            horDir1         (1 0 0);
-            horDir2         (0 1 0);
-            verDir          (0 0 1);
-            horPos1         4 (-2.2 -0.5 0.5 2.2);
-            horPos2         4 (-1e10 -1e9 1e9 1e10);
-//            verPosX         $horPos1;
-            verPos         4 (-0.39 -0.21 0.19 0.39);
+
+            separateMeshMorphing true;
+            xMorphing
+            {
+                coordinateSystem
+                {
+                    origin  (0 0 0);
+                    e1      (1 0 0);
+                    e2      (0 1 0);
+                }
+
+                // Coordinates specified relative to body or lab
+                relativeTo  lab; //default: lab
+
+                innerBox { xMin -0.5;  xMax  0.5;}
+                outerBox { xMin -2.2;  xMax  2.2;}
+            }
+            zMorphing
+            {
+                $xMorphing;
+
+                innerBox { zMin -0.21; zMax  0.19; }
+                outerBox { zMin -0.39; zMax  0.39; }
+            }
 
             linDirs   (1 0 1);
             rotDirs   (0 1 0);

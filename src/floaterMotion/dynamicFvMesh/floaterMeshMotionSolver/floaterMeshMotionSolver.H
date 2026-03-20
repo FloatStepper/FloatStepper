@@ -36,13 +36,67 @@ Group
    grpMeshMotionSolvers
 
 Description
-    6-DoF solid-body mesh motion solver for an fvMesh.
+    Description
 
-    Applies SLERP interpolation of movement as function of distance to
-    the object surface.
+    Motion solver for floating body using six degrees of freedom rigid
+    body motion with customised box-shaped morphing regions for the linear
+    displacement and SLERP for the rotational morphing.
+
+    Between the inner and outer boxes the mesh morphing transitions linearly
+    from full rigid body motion to stationary. Inside the inner box the mesh
+    moves as a rigid body. Outside the outer box the mesh is stationary.
+
+    Activated by setting separateMeshMorphing true. If false, falls back to
+    standard distance-based blending using innerDistance and outerDistance.
+    The y and z directions inherit all settings from xMorphing if not
+    specified.
+
+    Usage
+    \verbatim
+    solvers
+    {
+        box
+        {
+            motionSolverLibs    ( floaterMotion );
+            motionSolver        floaterMeshMotionSolver;
+
+            floaterMeshMotionSolverCoeffs
+            {
+                patches                 ( box );
+                innerDistance           0.075;
+                outerDistance           0.4;
+                separateMeshMorphing    true;
+
+                xMorphing
+                {
+                    coordinateSystem { origin (0 0 0); e1 (1 0 0); e2 (0 1 0); }
+                    relativeTo       body;
+                    innerBox     { xMin -0.6; xMax 0.5; zMin -0.21; zMax 0.19; }
+                    outerBox     { xMin -2.2; xMax 2.2; zMin -0.39; zMax 0.39; }
+                }
+
+                yMorphing { $xMorphing; }
+
+                zMorphing
+                {
+                    $xMorphing;
+                    innerBox     { xMin -0.6; xMax 0.5; zMin -0.21; zMax 0.19; }
+                    outerBox     { xMin -2.2; xMax 2.2; zMin -0.39; zMax 0.39; }
+                }
+            }
+        }
+    }
+    \endverbatim
+
+    Note
+    Bounds not specified in innerBox and outerBox default to +/-GREAT and
+    +/-VGREAT, respectively, ensuring outer bounds always exceed inner bounds
+    for unspecified directions. The coordinateSystem entry defaults to the
+    global Cartesian system if omitted. relativeTo body means bounds move
+    with the body; relativeTo lab means bounds are fixed in the global frame.
 
 SourceFiles
-    floaterMeshMotionSolver.C
+    floaterMeshMotionSolver.C, morphingBoxRegion.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -51,6 +105,7 @@ SourceFiles
 
 #include "pointDisplacementMotionSolver.H"
 #include "floaterMotion.H"
+#include "morphingBoxRegion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -87,31 +142,19 @@ class floaterMeshMotionSolver
         const tensor distStretch_;
 
         //- Switch to separate linear and rotational mesh deformation treatment
-        const bool separateTransRotPointDisplacement_;
+        const bool separateMeshMorphing_;
 
         //- First horisontal direction in mesh motion coordinates used if
         //  translation and rotation mesh deformation are treated separately
-        vector horDir1_;
-
-        //- Intervals along horDir1_ where mesh deforms to accommodate body
-        //  translation, e.g. 4 (-100 -50 50 100)
-        scalarList horPos1_;
+        vector xhat_;
 
         //- Second horisontal direction in mesh motion coordinates used if
         //  translation and rotation mesh deformation are treated separately
-        vector horDir2_;
-
-        //- Intervals along horDir2_ where mesh deforms to accommodate body
-        //  translation, e.g. 4 (-100 -50 50 100)
-        scalarList horPos2_;
+        vector yhat_;
 
         //- Vertical direction in mesh motion coordinates used if translation
         //  and rotation mesh deformation are treated separately
-        vector verDir_;
-
-        //- Vertical intervals above and below floater where mesh deforms, e.g.
-        //  4 (-100 -50 50 100)
-        scalarList verPos_;
+        vector zhat_;
 
         //- Reference density required by the forces object for
         //  incompressible calculations, required if rho == rhoInf
@@ -122,8 +165,14 @@ class floaterMeshMotionSolver
         //  as rhoInf
         word rhoName_;
 
-        //- Current interpolation scale 
+        //- Mesh morphing blending between stationary and co-moving
         pointScalarField scale_;
+
+        //- Mesh morphing blending between stationary and co-moving for linear
+        //  displacement. Only allocated if separateMeshMorphing_.
+        autoPtr<pointScalarField> xScale_;
+        autoPtr<pointScalarField> yScale_;
+        autoPtr<pointScalarField> zScale_;
 
         //- Current time index (used for updating)
         label curTimeIndex_;
@@ -181,12 +230,12 @@ public:
         //  orientation
         void updateDisplacement();
 
-        //- Calculate the mask field used for translational displacement
-        void calcTransDispScale
+        //- Apply grading to stretched morphing zone
+        void applyGrading
         (
-            const pointField& X,
-            const scalarList& pts,
             const vector& dir,
+            const scalarField& pts,
+            const scalar Lx,
             scalarField& scale
         ) const;
 

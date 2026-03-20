@@ -42,8 +42,10 @@ boundaryField
     }
     atmosphere
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            fixedNormalSlip;
+        n               (0 0 1);
+//        type            fixedValue;
+//        value           uniform (0 0 0);
     }
     box
     {
@@ -52,8 +54,10 @@ boundaryField
     }
     bottom
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            fixedNormalSlip;
+        n               (0 0 1);
+//        type            fixedValue;
+//        value           uniform (0 0 0);
     }
 }
 
