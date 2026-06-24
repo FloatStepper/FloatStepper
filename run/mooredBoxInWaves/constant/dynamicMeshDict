@@ -29,6 +29,32 @@ solvers
             innerDistance   10;
             outerDistance   60;
 
+            separateMeshMorphing true;
+            xMorphing
+            {
+                // Coordinates specified relative to body or lab
+                relativeTo  body; //default: lab
+
+                innerBox { xMin -30;  xMax  30;}
+                outerBox { xMin -80;  xMax  80;}
+            }
+
+            yMorphing
+            {
+                innerBox { yMin -30;  yMax  30;}
+                outerBox { yMin -80;  yMax  80;}
+            }
+
+            zMorphing
+            {
+                $xMorphing;
+                $yMorphing;
+
+                innerBox { zMin -20; zMax  20; }
+                outerBox { zMin -80; zMax  80; }
+            }
+
+
             linDirs         (1 1 1);
             rotDirs         (1 1 1);
 
