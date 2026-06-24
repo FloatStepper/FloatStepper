@@ -166,17 +166,17 @@ int main(int argc, char *argv[])
         vectorList tau0List(bodySolvers.size(), Zero);
         {
             // Update mesh points in accordance with 0-acceleration body motion
-            #include "updateMesh0.H"
+            #include "updateMesh.H"
 
             // Calculate fluid motion response to 0-acceleration body motion
-            #include "updateFluid0.H" //alphaEqn, UEqn and Piso loop
+            #include "updateFluid.H" //alphaEqn, UEqn and Piso loop
 
             // Recording fluid force associated with 0-acceleration motion
             forAll(bodySolvers, bsi)
             {
                 floaterMeshMotionSolver& bodySolver = bodySolvers[bsi];
                 vector F0(Zero), tau0(Zero);
-                bodySolver.motion().calcForceAndTorque(rho0, p0, U0, F0, tau0);
+                bodySolver.motion().calcForceAndTorque(rho, p, U, F0, tau0);
                 F0List[bsi] = F0; tau0List[bsi] = tau0;
                 Info << "F0 = " << F0 << ", tau0 = " << tau0 << endl;
             }

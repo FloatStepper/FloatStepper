@@ -16,13 +16,12 @@ mesh.setPhi().ref() = mesh.phi().oldTime();
 //mesh.movePoints(oldOldPoints);
 //mesh.movePoints(oldPoints);
 
-// Reset fields
-//alpha1 = alpha1.oldTime(); //Reset does not work
-//alpha2 = alpha2.oldTime(); //Reset does not work
+alpha1 = alpha1.oldTime();
+alpha2 = 1 - alpha1;
 p_rgh = p_rgh.oldTime();
 U = U.oldTime();
 rho = rho.oldTime();
 rhoPhi = rhoPhi.oldTime();
 phi = phi.oldTime(); //Not needed if correctPhi
 p = p.oldTime();
-Uf0 = Uf0.oldTime();
+Uf() = Uf().oldTime();
