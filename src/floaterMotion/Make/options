@@ -9,6 +9,7 @@ EXE_INC = \
     -I$(LIB_SRC)/sixDoFRigidBodyMotion/lnInclude \
     -I../functionObjects/forceContributions/lnInclude \
     -I../addedMass/lnInclude \
+    -I./floaterMotion/integrators/floaterIntegrator \
     -I$(LIB_SRC)/transportModels \
     -I$(LIB_SRC)/transportModels/geometricVoF/lnInclude \
     -I$(LIB_SRC)/transportModels/twoPhaseMixture/lnInclude \

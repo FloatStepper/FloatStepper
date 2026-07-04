@@ -4,6 +4,7 @@ floaterMotion/floaterMotionState.C
 floaterMotion/floaterMotionStateIO.C
 
 restraints = floaterMotion/restraints
+integrators = floaterMotion/integrators
 
 $(restraints)/floaterMotionRestraint/floaterMotionRestraint.C
 $(restraints)/floaterMotionRestraint/floaterMotionRestraintNew.C
@@ -16,6 +17,12 @@ $(restraints)/sphericalAngularDamper/sphericalAngularDamper.C
 $(restraints)/linearSpringDamper/linearSpringDamper.C
 $(restraints)/softWall/softWall.C
 $(restraints)/oscillatingForce/oscillatingForce.C
+
+$(integrators)/floaterIntegrator/floaterIntegrator.C
+$(integrators)/floaterIntegrator/floaterIntegratorNew.C
+$(integrators)/basic/basic.C
+$(integrators)/symplecticEuler/symplecticEuler.C
+$(integrators)/exponentialMap/exponentialMap.C
 
 dynamicFvMesh/dynamicPointDisplacementFvMesh/dynamicPointDisplacementFvMesh.C
 dynamicFvMesh/pointDisplacementMotionSolver/pointDisplacementMotionSolver.C

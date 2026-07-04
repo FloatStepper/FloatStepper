@@ -16,6 +16,7 @@
 #include "Tuple2.H"
 #include "pimpleControl.H" //Used by updateBodyState()
 #include "addedMass.H"
+#include "floaterIntegrator.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -76,7 +77,7 @@ class floaterMotion
         //
         //      I_CofR = I_CofM + mass_*(I*magSqr(momentArm) - sqr(momentArm));
         //
-        //  To obtain a inertia tensor in body coordinates, I_body, from the 
+        //  To obtain a inertia tensor in body coordinates, I_body, from the
         //  inertia tensor in lab coordinates, I_lab, employ the coordinate
         //  transformation:
         //
@@ -113,6 +114,9 @@ class floaterMotion
 
         //- Names of patches making up the rigid body
         wordRes patches_;
+
+        //- ODE integrator for rigid body motion
+        autoPtr<floaterIntegrator> integrator_;
 
 public:
 
