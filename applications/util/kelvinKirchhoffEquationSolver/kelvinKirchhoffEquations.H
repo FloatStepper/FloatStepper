@@ -68,7 +68,8 @@ public:
         scalarSquareMatrix W({6, 6}, 0);
         W.subMatrix(0,0,3,3) = wx; //Note: tensor to Matrix - safe?
         W.subMatrix(3,3,3,3) = wx; //Note: tensor to Matrix - safe?
-        scalarField Ftau0 = (Madd * W - W * Madd) * vw;
+        scalarField Ftau0;
+	    Ftau0 = (Madd * W - W * Madd) * vw; // CT: Split initialisation from declaration. Needed for aocc compilation.
         vector F0(Ftau0[0], Ftau0[1], Ftau0[2]);
         vector tau0(Ftau0[3], Ftau0[4], Ftau0[5]);
 
@@ -81,7 +82,8 @@ public:
         );
         scalarSquareMatrix auxMatrix({6, 6}, 0);
         auxMatrix.subMatrix(3,0,3,3) = v0x; //Note: tensor to Matrix - safe?
-        scalarField auxField = (auxMatrix * Madd) * vw;
+        scalarField auxField;
+	    auxField = (auxMatrix * Madd) * vw; // CT: Split initialisation from declaration. Needed for aocc compilation.
         tau0[0] -= auxField[3];
         tau0[1] -= auxField[4];
         tau0[2] -= auxField[5];

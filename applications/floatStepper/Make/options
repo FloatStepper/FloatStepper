@@ -41,4 +41,6 @@ EXE_LIBS = \
     -lincompressibleInterPhaseTransportModels \
     -L$(FOAM_USER_LIBBIN) \
     -lfloaterMotion \
+    -lforces \
+    -lforceContributions \
     -laddedMass

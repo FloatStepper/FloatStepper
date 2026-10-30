@@ -44,4 +44,6 @@ EXE_LIBS = \
     -L$(FOAM_USER_LIBBIN) \
     -lfloaterMotion \
     -laddedMass \
+    -lforces \
+    -lforceContributions \
     -lODE

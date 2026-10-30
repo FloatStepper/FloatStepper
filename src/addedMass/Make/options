@@ -9,4 +9,5 @@ EXE_LIBS = \
     -lfvOptions \
     -lmeshTools \
     -L$(FOAM_USER_LIBBIN) \
+    -lforces \
     -lforceContributions
